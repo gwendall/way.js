@@ -73,7 +73,7 @@ A comma separated list of values to pick (in forms only) to sync with the storag
 
 **omit** (String)
 
-A comma separated list of values to omit (in forms only).
+A comma separated list of values (in forms only) to not sync with the storage. By default, no form input is omitted.
 
 ```html
 <form way-data="some.form" way-omit="dont,want.those">
@@ -81,7 +81,7 @@ A comma separated list of values to omit (in forms only).
 
 **img** (String)
 
-A link to a default image to set on an <img> element if the binded value can't load an image
+A link to a default image to set on an <img> element, in case the binded value can't load an image
 
 ```html
 <img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
