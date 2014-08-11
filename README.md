@@ -128,21 +128,23 @@ Sets the element's value from any json.
 
 **** (String)
 
-**$.getStored(selector)**
-
-```html
-<input type="text" way-data="some.property">
-```
-
 **$.setStored(selector, data)**
 
-```html
-<input type="text" way-data="some.property">
+Saves the data in memory under the specified pathname.
+
+```javascript
+$.setStored("some.path", "bonjour!");
+$.getStored("some.path");
+>> "bonjour"
 ```
+
+**$.getStored(selector)**
+
+Returns the value of the data stored under a given pathname.
 
 **$.digestBindings(selector)**
 
-Digests the bindings with the given selector. All if selector omitted.
+Updates the bindings with the given selector. If omitted, all DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
 
 ```html
 <input type="text" way-data="some.property">
