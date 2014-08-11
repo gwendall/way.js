@@ -47,7 +47,7 @@ Set these options as "way-" HTML attributes on the elements that have to be bind
 Prevents the element changes from resetting the binded value.
 
 ```html
-	<input type="text" way-readonly="true">
+	<input type="text" way-data="some.property" way-readonly="true">
 ```
 
 **writeonly** (String)
@@ -55,7 +55,7 @@ Prevents the element changes from resetting the binded value.
 Prevents the element from getting refreshed when the binded value changes.
 
 ```html
-	<input type="text" way-writeonly="false">
+	<input type="text" way-data="some.property" way-writeonly="false">
 ```
 
 **pick** (String)
@@ -63,7 +63,7 @@ Prevents the element from getting refreshed when the binded value changes.
 A comma separated list of values to pick (in forms only).
 
 ```html
-	<input type="text" way-pick="some,properties,that,can.be.nested">
+	<form way-data="some.form" way-pick="some,properties,that,can.be.nested">
 ```
 
 **omit** (String)
@@ -71,15 +71,15 @@ A comma separated list of values to pick (in forms only).
 A comma separated list of values to omit (in forms only).
 
 ```html
-	<input type="text" way-omit="dont,want.those">
+	<form way-data="some.form" way-omit="dont,want.those">
 ```
 
-**imagefallback** (String)
+**img** (String)
 
 A link to a default image to set on an <img> element if the binded value can't load an image
 
 ```html
-	<input type="text" way-imagefallback="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
+	<img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
 ```
 
 - prettyprint (?)

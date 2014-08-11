@@ -136,7 +136,7 @@ $.fn.setValueDOM = function(data) {
 				isValidImageUrl(a, function(response) {
 					if (!response) {
 						var options = $(self).getBindOptions() || {};
-						a = options.imagefallback || null;
+						a = options.img || null;
 					}
 					if (a) $(self).attr('src', a);
 				});
