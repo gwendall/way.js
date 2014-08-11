@@ -34,7 +34,7 @@ Include the script with its dependencies
 
 ## Options ##
 
-Set these options as "way-" HTML attributes on the elements that have to be binded. Or as parameters of the functions below.
+Set these options as "way-" HTML attributes on the elements that have to be binded.
 
 **data** (String)
 
@@ -43,6 +43,8 @@ Allows to define the dot separated path where the data will be stored. Can inclu
 ```html
 <input type="text" way-data="some.property">
 ```
+
+When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage.
 
 **readonly** (Boolean)
 
@@ -62,7 +64,7 @@ Prevents the element from getting refreshed when the binded value changes.
 
 **pick** (String)
 
-A comma separated list of values to pick (in forms only).
+A comma separated list of values to pick (in forms only) to sync with the storage. By default, all form inputs are synced.
 
 ```html
 <form way-data="some.form" way-pick="some,properties,that,can.be.nested">
