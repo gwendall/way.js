@@ -136,8 +136,8 @@ Returns an object with the "way-" options passed to the element.
 Saves the data in memory under the specified pathname.
 
 ```javascript
-$.setStored("some.path", "bonjour!");
-$.getStored("some.path");
+way.set("some.path", "bonjour!");
+way.get("some.path");
 >> "bonjour"
 ```
 
