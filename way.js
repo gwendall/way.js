@@ -31,7 +31,7 @@ $.fn.toStorage = function(options) {
 	
 	if (options.readonly) return false;
 	_.throttle(function() {
-		$.setBinding(options.data, data);
+		$.setStored(options.data, data);
 	}, timeout)();
 	
 }
@@ -39,7 +39,7 @@ $.fn.toStorage = function(options) {
 $.fn.toJSON = function(options) {
 	
 	var self = this,
-		data = $(self).getValue(),
+		data = $(self).getValueDOM(),
 		options = options || $(self).getBindOptions();
 	
 	if (_.isArray(options.pick)) data = _.pick(data, options.pick);
@@ -67,7 +67,7 @@ $.fn.fromJSON = function(data, options) {
 		if (_.isArray(options.omit)) data = _.omit(data, options.omit);
 		data = _.extend(currentData, data);		
 	}
-	$(self).setValue(data);
+	$(self).setValueDOM(data);
 
 }
 
@@ -77,7 +77,7 @@ $.fn.fromStorage = function(options) {
 		options = options || $(self).getBindOptions();
 
 	if (options.writeonly) return false;
-	var data = $.getBinding(options.data);
+	var data = $.getStored(options.data);
 		$(self).fromJSON(data, options);
 
 }
@@ -86,7 +86,7 @@ $.fn.fromStorage = function(options) {
 // HTML GETTERS / SETTERS //
 ////////////////////////////
 
-$.fn.getValue = function() {
+$.fn.getValueDOM = function() {
 	
 	var self = this;	
 	var getters = {
@@ -109,7 +109,7 @@ $.fn.getValue = function() {
 	
 }
 
-$.fn.setValue = function(data) {
+$.fn.setValueDOM = function(data) {
 	
 	var self = this;
 	var setters = {
@@ -222,22 +222,22 @@ _WAY = {
 	options: {}
 };
 
-$.setBinding = function(selector, value) {
+$.setStored = function(selector, value) {
 	
 	_WAY.data = deepJSON(_WAY.data, selector, value);	
 	$.digestBindings(selector);
 		
 }
 
-$.getBinding = function(selector) {
+$.getStored = function(selector) {
 	
 	return deepJSON(_WAY.data, selector);
 
 }
 
-$.digestBindings = function(selector, all) {
+$.digestBindings = function(selector) {
 	
-	var domSelector = all ? "[" + tagPrefix + "-data]" : "[" + tagPrefix + "-data^='" + selector.split('.')[0] + "']";
+	var domSelector = selector ? "[" + tagPrefix + "-data^='" + selector.split('.')[0] + "']" : "[" + tagPrefix + "-data]";
 	$(domSelector).each(function() {
 		var options = $(this).getBindOptions();
 		var focused = (($(this).get(0).tagName == "FORM") && ($(this).get(0) == $(':focus').parents("form").get(0))) ? true : false;

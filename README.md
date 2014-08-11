@@ -86,68 +86,66 @@ A link to a default image to set on an <img> element if the binded value can't l
 
 ## Functions ##
 
+You can also call independently some functions to interact with your stored data. 
 
-**toStorage** (String)
+By default, options are read from the HTML tags of the elements. Set the "options" parameter (optional) to overwrite them.
 
-```html
-	<input type="text" way-data="some.property">
-```
 
-**fromStorage** (String)
+**$(element).toStorage(options)**
 
-```html
-	<input type="text" way-data="some.property">
-```
-
-**toJSON** (String)
+Stores the element's value to the in-store memory.
 
 ```html
 	<input type="text" way-data="some.property">
 ```
 
-**fromJSON** (String)
+**$(element).fromStorage(options)**
+
+Sets the element's value from the stored one.
 
 ```html
 	<input type="text" way-data="some.property">
 ```
 
-**getValue** (String)
+**$(element).toJSON(options)**
+
+Returns a JSON with the parsed data of the input (particularly handy for forms).
 
 ```html
 	<input type="text" way-data="some.property">
 ```
 
-**setValue** (String)
+**$(element).fromJSON(json, options)**
+
+Sets the element's value from any json.
 
 ```html
 	<input type="text" way-data="some.property">
 ```
 
-**getBindOptions** (String)
+**$(element).getBindOptions()**
+
+**** (String)
 
 ```html
 	<input type="text" way-data="some.property">
 ```
 
-**getAttrs** (String)
+**$.getStored(selector)**
 
 ```html
 	<input type="text" way-data="some.property">
 ```
 
-**getBinding** (String)
+**$.setStored(selector, data)**
 
 ```html
 	<input type="text" way-data="some.property">
 ```
 
-**setBinding** (String)
+**$.digestBindings(selector)**
 
-```html
-	<input type="text" way-data="some.property">
-```
-
-**digestBindings** (String)
+Digests the bindings with the given selector. All if selector omitted.
 
 ```html
 	<input type="text" way-data="some.property">
