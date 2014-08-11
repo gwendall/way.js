@@ -81,7 +81,7 @@ A comma separated list of values (in forms only) to not sync with the storage. B
 
 **img** (String)
 
-A link to a default image to set on an <img> element, in case the binded value can't load an image
+A link to a default image to set on an <img> element, in case the binded value can't load an image.
 
 ```html
 <img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
@@ -94,7 +94,7 @@ A link to a default image to set on an <img> element, in case the binded value c
 
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 
-Note: By default, options are read from the HTML tags of the elements. Set the "options" parameter (optional) to overwrite them.
+Note: By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter.
 
 
 **$(element).toStorage(options)**
