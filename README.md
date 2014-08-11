@@ -17,7 +17,9 @@ Declare an HTML element with some tags.
 
 ```
 
-Boom. Now every change in the form will be stored in-memory. The binded span's html will be change on the fly. Enough talk, see it in action.
+Boom. Now every change in the form will be stored in-memory. The binded span's html will be change on the fly. 
+
+Enough talk, [see it in action](https://github.com/maxatwork/form2js).
 
 
 ## Installation ##
