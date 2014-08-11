@@ -57,7 +57,7 @@ Prevents the element changes from resetting the binded value.
 
 **writeonly** (Boolean)
 
-Prevents the element from getting refreshed when the binded value changes.
+Prevents the element from getting changed when the binded value changes.
 
 ```html
 <input type="text" way-data="some.property" way-writeonly="false">
