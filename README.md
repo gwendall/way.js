@@ -147,7 +147,7 @@ Returns the value of the data stored under a given pathname.
 
 **way.digestBindings([selector])**
 
-Updates the bindings for the given selector. If omitted, all DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
+Updates the bindings for the given selector. If omitted, all (excluding write-only's) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
 
 ```html
 <input type="text" way-data="some.property">
