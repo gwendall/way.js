@@ -1,7 +1,7 @@
 way.js
 ======
 
-Simple, lightweight two-way databinding
+Simple, lightweight (1.25KB) two-way databinding
 
 Options:
 
