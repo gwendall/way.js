@@ -25,8 +25,64 @@
 		<div class="alert alert-info alert-change">Changed to <span way-data="htmlData.value"></span></div>
 
 		<div class="container-fluid">
-		
-			<div class="row" style="">
+			
+			<div class="row">
+
+				<h1>
+					Form Data Binder demo
+					<small>[<a href="https://www.gittip.com/gwendall">gittip</a>]</small>
+				</h1>
+
+				<div class="col-sm-6 main">
+
+					<h3>Search filters (form)</h3>
+
+					<form role="form" class="form-horizontal" id="someForm" way-data="formData">
+
+						<div class="form-group">
+							<label class="col-sm-3">Name</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="name" placeholder="Name" autocomplete="off">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3">Nationality</label>
+							<div class="col-sm-9 checkbox">
+								{{#each nationalities}}
+									<input type="checkbox" name="nationality[]" value="{{this}}">{{this}}<br>
+								{{/each}}
+							</div>
+						</div>
+
+					</form>
+
+					<h3>Filtered items</h3>
+
+					<ul class="list-group">
+						{{#each items}}
+							{{> item}}
+						{{/each}}
+					</ul>
+
+				</div>
+
+				<div class="col-sm-6">
+
+					<h3>
+						Session data
+						<div class="btn btn-sm btn-default pull-right resetSessionToDefault">Set to default</div>
+					</h3>
+					<pre way-data="formData" way-json="true"></pre>
+
+					<h3>Default data</h3>
+					<pre way-data="defaultData"></pre>
+
+				</div>
+
+			</div>
+			
+			<div class="row">
 
 				<div class="col-sm-12">
 					

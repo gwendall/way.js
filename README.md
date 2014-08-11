@@ -90,6 +90,11 @@ A link to a default image to set on an <img> element, in case the binded value c
 ```html
 <img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
 ```
+
+**json** (Boolean)
+
+Returns pretty-printed json data to its DOM element.
+
 <!--
 - prettyprint (?)
 -->

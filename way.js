@@ -113,15 +113,14 @@ way = {};
 		if (currentData == data) return false;
 		if (options.writeonly) return false;
 		
-		// If a nested value changes a parent
-		if (_.isObject(data) && !_.isObject(currentData)) data = '';
-		
-		if (_.isObject(data)) {
+		if (_.isObject(data) && _.isObject(currentData)) {
 			if (_.isArray(options.pick)) data = _.pick(data, options.pick);
 			if (_.isArray(options.omit)) data = _.omit(data, options.omit);
 			data = _.extend(currentData, data);		
 		}
-
+		
+		if (options.json) data = JSON.stringify(data, undefined, 2);
+		
 		self.setValueDOM(element, data);
 
 	}
@@ -230,7 +229,8 @@ way = {};
 				pick: "array",
 				omit: "array",
 				readonly: "boolean",
-				writeonly: "boolean"
+				writeonly: "boolean",
+				json: "boolean"
 			};
 
 			var parsers = {
