@@ -100,24 +100,20 @@ Everything should be done for you from the HTML tags. But if necessary, you can 
 
 Note: By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter. It is of course optional.
 
-**$(element).toStorage(options)**
+**way.toStorage([element], [options])**
 
 Stores the element's value to the in-store memory.
 
-**$(element).toStorage(options)**
-
-Stores the element's value to the in-store memory.
-
-**$(element).fromStorage(options)**
+**way.fromStorage([element], [options])**
 
 Sets the element's value from the stored one.
 
-**$(element).toJSON(options)**
+**way.toJSON([element], [options])**
 
 Returns a JSON with the parsed data of the input (particularly handy for forms).
 
 ```javascript
-$("#someForm").toJSON();
+way.toJSON("#someForm");
 
 >> {
 		its: "values",
@@ -127,15 +123,15 @@ $("#someForm").toJSON();
 	}
 ```
 
-**$(element).fromJSON(json, options)**
+**way.fromJSON([element], [data], [options])**
 
-Sets the element's value from any json.
+Sets the element's value from any data (in json).
 
-**$(element).getBindOptions()**
+**way.getBindOptions([element])**
 
 Returns an object with the "way-" options passed to the element.
 
-**$.setStored(selector, data)**
+**way.set([selector], [data])**
 
 Saves the data in memory under the specified pathname.
 
@@ -145,16 +141,25 @@ $.getStored("some.path");
 >> "bonjour"
 ```
 
-**$.getStored(selector)**
+**way.get([selector])**
 
 Returns the value of the data stored under a given pathname.
 
-**$.digestBindings(selector)**
+**way.digestBindings([selector])**
 
 Updates the bindings with the given selector. If omitted, all DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
 
 ```html
 <input type="text" way-data="some.property">
+```
+**way.watch([selector], [callback])**
+
+Watches changes of a given value.
+
+```javascript
+way.watch("some.data", function(value) {
+	console.log("Data has been updated to value: " + value);
+});
 ```
 
 ## Notes ##
