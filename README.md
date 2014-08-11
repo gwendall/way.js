@@ -94,48 +94,39 @@ A link to a default image to set on an <img> element, in case the binded value c
 
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 
-Note: By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter.
+Note: By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter. It is of course optional.
 
 
 **$(element).toStorage(options)**
 
 Stores the element's value to the in-store memory.
 
-```html
-<input type="text" way-data="some.property">
-```
-
 **$(element).fromStorage(options)**
 
 Sets the element's value from the stored one.
-
-```html
-<input type="text" way-data="some.property">
-```
 
 **$(element).toJSON(options)**
 
 Returns a JSON with the parsed data of the input (particularly handy for forms).
 
-```html
-<input type="text" way-data="some.property">
+```javascript
+$("#someForm").toJSON();
+
+>> {
+		its: "values",
+		serialized: {
+			in: "a json"
+		}
+	}
 ```
 
 **$(element).fromJSON(json, options)**
 
 Sets the element's value from any json.
 
-```html
-<input type="text" way-data="some.property">
-```
-
 **$(element).getBindOptions()**
 
 **** (String)
-
-```html
-<input type="text" way-data="some.property">
-```
 
 **$.getStored(selector)**
 
