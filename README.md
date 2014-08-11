@@ -89,9 +89,9 @@ A link to a default image to set on an <img> element if the binded value can't l
 
 ## Functions ##
 
-You can also call independently some functions to interact with your stored data. 
+Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 
-By default, options are read from the HTML tags of the elements. Set the "options" parameter (optional) to overwrite them.
+Note: By default, options are read from the HTML tags of the elements. Set the "options" parameter (optional) to overwrite them.
 
 
 **$(element).toStorage(options)**
