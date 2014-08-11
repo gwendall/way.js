@@ -38,24 +38,26 @@ Set these options as "way-" HTML attributes on the elements that have to be bind
 
 **data** (String)
 
+Allows to define the dot separated path where the data will be stored. Can include arrays.
+
 ```html
-	<input type="text" way-data="some.property">
+<input type="text" way-data="some.property">
 ```
 
-**readonly** (String)
+**readonly** (Boolean)
 
 Prevents the element changes from resetting the binded value.
 
 ```html
-	<input type="text" way-data="some.property" way-readonly="true">
+<input type="text" way-data="some.property" way-readonly="true">
 ```
 
-**writeonly** (String)
+**writeonly** (Boolean)
 
 Prevents the element from getting refreshed when the binded value changes.
 
 ```html
-	<input type="text" way-data="some.property" way-writeonly="false">
+<input type="text" way-data="some.property" way-writeonly="false">
 ```
 
 **pick** (String)
@@ -63,7 +65,7 @@ Prevents the element from getting refreshed when the binded value changes.
 A comma separated list of values to pick (in forms only).
 
 ```html
-	<form way-data="some.form" way-pick="some,properties,that,can.be.nested">
+<form way-data="some.form" way-pick="some,properties,that,can.be.nested">
 ```
 
 **omit** (String)
@@ -71,7 +73,7 @@ A comma separated list of values to pick (in forms only).
 A comma separated list of values to omit (in forms only).
 
 ```html
-	<form way-data="some.form" way-omit="dont,want.those">
+<form way-data="some.form" way-omit="dont,want.those">
 ```
 
 **img** (String)
@@ -79,10 +81,11 @@ A comma separated list of values to omit (in forms only).
 A link to a default image to set on an <img> element if the binded value can't load an image
 
 ```html
-	<img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
+<img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
 ```
-
+<!--
 - prettyprint (?)
+-->
 
 ## Functions ##
 
@@ -96,7 +99,7 @@ By default, options are read from the HTML tags of the elements. Set the "option
 Stores the element's value to the in-store memory.
 
 ```html
-	<input type="text" way-data="some.property">
+<input type="text" way-data="some.property">
 ```
 
 **$(element).fromStorage(options)**
@@ -104,7 +107,7 @@ Stores the element's value to the in-store memory.
 Sets the element's value from the stored one.
 
 ```html
-	<input type="text" way-data="some.property">
+<input type="text" way-data="some.property">
 ```
 
 **$(element).toJSON(options)**
@@ -112,7 +115,7 @@ Sets the element's value from the stored one.
 Returns a JSON with the parsed data of the input (particularly handy for forms).
 
 ```html
-	<input type="text" way-data="some.property">
+<input type="text" way-data="some.property">
 ```
 
 **$(element).fromJSON(json, options)**
@@ -120,7 +123,7 @@ Returns a JSON with the parsed data of the input (particularly handy for forms).
 Sets the element's value from any json.
 
 ```html
-	<input type="text" way-data="some.property">
+<input type="text" way-data="some.property">
 ```
 
 **$(element).getBindOptions()**
@@ -128,19 +131,19 @@ Sets the element's value from any json.
 **** (String)
 
 ```html
-	<input type="text" way-data="some.property">
+<input type="text" way-data="some.property">
 ```
 
 **$.getStored(selector)**
 
 ```html
-	<input type="text" way-data="some.property">
+<input type="text" way-data="some.property">
 ```
 
 **$.setStored(selector, data)**
 
 ```html
-	<input type="text" way-data="some.property">
+<input type="text" way-data="some.property">
 ```
 
 **$.digestBindings(selector)**
@@ -148,8 +151,19 @@ Sets the element's value from any json.
 Digests the bindings with the given selector. All if selector omitted.
 
 ```html
-	<input type="text" way-data="some.property">
+<input type="text" way-data="some.property">
 ```
+
+## Notes ##
+
+- Forms stuff
+- 
+
+## To do ##
+
+- localStorage (localForage?) integration
+- test
+- enjoy
 
 ## Integrations ##
 
@@ -162,10 +176,9 @@ Digests the bindings with the given selector. All if selector omitted.
 
 Otherwise changes will be rejected.
 
-
 ## Credits ##
-[form2js' author](https://github.com/maxatwork/form2js)
 
+[form2js' author](https://github.com/maxatwork/form2js)
 
 ## Licence ##
 
