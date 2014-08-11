@@ -164,8 +164,9 @@ A link to a default image to set on an <img> element if the binded value can't l
 
 Otherwise changes will be rejected.
 
-## Contributors list ##
-[Can be found here](https://github.com/epeli/underscore.string/graphs/contributors).
+
+## Credits ##
+[form2js' author](https://github.com/maxatwork/form2js)
 
 
 ## Licence ##
