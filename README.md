@@ -34,7 +34,8 @@ Include the script with its dependencies
 
 ## Options ##
 
-Set these options as "way-" HTML attributes on the elements that have to be binded.
+Options can be passed via data attributes or JavaScript. For data attributes, append the option name to way-, as in way-data="".
+Set these options to the elements that have to be binded.
 
 **data** (String)
 
