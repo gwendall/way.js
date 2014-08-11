@@ -14,40 +14,48 @@ way = {};
 
 	var EventEmitter = function () {};
 
-	EventEmitter.prototype = {
+	EventEmitter.prototype.constructor = EventEmitter;
 
-		constructor: EventEmitter,
+	EventEmitter.prototype.watch = function(selector, handler) {
+	
+		if (!this._watchers) this._watchers = {};		
+		this._watchers[selector] = this._watchers[selector] || [];
+		this._watchers[selector].push(handler);
 
-		watch: function(selector, handler) {
-			if (!this._watchers) this._watchers = {};
-			
-			/*
-			// Find all the child selectors... #TODO
-			var childSelector = $.getChildSelector(selector);
-			console.log('Finding all the child selector.', childSelector);
-			$(childSelector).each(function() {
-				console.log('Watcher, child selectors fucking up.');
-			});
-			*/
-			
-			this._watchers[selector] = this._watchers[selector] || [];
-			this._watchers[selector].push(handler);
-		},
+	}
 
-		emitChange: function(selector /* , arguments */) {
-			if (!this._watchers) this._watchers = {};
-			if (!this._watchers[selector]) return;
-			var args = arguments;
-			var self = this;
+	EventEmitter.prototype.findDependantWatchers = function(selector) {
+		
+		// Go up to look for parent watchers... (ex: if "some.nested.value" is the selector, it should also trigger for "some")
+		
+		var result = [];
+		var watchers = _.keys(this._watchers);
+		for (var i in watchers) {
+			var watcher = watchers[i];
+			if (startsWith(selector, watcher)) result.push(watcher);
+		}
+		return result;
+		
+	}
+		
+	EventEmitter.prototype.emitChange = function(selector /* , arguments */) {
 
-			// console.log('Emit called.', _.keys(this._watchers));
-			this._watchers[selector].forEach(function (handler) {
-				handler.apply(self, Array.prototype.slice.call(args, 1));
-			});
+		if (!this._watchers) this._watchers = {};
+		
+		var self = this;		
+		var deps = self.findDependantWatchers(selector);
+		
+		for (var i in deps) {
+			var item = deps[i];
+			if (this._watchers[item]) {
+				this._watchers[item].forEach(function(handler) {
+					handler.apply(self, [self.get(item)]);
+				});				
+			}
 		}
 
-	};
-
+	}
+	
 	////////////////////
 	// WAY DEFINITION //
 	////////////////////
@@ -104,12 +112,16 @@ way = {};
 
 		if (currentData == data) return false;
 		if (options.writeonly) return false;
-
+		
+		// If a nested value changes a parent
+		if (_.isObject(data) && !_.isObject(currentData)) data = '';
+		
 		if (_.isObject(data)) {
 			if (_.isArray(options.pick)) data = _.pick(data, options.pick);
 			if (_.isArray(options.omit)) data = _.omit(data, options.omit);
 			data = _.extend(currentData, data);		
 		}
+
 		self.setValueDOM(element, data);
 
 	}
@@ -263,9 +275,11 @@ way = {};
 
 		var self = this;
 		self.data = deepJSON(self.data, selector, value);	
-		self.emitChange(selector, value);
 		self.digestBindings(selector);
-
+		
+		// SHOULD WE FIND FOR NESTED WATCHERS HERE?
+		self.emitChange(selector, value);
+		
 	}
 
 	WAY.prototype.get = function(selector) {
@@ -294,7 +308,7 @@ way = {};
 	// MISC //
 	//////////
 
-	var startsWith = function(str, starts){
+	var startsWith = function(str, starts) {
 		if (starts === '') return true;
 		if (str == null || starts == null) return false;
 		str = String(str); starts = String(starts);
