@@ -1,0 +1,43 @@
+/* CSS declarations go here */
+body {
+	padding: 0px 20px;
+	background: rgba(0, 0, 0, .05);
+}
+
+.main {
+	background: white;
+	padding: 5px 20px;
+	-webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 10px rgba(0, 0, 0, .35);
+}
+
+.container-fluid {
+	max-width: 600px;
+}
+
+h1 {
+	margin: 30px;
+	margin-left: 10px;
+}
+
+h3 {
+	margin: 20px;
+	margin-left: 5px;
+}
+
+.form-group label {
+	margin-top: 7px;
+}
+
+.form-group .checkbox {
+	padding-left: 45px;
+}
+
+table img {
+	width: 350px;
+	min-height: 100px;
+	background: rgba(0, 0, 0, .05);
+}
+
+table * {
+	max-width: 500px;
+}

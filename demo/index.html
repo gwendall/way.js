@@ -1,0 +1,108 @@
+<!doctype html>
+
+<html lang="en">
+	
+	<head>
+
+		<meta charset="utf-8">
+		<title>Way.js demo</title>
+		<meta name="description" content="xxx">
+		<meta name="author" content="x">
+
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="style.css">
+
+		<script src="../vendor/jquery.js"></script>
+		<script src="../vendor/underscore.js"></script>
+		<script src="../vendor/form2js.js"></script>
+		<script src="../vendor/js2form.js"></script>
+		<script src="../way.min.js"></script>
+		
+	</head>
+
+	<body>
+		
+		<div class="container-fluid">
+		
+			<div class="row" style="">
+
+				<div class="col-sm-12">
+					
+					<h1>Way.js demo</h1>
+					
+					<h4>All the HTML elements below (read-only) will be binded to the following input (write-only).</h4>
+					
+					<input type="text" class="form-control" way-data="htmlData.value" way-writeonly="true" style="margin: 20px 0px;" placeholder="...">
+
+					<table class="table" style="margin: 40px 0px 100px 0px;">
+						<thead>
+							<tr>
+								<th>HTML tag</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>P</td>
+								<td>
+									<p way-data="htmlData.value"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>TEXTAREA</td>
+								<td>
+									<textarea class="form-control" way-data="htmlData.value" way-readonly="true"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td>DIV</td>
+								<td>
+									<div way-data="htmlData.value"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>SPAN</td>
+								<td>
+									<span way-data="htmlData.value"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>PRE</td>
+								<td>
+									<pre way-data="htmlData.value"></pre>
+								</td>
+							</tr>
+							<tr>
+								<td>IMG</td>
+								<td>
+									<img way-data="htmlData.value">
+								</td>
+							</tr>
+							<tr>
+								<td>IMG (with fallback)</td>
+								<td>
+									<img way-data="htmlData.value" 
+									way-imagefallback="http://img1.wikia.nocookie.net/__cb20130506083200/himym/images/5/51/Bender.jpg">
+									<div>
+										<small>
+										This img has a 
+										<a href="http://img1.wikia.nocookie.net/__cb20130506083200/himym/images/5/51/Bender.jpg" 
+										target="_blank">fallback</a>
+										if the binded data isn't an image URL
+										</small>
+									</div>
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+					
+				</div>
+
+			</div>
+		
+		</div>
+				
+	</body>
+	
+</html>

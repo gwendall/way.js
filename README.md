@@ -14,16 +14,16 @@ Options:
 
 Functions
 
-toStorage
-toJSON
+- toStorage
+- toJSON
 
-fromJSON
-fromStorage
-getValue
-setValue
-getBindOptions
-getAttrs
+- fromJSON
+- fromStorage
+- getValue
+- setValue
+- getBindOptions
+- getAttrs
 
-setBinding
-getBinding
-digestBindings
+- setBinding
+- getBinding
+- digestBindings
