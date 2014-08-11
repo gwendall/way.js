@@ -39,5 +39,12 @@ table img {
 }
 
 table * {
-	max-width: 500px;
+	max-width: 470px;
+}
+
+.alert-change {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+	display: none;
 }

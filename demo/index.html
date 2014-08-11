@@ -16,24 +16,32 @@
 		<script src="../vendor/underscore.js"></script>
 		<script src="../vendor/form2js.js"></script>
 		<script src="../vendor/js2form.js"></script>
-		<script src="../way.min.js"></script>
+		<script src="../way.js"></script>
+		<script src="index.js"></script>
 		
 	</head>
-
 	<body>
 		
+		<div class="alert alert-info alert-change">Changed to <span way-data="htmlData.value"></span></div>
+
 		<div class="container-fluid">
 		
 			<div class="row" style="">
 
 				<div class="col-sm-12">
 					
-					<h1>Way.js demo</h1>
+					<input type="text" class="form-control" way-data="some.data" placeholder="some.data">
+					<input type="text" class="form-control" way-data="some.data.nested" placeholder="some.data.nested">
+					
+					<h1>Way.js demo!</h1>
 					
 					<h4>All the HTML elements below (read-only) will be binded to the following input (write-only).</h4>
 					
-					<input type="text" class="form-control" way-data="htmlData.value" way-writeonly="true" style="margin: 20px 0px;" placeholder="...">
-
+					<input type="text" class="form-control" way-data="htmlData.value" way-writeonly="true" style="margin: 20px 0px;" 
+					placeholder="...">
+					
+					<div way-repeat="toutounes"></div>
+					
 					<table class="table" style="margin: 40px 0px 100px 0px;">
 						<thead>
 							<tr>

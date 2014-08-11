@@ -1,6 +1,8 @@
 way.js
 ======
 
+Two-way databinding is useful, but you may not want to use a whole framework to benefit from it.
+
 ## Quick start ##
 
 Declare an HTML element with some tags.
@@ -98,6 +100,9 @@ Everything should be done for you from the HTML tags. But if necessary, you can 
 
 Note: By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter. It is of course optional.
 
+**$(element).toStorage(options)**
+
+Stores the element's value to the in-store memory.
 
 **$(element).toStorage(options)**
 
