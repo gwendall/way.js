@@ -156,8 +156,7 @@ Digests the bindings with the given selector. All if selector omitted.
 
 ## Notes ##
 
-- Forms stuff
-- 
+xxx
 
 ## To do ##
 
