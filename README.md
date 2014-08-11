@@ -1,29 +1,6 @@
 way.js
 ======
 
-Simple, lightweight (1.25KB) two-way databinding
-
-Some explanation...
-
-[d]: http://www.diveintojavascript.com/core-javascript-reference/the-string-object
-
-
-As name states this an extension for [Underscore.js][u] (and [Lo-Dash](http://lodash.com/)), but it can be used
-independently from **_s**-global variable. But with Underscore.js you can
-use Object-Oriented style and chaining:
-
-[u]: http://underscorejs.org/
-
-
-## Installation ##
-
-Include the script with its dependencies
-
-```javascript
-_("   epeli  ").chain().trim().capitalize().value()
-=> "Epeli"
-```
-
 ## Quick start ##
 
 Declare an HTML element with some tags.
@@ -35,6 +12,24 @@ Declare an HTML element with some tags.
   	<input type="text" name="age">
   	<input type="text" name="gender">
   </form>
+
+  Name: <span way-data="myFormData.name"></span>
+
+```
+
+Boom. Now every change in the form will be stored in-memory. The binded span's html will be change on the fly. Enough talk, see it in action.
+
+
+## Installation ##
+
+Include the script with its dependencies
+
+```html
+<script src="/vendor/jquery.js"></script>
+<script src="/vendor/underscore.js"></script>
+<script src="/vendor/form2js.js"></script>
+<script src="/vendor/js2form.js"></script>
+<script src="/way.min.js"></script>
 ```
 
 ## Options ##
@@ -47,38 +42,47 @@ Set these options as "way-" HTML attributes on the elements that have to be bind
 	<input type="text" way-data="some.property">
 ```
 
-**reactive** (String)
-
-```html
-	<input type="text" way-data="some.property">
-```
-
 **readonly** (String)
 
+Prevents the element changes from resetting the binded value.
+
 ```html
-	<input type="text" way-data="some.property">
+	<input type="text" way-readonly="true">
 ```
 
 **writeonly** (String)
 
+Prevents the element from getting refreshed when the binded value changes.
+
 ```html
-	<input type="text" way-data="some.property">
+	<input type="text" way-writeonly="false">
 ```
 
 **pick** (String)
 
+A comma separated list of values to pick (in forms only).
+
 ```html
-	<input type="text" way-data="some.property">
+	<input type="text" way-pick="some,properties,that,can.be.nested">
 ```
 
 **omit** (String)
 
+A comma separated list of values to omit (in forms only).
+
 ```html
-	<input type="text" way-data="some.property">
+	<input type="text" way-omit="dont,want.those">
+```
+
+**imagefallback** (String)
+
+A link to a default image to set on an <img> element if the binded value can't load an image
+
+```html
+	<input type="text" way-imagefallback="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
 ```
 
 - prettyprint (?)
-
 
 ## Functions ##
 

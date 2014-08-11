@@ -74,8 +74,10 @@ $.fn.fromJSON = function(data, options) {
 $.fn.fromStorage = function(options) {
 	
 	var self = this,
-		options = options || $(self).getBindOptions(),
-		data = $.getBinding(options.data);
+		options = options || $(self).getBindOptions();
+
+	if (options.writeonly) return false;
+	var data = $.getBinding(options.data);
 		$(self).fromJSON(data, options);
 
 }
@@ -159,7 +161,7 @@ $.fn.setValue = function(data) {
 
 $.fn.getBindOptions = function() {
 	var defaultOptions = {
-			reactive: true,
+//			reactive: true,
 			readonly: false,
 			writeonly: false
 		};
@@ -173,7 +175,7 @@ $.fn.getAttrs = function(prefix) {
 		var attrTypes = {
 			pick: "array",
 			omit: "array",
-			reactive: "boolean",
+//			reactive: "boolean",
 			readonly: "boolean",
 			writeonly: "boolean"
 		};
@@ -239,7 +241,7 @@ $.digestBindings = function(selector, all) {
 	$(domSelector).each(function() {
 		var options = $(this).getBindOptions();
 		var focused = (($(this).get(0).tagName == "FORM") && ($(this).get(0) == $(':focus').parents("form").get(0))) ? true : false;
-		if (options.reactive && !focused) $(this).fromStorage();
+		if (!focused) $(this).fromStorage(options);
 	});
 	
 }
