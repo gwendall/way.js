@@ -126,7 +126,7 @@ Sets the element's value from any json.
 
 **$(element).getBindOptions()**
 
-**** (String)
+Returns an object with the "way-" options passed to the element.
 
 **$.setStored(selector, data)**
 
