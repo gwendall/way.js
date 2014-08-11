@@ -3,39 +3,6 @@ way.js
 
 Simple, lightweight (1.25KB) two-way databinding
 
-Options:
-
-- data
-- readonly
-- writeonly
-- omit
-- skip
-- reactive
-- prettyprint (?)
-
-Functions
-
-- toStorage
-- toJSON
-
-- fromJSON
-- fromStorage
-- getValue
-- setValue
-- getBindOptions
-- getAttrs
-
-- setBinding
-- getBinding
-- digestBindings
-
-
-
-
-# Underscore.string [![Build Status](https://secure.travis-ci.org/epeli/underscore.string.png?branch=master)](http://travis-ci.org/epeli/underscore.string) #
-
-
-
 Some explanation...
 
 [d]: http://www.diveintojavascript.com/core-javascript-reference/the-string-object
@@ -47,38 +14,140 @@ use Object-Oriented style and chaining:
 
 [u]: http://underscorejs.org/
 
-```javascript
-_("   epeli  ").chain().trim().capitalize().value()
-=> "Epeli"
-```
-
-## Use cases ##
-
-* [Meteor](https://raw.github.com/epeli/underscore.string/master/lib/underscore.string.js) *Uncompressed with Comments 18kb*
 
 ## Installation ##
 
 Include the script with its dependencies
 
-  * [Development version](https://raw.github.com/epeli/underscore.string/master/lib/underscore.string.js) *Uncompressed with Comments 18kb*
-  * [Production version](https://github.com/epeli/underscore.string/raw/master/dist/underscore.string.min.js) *Minified 7kb*
+```javascript
+_("   epeli  ").chain().trim().capitalize().value()
+=> "Epeli"
+```
 
 ## Quick start ##
 
-* [Meteor](https://raw.github.com/epeli/underscore.string/master/lib/underscore.string.js) *Uncompressed with Comments 18kb*
+Declare an HTML element with some tags.
+
+```html
+
+  <form way-data="myFormData">
+  	<input type="text" name="name">
+  	<input type="text" name="age">
+  	<input type="text" name="gender">
+  </form>
+```
 
 ## Options ##
 
 Set these options as "way-" HTML attributes on the elements that have to be binded. Or as parameters of the functions below.
 
-**reactive** _.numberFormat(number, [ decimals=0, decimalSeparator='.', orderSeparator=','])
+**data** (String)
 
-```javascript
-	xxx
+```html
+	<input type="text" way-data="some.property">
 ```
+
+**reactive** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**readonly** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**writeonly** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**pick** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**omit** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+- prettyprint (?)
+
 
 ## Functions ##
 
+
+**toStorage** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**fromStorage** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**toJSON** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**fromJSON** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**getValue** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**setValue** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**getBindOptions** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**getAttrs** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**getBinding** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**setBinding** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
+
+**digestBindings** (String)
+
+```html
+	<input type="text" way-data="some.property">
+```
 
 ## Integrations ##
 
