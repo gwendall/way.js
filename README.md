@@ -105,15 +105,15 @@ Everything should be done for you from the HTML tags. But if necessary, you can 
 
 Note: By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter. It is of course optional.
 
-**way.toStorage([element], [options])**
+**way.dom([element]).toStorage([options])**
 
 Stores the element's value to the in-store memory.
 
-**way.fromStorage([element], [options])**
+**way.dom([element]).fromStorage([options])**
 
 Sets the element's value from the stored one.
 
-**way.toJSON([element], [options])**
+**way.dom([element]).toJSON([options])**
 
 Returns a JSON with the parsed data of the input (particularly handy for forms).
 
@@ -128,11 +128,11 @@ way.toJSON("#someForm");
 	}
 ```
 
-**way.fromJSON([element], [data], [options])**
+**way.dom([element]).fromJSON([data], [options])**
 
 Sets the element's value from any data (in json).
 
-**way.getBindOptions([element])**
+**way.dom([element]).getOptions()**
 
 Returns an object with the "way-" options passed to the element.
 
@@ -174,6 +174,7 @@ xxx
 ## To do ##
 
 - localStorage (localForage?) integration
+- document a bit more the code
 - test
 - enjoy
 

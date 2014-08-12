@@ -14,6 +14,8 @@
 
 		<script src="../vendor/jquery.js"></script>
 		<script src="../vendor/underscore.js"></script>
+		<script src="../vendor/handlebars.js"></script>
+
 		<script src="../vendor/form2js.js"></script>
 		<script src="../vendor/js2form.js"></script>
 		<script src="../way.js"></script>
@@ -22,7 +24,13 @@
 	</head>
 	<body>
 		
-		<div class="alert alert-info alert-change">Changed to <span way-data="htmlData.value"></span></div>
+		<script id="entry-template" type="text/x-handlebars-template">
+		  template content
+		</script>
+		
+		<!--
+		<div class="alert alert-warning alert-danger">Changed to <span way-data="htmlData.value"></span></div>
+		-->		
 
 		<div class="container-fluid">
 			
@@ -37,7 +45,7 @@
 
 					<h3>Search filters (form)</h3>
 
-					<form role="form" class="form-horizontal" id="someForm" way-data="formData">
+					<form role="form" class="form-horizontal" id="someForm" way-data="formData" way-persistent="true">
 
 						<div class="form-group">
 							<label class="col-sm-3">Name</label>
@@ -49,9 +57,12 @@
 						<div class="form-group">
 							<label class="col-sm-3">Nationality</label>
 							<div class="col-sm-9 checkbox">
-								{{#each nationalities}}
-									<input type="checkbox" name="nationality[]" value="{{this}}">{{this}}<br>
-								{{/each}}
+								<div way-repeat="nationalities">
+									<input type="checkbox" name="nationality[]" value="french">French<br/>
+									<input type="checkbox" name="nationality[]" value="american">American<br/>
+									<input type="checkbox" name="nationality[]" value="british">British<br/>
+									<input type="checkbox" name="nationality[]" value="chinese">Chinese<br/>
+								</div>
 							</div>
 						</div>
 
@@ -76,7 +87,7 @@
 					<pre way-data="formData" way-json="true"></pre>
 
 					<h3>Default data</h3>
-					<pre way-data="defaultData"></pre>
+					<pre way-data="defaultData" way-json="true"></pre>
 
 				</div>
 
@@ -90,8 +101,8 @@
 					
 					<h4>All the HTML elements below (read-only) will be binded to the following input (write-only).</h4>
 					
-					<input type="text" class="form-control" way-data="htmlData.value" way-writeonly="true" style="margin: 20px 0px;" 
-					placeholder="...">
+					<input type="text" class="form-control" way-data="htmlData.value" way-writeonly="true" way-persistent="true"
+					style="margin: 20px 0px;" placeholder="...">
 					
 					<div way-repeat="toutounes"></div>
 					

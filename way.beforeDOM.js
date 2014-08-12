@@ -71,17 +71,33 @@ window.way = {};
 	WAY.prototype = Object.create(EventEmitter.prototype);
 	WAY.constructor = WAY;
 	
-	//////////////////////////////
-	// DOM METHODS: DOM -> JSON //
-	//////////////////////////////
+	/////////////////
+	// DOM -> JSON //
+	/////////////////
 	
+	/*
+	WAY.prototype.toStorage = function(element, options) {
+		
+		var self = this,
+			options = options || self.getOptions(element),
+			timeout = Number(options.timeout) || 0,
+			data = self.toJSON(element, options);
+
+		if (options.readonly) return false;
+		_.throttle(function() {
+			self.set(options.data, data, options);
+		}, timeout)();
+		
+	}
+	*/
+
 	WAY.prototype.toStorage = function(options, element) {
 		
 		var self = this,
 			element = element || self._element,
-			options = options || self.dom(element).getOptions(),
+			options = options || self.getOptions(element),
 			timeout = Number(options.timeout) || 0,
-			data = self.dom(element).toJSON(options);
+			data = self.toJSON(element, options);
 
 		if (options.readonly) return false;
 		_.throttle(function() {
@@ -90,12 +106,11 @@ window.way = {};
 		
 	}
 	
-	WAY.prototype.toJSON = function(options, element) {
+	WAY.prototype.toJSON = function(element, options) {
 
 		var self = this,
-			element = element || self._element,
-			data = self.dom(element).getValueDOM(),
-			options = options || self.dom(element).getOptions();
+			data = self.getValueDOM(element),
+			options = options || self.getOptions(element);
 
 		if (_.isArray(options.pick)) data = _.pick(data, options.pick);
 		if (_.isArray(options.omit)) data = _.omit(data, options.omit);
@@ -104,16 +119,15 @@ window.way = {};
 
 	}
 
-	//////////////////////////////
-	// DOM METHODS: JSON -> DOM //
-	//////////////////////////////
+	/////////////////
+	// JSON -> DOM //
+	/////////////////
 	
-	WAY.prototype.fromJSON = function(data, options, element) {
+	WAY.prototype.fromJSON = function(element, data, options) {
 				
 		var self = this,
-			element = element || self._element,
-			options = options || self.dom(element).getOptions(),
-			currentData = self.dom(element).toJSON();
+			options = options || self.getOptions(element),
+			currentData = self.toJSON(element);
 
 		if (currentData == data) return false;
 		if (options.writeonly) return false;
@@ -126,31 +140,27 @@ window.way = {};
 		
 		if (options.json) data = JSON.stringify(data, undefined, 2);
 		
-		self.dom(element).setValueDOM(data, options);
+		self.setValueDOM(element, data, options);
 
 	}
 	
-	WAY.prototype.fromStorage = function(options, element) {
+	WAY.prototype.fromStorage = function(element, options) {
 		
 		var self = this,
-			element = element || self._element,
-			options = options || self.dom(element).getOptions();
+			options = options || self.getOptions(element);
 		
 		if (options.writeonly) return false;
 		
 		var data = self.get(options.data);
-		self.dom(element).fromJSON(data, options);
+		self.fromJSON(element, data, options);
 
 	}
 
-	/////////////////////////////////////////
-	// DOM METHODS: HTML GETTERS / SETTERS //
-	/////////////////////////////////////////
+	////////////////////////////
+	// HTML GETTERS / SETTERS //
+	////////////////////////////
 	
 	WAY.prototype.getValueDOM = function(element) {
-
-		var self = this,
-			element = element || self._element;
 
 		var getters = {
 			'FORM': function() {
@@ -172,11 +182,9 @@ window.way = {};
 
 	}
 
-	WAY.prototype.setValueDOM = function(data, options, element) {
+	WAY.prototype.setValueDOM = function(element, data, options) {
 
-		var self = this,
-			element = element || self._element;
-
+		var self = this;
 		var setters = {
 			'FORM': function(a) {
 				js2form($(element).get(0), a);
@@ -199,7 +207,7 @@ window.way = {};
 
 				isValidImageUrl(a, function(response) {
 					if (!response) {
-						var options = self.dom(element).getOptions() || {};
+						var options = self.getOptions(element) || {};
 						a = options.img || null;
 					}
 					if (a) $(element).attr('src', a);
@@ -215,28 +223,24 @@ window.way = {};
 		setter(data);
 
 	}
-
-	//////////////////////////////////
-	// DOM METHODS: OPTIONS PARSING //
-	//////////////////////////////////
 		
+	/////////////////////
+	// OPTIONS PARSING //
+	/////////////////////
+	
 	WAY.prototype.getOptions = function(element) {
-
-		var self = this,
-			element = element || self._element,
-			defaultOptions = {
+		
+		var self = this;
+		var defaultOptions = {
 				readonly: false,
 				writeonly: false,
 				persistent: false
 			};
-		return _.extend(defaultOptions, self.dom(element).getAttrs(tagPrefix));
+		return _.extend(defaultOptions, self.getAttrs(element, tagPrefix));
 
 	}
 
-	WAY.prototype.getAttrs = function(prefix, element) {
-
-		var self = this,
-			element = element || self._element;
+	WAY.prototype.getAttrs = function(element, prefix) {
 		
 		var parseAttrValue = function(key, value) {
 
@@ -343,7 +347,7 @@ window.way = {};
 		$(dataSelector).each(function() {
 			// Make sure the currently focused input is not getting refreshed
 			var focused = (($(this).get(0).tagName == "FORM") && ($(this).get(0) == $(':focus').parents("form").get(0))) ? true : false;
-			if (!focused) self.dom(this).fromStorage();
+			if (!focused) self.fromStorage(this);
 		});
 
 	}
@@ -450,6 +454,7 @@ window.way = {};
 	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
 
 		var element = $(e.target).parents("form");
+//		way.toStorage(element);
 		way.dom(element).toStorage();
 
 	});
@@ -457,13 +462,14 @@ window.way = {};
 	$(document).on("keyup change", ":input[" + tagPrefix + "-data]", function(e) {
 
 		var element = $(e.target);
+//		way.toStorage(element);
 		way.dom(element).toStorage();
 
 	});
 
-	//////////////////////////
-	// DOM METHODS CHAINING //
-	//////////////////////////
+	/////////////////
+	// DOM METHODS //
+	/////////////////
 	
 	WAY.prototype.dom = function(element) {
 		this._element = $(element);
