@@ -20,7 +20,7 @@ Declare an HTML element with some tags.
 
 ```
 
-Boom. Now every change in the form will be stored in-memory. The binded span's html will be change on the fly. And the form data will be persistent, meaning it will be populated with your typed data on page reloads.
+Boom. Now every change in the form will be stored in-memory. The binded span's html will be changed on the fly. And the form data will be persistent, meaning it will be populated with your typed data on page reloads.
 
 Enough talk, [see it in action](https://gwendall.github.io/way).
 
