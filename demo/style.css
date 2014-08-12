@@ -4,14 +4,22 @@ body {
 	background: rgba(0, 0, 0, .05);
 }
 
-.main {
+.out-box {
 	background: white;
 	padding: 5px 20px;
 	-webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 10px rgba(0, 0, 0, .35);
 }
 
+.col-fixed {
+	position: fixed;
+	right: 0px;
+	top: 0px;
+	height: 100%;
+	overflow-y: scroll;
+	padding: 20px;
+}
+
 .container-fluid {
-	max-width: 960px;
 }
 
 h1 {
@@ -32,10 +40,31 @@ h3 {
 	padding-left: 45px;
 }
 
+.img-error-text {
+	position: absolute;
+}
+
 table img {
 	width: 350px;
 	min-height: 100px;
 	background: rgba(0, 0, 0, .05);
+	border: rgba(0, 0, 0, .05) solid 3px;
+}
+
+table img.way-success {
+	border: #5BEB89 solid 3px;
+}
+
+table img.way-error {
+	border: #EB5B5B solid 3px;
+}
+
+.img-error-texto {
+	color: red;
+	display: none !important;
+}
+
+table img.way-error + .img-error-text {
 }
 
 table * {

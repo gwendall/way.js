@@ -103,7 +103,7 @@ window.way = {};
 
 		var self = this,
 			element = element || self._element,
-			data = self.dom(element).getValueDOM(),
+			data = self.dom(element).getValue(),
 			options = options || self.dom(element).getOptions();
 
 		if (_.isArray(options.pick)) data = _.pick(data, options.pick);
@@ -132,10 +132,12 @@ window.way = {};
 			if (_.isArray(options.omit)) data = _.omit(data, options.omit);
 			data = _.extend(currentData, data);		
 		}
+
+		if (options.json) {
+			data = isJSON(data) ? data : JSON.stringify(data, undefined, 2);
+		}
 		
-		if (options.json) data = JSON.stringify(data, undefined, 2);
-		
-		self.dom(element).setValueDOM(data, options);
+		self.dom(element).setValue(data, options);
 
 	}
 	
@@ -156,7 +158,7 @@ window.way = {};
 	// DOM METHODS: HTML GETTERS / SETTERS //
 	/////////////////////////////////////////
 	
-	WAY.prototype.getValueDOM = function(element) {
+	WAY.prototype.getValue = function(element) {
 
 		var self = this,
 			element = element || self._element;
@@ -181,20 +183,25 @@ window.way = {};
 
 	}
 
-	WAY.prototype.setValueDOM = function(data, options, element) {
-
+	WAY.prototype.setValue = function(data, options, element) {
+		
 		var self = this,
 			element = element || self._element;
-
+		
 		var setters = {
 			'FORM': function(a) {
 				js2form($(element).get(0), a);
 			},
 			'INPUT': function(a) {
+				if (!_.isString(a)) a = JSON.stringify(a);
 				$(element).val(a || '');
 			},
 			'TEXTAREA': function(a) {
+				if (!_.isString(a)) a = JSON.stringify(a);
 				$(element).val(a || '');
+			},
+			'PRE': function(a) {
+				$(element).html(a);				
 			},
 			'IMG': function(a) {
 
@@ -205,15 +212,30 @@ window.way = {};
 						load: function() { cb(true); }
 					});
 				}
-
 				isValidImageUrl(a, function(response) {
-					if (!response) {
+					if (response) {
+						$(element).removeClass("way-error").addClass("way-success");
+					} else {
+						if (a) {
+							$(element).addClass("way-error");
+						} else {
+							$(element).removeClass("way-error").removeClass("way-success");
+						}
 						var options = self.dom(element).getOptions() || {};
-						a = options.img || null;
+						a = options.default || "";
 					}
-					if (a) $(element).attr('src', a);
+					// if (a) $(element).attr('src', a); // Preserve the previous image or not?
+					$(element).attr('src', a);
 				});
-
+				/*
+				if (a) {
+				} else {
+					var options = self.dom(element).getOptions() || {};
+					a = options.img || "";
+					$(element).removeClass("way-error");
+					if (a) $(element).attr('src', a);
+				}
+				*/
 			}
 		}
 		var defaultSetter = function(a) {
@@ -300,7 +322,9 @@ window.way = {};
 		
 		var self = this;
 		options = options || {};
+		
 		self.settr(self, selector, value);
+
 		self.emitChange(selector, value);
 		self.digestBindings(selector);
 		if (options.persistent) self.backup(selector);
@@ -310,7 +334,7 @@ window.way = {};
 	WAY.prototype.settr = function(self, selector, value) {
 		
 		// Separate settr so that we can easily adapt to other data stores.
-		if (!selector || !_.isString(selector)) return false;
+		if (selector && !_.isString(selector)) return false;
 		self.data = self.data || {};
 		self.data = deepJSON(self.data, selector, value);
 
@@ -325,16 +349,19 @@ window.way = {};
 
 	}
 
-	WAY.prototype.remove = function(selector) {
+	WAY.prototype.remove = function(selector, options) {
 		
 		var self = this;
-		if (!selector) self.data = {};
 
-	//	self.emitChange(selector, null);
-	//	self.digestBindings();
-	//	self.backup(selector);
-
-		console.log('Removing way.', selector, self);
+		if (selector) {
+			self.data = deepJSON(self.data, selector, null, true);
+		} else {
+			self.data = {};
+		}
+		
+		self.emitChange(selector, null);
+		self.digestBindings(selector);
+		self.backup(selector);
 		
 	}
 
@@ -347,14 +374,31 @@ window.way = {};
 		
 		var self = this;
 		
-		// Digest data
 		var dataSelector = self.buildSelector(selector, "data");
 		$(dataSelector).each(function() {
 			// Make sure the currently focused input is not getting refreshed
 			var focused = (($(this).get(0).tagName == "FORM") && ($(this).get(0) == $(':focus').parents("form").get(0))) ? true : false;
 			if (!focused) self.dom(this).fromStorage();
 		});
-
+		
+		// Selectors for all data (mainly for debug)
+		var allSelector = "[" + tagPrefix + "-data='']";
+		$(allSelector).each(function() {
+			self.dom(this).fromJSON(self.data);
+		});
+		
+	}
+	
+	WAY.prototype.setDefaults = function() {
+		
+		var self = this,
+			dataSelector = self.buildSelector(null, "default");
+		
+		$(dataSelector).each(function() {
+			var options = self.dom(this).getOptions();
+			self.dom(this).setValue(options.default);
+		});
+		
 	}
 
 	//////////////////////////
@@ -362,48 +406,36 @@ window.way = {};
 	//////////////////////////
 	
 	WAY.prototype.backup = function(selector) {
-
-		var self = this,
-			key = selector.split('.')[0],
-			value = self.get(key);
+		
+		var self = this;
 		try { 
-			localStorage.setItem(key, JSON.stringify(value));
+			var data = self.data || {};
+			localStorage.setItem(tagPrefix, JSON.stringify(data));
 		} catch(e) {
 			console.log('Your browser does not support localStorage.');			
 		}
-
+		
 	}
 
 	WAY.prototype.restore = function(selector) {
 		
 		var self = this;
-		if (selector) {
-			try {
-				var value = localStorage.getItem(selector);
-				try { 
-					value = JSON.parse(value); 
-					self.set(selector, value);
-				} catch(e) {}
-			} catch(e) {
-				console.log('Your browser does not support localStorage.');	
-			}
-		} else {
-			try {
-				for (var key in localStorage) {
-					var value = localStorage.getItem(key);
-					try {
-						value = JSON.parse(value); 
-						self.set(key, value);
-					} catch(e) {}
+		try {
+			var data = localStorage.getItem(tagPrefix);
+			try { 
+				data = JSON.parse(data); 
+				for (var key in data) {
+					self.set(key, data[key]);					
 				}
-			} catch(e) {
-				console.log('Your browser does not support localStorage.');
-			}
+			} catch(e) {}
+		} catch(e) {
+			console.log('Your browser does not support localStorage.');	
 		}
 		
 	}
 	
 	$(document).ready(function() {
+		way.setDefaults();
 		way.restore();
 	});
 	
@@ -419,8 +451,20 @@ window.way = {};
 		return str.length >= starts.length && str.slice(0, starts.length) === starts;
 
 	}
+	
+	var isJSON = function(string) {
+		
+		var test = false;
+		try {
+			test = /^[\],:{}\s]*$/.test(string.replace(/\\["\\\/bfnrtu]/g, '@').
+			replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+			replace(/(?:^|:|,)(?:\s*\[)+/g, ''));
+		} catch (e) {}
+		return test;
+		
+	}
 
-	var deepJSON = function (obj, key, value) {
+	var deepJSON = function (obj, key, value, remove) {
 
 		var keys = key.replace(/\[(["']?)([^\1]+?)\1?\]/g, '.$2').replace(/^\./, '').split('.'),
 				root,
@@ -437,8 +481,12 @@ window.way = {};
 				key = keys[i++];
 				obj = obj[key] = _.isObject(obj[key]) ? obj[key] : {};
 			}
-
-			obj[keys[i]] = value;
+			
+			if (remove) {
+				delete obj[keys[i]];
+			} else {
+				obj[keys[i]] = value;				
+			}
 
 			value = root;
 

@@ -1,17 +1,14 @@
 $(document).ready(function() {
 	
-	var source   = $("#entry-template").html();
-	var template = Handlebars.compile(source);
+	$(document).on("click", ".clearWay", function() {
+		way.remove();
+	});
 	
-	var defaultData = { name: "e", nationality: [ "french", "american" ] };	
-	way.set("defaultData", defaultData, { persistent: true });
-	
-	$(document).on("click", ".resetSessionToDefault", function() {
-		way.set("formData", defaultData, { persistent: true });		
+	way.watch("formData", function(value) {
+		console.log('"formData" property changed.', value);
 	});
 	
 	/*
-	way.set("inputChanged", false);
 	way.watch("htmlData.value", function(value) {
 		_.delay(function() {
 			_.throttle(function() {
@@ -27,9 +24,5 @@ $(document).ready(function() {
 		}, 1000);
 	});
 	*/
-	
-	way.watch("formData", function(value) {
-		console.log('Form changed!', value);
-	});
 
 });
