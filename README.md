@@ -104,7 +104,10 @@ Returns pretty-printed json data to its DOM element.
 
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 
-Note: By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter. It is of course optional.
+
+Notes: 
+- [element] refers to the jQuery selector of a DOM element
+- [options] is optional. By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter. It is of course optional.
 
 **way.toStorage([element], [options])**
 
