@@ -1,7 +1,8 @@
 way.js
 ======
 
-Two-way databinding is useful, but you may not want to use a whole framework to benefit from it.
+Simple, lightweight, persistent, framework-agnostic two-way databinding (with very little javascript)
+Two-way databinding is useful, but you may not want to use a whole framework to enjoy it.
 
 ## Quick start ##
 
@@ -9,7 +10,7 @@ Declare an HTML element with some tags.
 
 ```html
 
-  <form way-data="myFormData">
+  <form way-data="myFormData" way-persistent="true">
   	<input type="text" name="name">
   	<input type="text" name="age">
   	<input type="text" name="gender">
@@ -19,7 +20,7 @@ Declare an HTML element with some tags.
 
 ```
 
-Boom. Now every change in the form will be stored in-memory. The binded span's html will be change on the fly. 
+Boom. Now every change in the form will be stored in-memory. The binded span's html will be change on the fly. And the form data will be persistent, meaning it will be populated with your typed data on page reloads.
 
 Enough talk, [see it in action](https://github.com/maxatwork/form2js).
 
@@ -50,6 +51,14 @@ Allows to define the dot separated path where the data will be stored. Can inclu
 ```
 
 When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage.
+
+**persistent** (Boolean)
+
+Allows to store the data to localStorage everytime the binded data changes.
+
+```html
+<input type="text" way-data="some.property" way-persistent="true">
+```
 
 **readonly** (Boolean)
 
@@ -85,7 +94,7 @@ A comma separated list of values (in forms only) to not sync with the storage. B
 
 **img** (String)
 
-A link to a default image to set on an <img> element, in case the binded value can't load an image.
+A link to a default image to set on an IMG element, in case the binded value can't load an image.
 
 ```html
 <img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
@@ -103,7 +112,10 @@ Returns pretty-printed json data to its DOM element.
 
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 
-Note: By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter. It is of course optional.
+
+Notes: 
+- [element] refers to the jQuery selector of a DOM element
+- [options] is optional. By default, options are read from the HTML tags of the elements. But you can overwrite them, by passing this parameter.
 
 **way.dom([element]).toStorage([options])**
 
@@ -165,6 +177,13 @@ Watches changes of a given value.
 way.watch("some.data", function(value) {
 	console.log("Data has been updated to value: " + value);
 });
+```
+**way.restore([selector])**
+
+Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
+
+```javascript
+way.restore("some.data");
 ```
 
 ## Notes ##
