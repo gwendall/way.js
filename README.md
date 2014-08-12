@@ -86,7 +86,7 @@ A comma separated list of values (in forms only) to not sync with the storage. B
 
 **img** (String)
 
-A link to a default image to set on an <img> element, in case the binded value can't load an image.
+A link to a default image to set on an IMG element, in case the binded value can't load an image.
 
 ```html
 <img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
