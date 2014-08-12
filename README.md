@@ -107,7 +107,7 @@ Everything should be done for you from the HTML tags. But if necessary, you can 
 
 Notes: 
 - [element] refers to the jQuery selector of a DOM element
-- [options] is optional. By default, options are read from the HTML tags of the elements. If you need to overwrite them, pass an "options" parameter. It is of course optional.
+- [options] is optional. By default, options are read from the HTML tags of the elements. But you can overwrite them, by passing this parameter.
 
 **way.toStorage([element], [options])**
 
