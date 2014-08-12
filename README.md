@@ -148,6 +148,10 @@ Sets the element's value from any data (in json).
 
 Returns an object with the "way-" options passed to the element.
 
+**way.dom([element]).getOptions()**
+
+Returns an object with the "way-" options passed to the element.
+
 **way.set([selector], [data])**
 
 Saves the data in memory under the specified pathname.

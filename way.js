@@ -314,11 +314,29 @@ window.way = {};
 		
 	}
 	
+	WAY.prototype.setDefault = function(force, options, element) {
+
+		var self = this,
+			element = element || self._element,
+			options = options ? _.extend(self.dom(element).getOptions(), options) : self.dom(element).getOptions();
+			
+		// Should we just set the default value in the DOM, or also in the datastore?
+		if (options.default && (force == true)) self.set(options.data, options.default, options);
+		if (options.default && (force != true)) self.dom(element).setValue(options.default, options);
+
+	}
+	
 	///////////////////////
 	// REACTIVE BINDINGS //
 	///////////////////////
 		
 	WAY.prototype.set = function(selector, value, options) {
+		
+		console.log('Setting!', {
+			selector: selector,
+			value: value,
+			options: options
+		});
 		
 		var self = this;
 		options = options || {};
@@ -336,7 +354,7 @@ window.way = {};
 		// Separate settr so that we can easily adapt to other data stores.
 		if (selector && !_.isString(selector)) return false;
 		self.data = self.data || {};
-		self.data = deepJSON(self.data, selector, value);
+		self.data = selector ? deepJSON(self.data, selector, value) : {};
 
 	}
 	
