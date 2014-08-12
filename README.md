@@ -32,6 +32,7 @@ Include the script with its dependencies
 ```html
 <script src="/vendor/jquery.js"></script>
 <script src="/vendor/underscore.js"></script>
+<script src="/vendor/underscore.json.js"></script>
 <script src="/vendor/form2js.js"></script>
 <script src="/vendor/js2form.js"></script>
 <script src="/way.min.js"></script>
@@ -152,6 +153,10 @@ Returns an object with the "way-" options passed to the element.
 
 Returns an object with the "way-" options passed to the element.
 
+**way.dom([element]).setDefault([force])**
+
+Sets the default value of an element. Pass a [force] parameter to force setting the default value in-memory.
+
 **way.set([selector], [data])**
 
 Saves the data in memory under the specified pathname.
@@ -189,6 +194,9 @@ Restores the data saved in localStorage. If [selector] is omitted, all data in l
 ```javascript
 way.restore("some.data");
 ```
+**way.setDefaults()**
+
+Sets all the default values of elements
 
 ## Notes ##
 

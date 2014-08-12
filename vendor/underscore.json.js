@@ -50,9 +50,12 @@
 	var _json = {}
 
 	_json.VERSION = '0.1.0';
+	_json.debug = true;
 	
 	_json.exit = function(source, reason, data, value) {
-
+		
+		if (!_json.debug) return;
+		
 		var messages = {};
 		messages.noJSON = "Not a JSON";
 		messages.noString = "Not a String";
@@ -91,8 +94,8 @@
 	
 	_json.get = function(json, selector) {
 		
-		if (!json) return _json.exit("get", "missing", "json", json);
-		if (!selector) return _json.exit("get", "missing", "selector", selector);
+		if (json == undefined) return _json.exit("get", "missing", "json", json);
+		if (selector == undefined) return _json.exit("get", "missing", "selector", selector);
 		if (!_.isString(selector)) return _json.exit("get", "noString", "selector", selector);
 		return deepJSON(json, selector);
 
@@ -100,18 +103,19 @@
 
 	_json.set = function(json, selector, value) {
 		
-		if (!json) return _json.exit("set", "missing", "json", json);
-		if (!selector) return _json.exit("set", "missing", "selector", selector);
-		if (!value) return _json.exit("set", "missing", "value", value);
+		if (json == undefined) return _json.exit("set", "missing", "json", json);
+		if (selector == undefined) return _json.exit("set", "missing", "selector", selector);
+		if (value == undefined) return _json.exit("set", "missing", "value", value);
 		if (!_.isString(selector)) return _json.exit("set", "noString", "selector", selector);
-		return deepJSON(json, selector, value);
+		return value ? deepJSON(json, selector, value) : _json.remove(json, selector);
+		// return deepJSON(json, selector, value); // Now removes the property if the value is empty. Maybe should keep it instead?
 
 	};
 	
 	_json.remove = function(json, selector) {
 		
-		if (!json) return _json.exit("remove", "missing", "json", json);
-		if (!selector) return _json.exit("remove", "missing", "selector", selector);
+		if (json == undefined) return _json.exit("remove", "missing", "json", json);
+		if (selector == undefined) return _json.exit("remove", "missing", "selector", selector);
 		if (!_.isString(selector)) return _json.exit("remove", "noString", "selector", selector);
 		return deepJSON(json, selector, null, true);
 
@@ -119,27 +123,25 @@
 
 	_json.push = function(json, selector, value) {
 		
-		if (!json) return _json.exit("push", "missing", "json", json);
-		if (!selector) return _json.exit("push", "missing", "selector", selector);
-		if (!value) return _json.exit("push", "missing", "value", value);
+		if (json == undefined) return _json.exit("push", "missing", "json", json);
+		if (selector == undefined) return _json.exit("push", "missing", "selector", selector);
+		if (value == undefined) return _json.exit("push", "missing", "value", value);
 		var array = _json.get(json, selector);
 		if (!_.isArray(array)) return _json.exit("push", "noArray", "array", array);
 		array.push(value);
-		_json.set(json, selector, array);
-		return;
+		return _json.set(json, selector, array);
 
 	}
 
 	_json.unshift = function(json, selector, value) {
 		
-		if (!json) return _json.exit("unshift", "missing", "json", json);
-		if (!selector) return _json.exit("unshift", "missing", "selector", selector);
-		if (!value) return _json.exit("unshift", "missing", "value", value);
+		if (json == undefined) return _json.exit("unshift", "missing", "json", json);
+		if (selector == undefined) return _json.exit("unshift", "missing", "selector", selector);
+		if (value == undefined) return _json.exit("unshift", "missing", "value", value);
 		var array = _json.get(json, selector);
 		if (!_.isArray(array)) return _json.exit("unshift", "noArray", "array", array);
 		array.unshift(value);
-		_json.set(json, selector, array);
-		return;
+		return _json.set(json, selector, array);
 
 	}
 	
