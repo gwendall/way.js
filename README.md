@@ -98,12 +98,16 @@ A comma separated list of values (in forms only) to not sync with the storage. B
 A link to a default data to set on an element, in case there is no binded value.
 
 ```html
-<img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
+<img way-data="some.image" way-default="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
 ```
 
 **json** (Boolean)
 
 Returns pretty-printed json data to its DOM element.
+
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
 <!--
 - prettyprint (?)
