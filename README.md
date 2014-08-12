@@ -10,7 +10,7 @@ Declare an HTML element with some tags.
 
 ```html
 
-  <form way-data="myFormData">
+  <form way-data="myFormData" way-persistent="true">
   	<input type="text" name="name">
   	<input type="text" name="age">
   	<input type="text" name="gender">
