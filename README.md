@@ -22,7 +22,7 @@ Declare an HTML element with some tags.
 
 Boom. Now every change in the form will be stored in-memory. The binded span's html will be change on the fly. And the form data will be persistent, meaning it will be populated with your typed data on page reloads.
 
-Enough talk, [see it in action](https://github.com/maxatwork/form2js).
+Enough talk, [see it in action](https://gwendall.github.io/way).
 
 
 ## Installation ##
@@ -92,9 +92,9 @@ A comma separated list of values (in forms only) to not sync with the storage. B
 <form way-data="some.form" way-omit="dont,want.those">
 ```
 
-**img** (String)
+**default** (String)
 
-A link to a default image to set on an IMG element, in case the binded value can't load an image.
+A link to a default data to set on an element, in case there is no binded value.
 
 ```html
 <img way-data="some.image" way-img="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">

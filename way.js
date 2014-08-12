@@ -134,7 +134,7 @@ window.way = {};
 		}
 
 		if (options.json) {
-			data = isJSON(data) ? data : JSON.stringify(data, undefined, 2);
+			data = _.json.isStringified(data) ? data : JSON.stringify(data, undefined, 2);
 		}
 		
 		self.dom(element).setValue(data, options);
@@ -354,7 +354,7 @@ window.way = {};
 		// Separate settr so that we can easily adapt to other data stores.
 		if (selector && !_.isString(selector)) return false;
 		self.data = self.data || {};
-		self.data = selector ? deepJSON(self.data, selector, value) : {};
+		self.data = selector ? _.json.set(self.data, selector, value) : {};
 
 	}
 	
@@ -363,7 +363,7 @@ window.way = {};
 		var self = this;
 		if (selector != undefined && !_.isString(selector)) return false;
 		if (!self.data) return {};
-		return selector ? deepJSON(self.data, selector) : self.data;
+		return selector ? _.json.get(self.data, selector) : self.data;
 
 	}
 
@@ -372,7 +372,7 @@ window.way = {};
 		var self = this;
 
 		if (selector) {
-			self.data = deepJSON(self.data, selector, null, true);
+			self.data = _.json.remove(self.data, selector);
 		} else {
 			self.data = {};
 		}
@@ -467,54 +467,6 @@ window.way = {};
 		if (str == null || starts == null) return false;
 		str = String(str); starts = String(starts);
 		return str.length >= starts.length && str.slice(0, starts.length) === starts;
-
-	}
-	
-	var isJSON = function(string) {
-		
-		var test = false;
-		try {
-			test = /^[\],:{}\s]*$/.test(string.replace(/\\["\\\/bfnrtu]/g, '@').
-			replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-			replace(/(?:^|:|,)(?:\s*\[)+/g, ''));
-		} catch (e) {}
-		return test;
-		
-	}
-
-	var deepJSON = function (obj, key, value, remove) {
-
-		var keys = key.replace(/\[(["']?)([^\1]+?)\1?\]/g, '.$2').replace(/^\./, '').split('.'),
-				root,
-				i = 0,
-				n = keys.length;
-
-		// Set deep value
-		if (arguments.length > 2) {
-
-			root = obj;
-			n--;
-
-			while (i < n) {
-				key = keys[i++];
-				obj = obj[key] = _.isObject(obj[key]) ? obj[key] : {};
-			}
-			
-			if (remove) {
-				delete obj[keys[i]];
-			} else {
-				obj[keys[i]] = value;				
-			}
-
-			value = root;
-
-		// Get deep value
-		} else {
-			while ((obj = obj[keys[i++]]) != null && i < n) {};
-			value = i < n ? void 0 : obj;
-		}
-
-		return value;
 
 	}
 	
