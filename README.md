@@ -215,7 +215,7 @@ xxx
 
 ## Integrations ##
 
-* [Meteor](https://raw.github.com/epeli/underscore.string/master/lib/underscore.string.js) *Uncompressed with Comments 18kb*
+* [Meteor] To be coming
 
 ## Contribute ##
 
