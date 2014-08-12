@@ -52,6 +52,14 @@ Allows to define the dot separated path where the data will be stored. Can inclu
 
 When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage.
 
+**persistent** (Boolean)
+
+Allows to store the data to localStorage everytime the binded data changes.
+
+```html
+<input type="text" way-data="some.property" way-persistent="true">
+```
+
 **readonly** (Boolean)
 
 Prevents the element changes from resetting the binded value.
@@ -170,6 +178,12 @@ way.watch("some.data", function(value) {
 	console.log("Data has been updated to value: " + value);
 });
 ```
+**way.restore([selector])**
+
+Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
+
+```javascript
+way.restore("some.data");
 
 ## Notes ##
 
