@@ -70,6 +70,15 @@ window.way = {};
 	// Inherit from EventEmitter
 	WAY.prototype = Object.create(EventEmitter.prototype);
 	WAY.constructor = WAY;
+
+	//////////////////////////
+	// DOM METHODS CHAINING //
+	//////////////////////////
+	
+	WAY.prototype.dom = function(element) {
+		this._element = $(element);
+		return this;
+	};
 	
 	//////////////////////////////
 	// DOM METHODS: DOM -> JSON //
@@ -460,15 +469,6 @@ window.way = {};
 		way.dom(element).toStorage();
 
 	});
-
-	//////////////////////////
-	// DOM METHODS CHAINING //
-	//////////////////////////
-	
-	WAY.prototype.dom = function(element) {
-		this._element = $(element);
-		return this;
-	};
 	
 	////////////////////////////
 	// GO YOUR WAY LITTLE GUY //
