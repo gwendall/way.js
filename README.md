@@ -184,6 +184,7 @@ Restores the data saved in localStorage. If [selector] is omitted, all data in l
 
 ```javascript
 way.restore("some.data");
+```
 
 ## Notes ##
 
