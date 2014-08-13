@@ -1,9 +1,3 @@
-dog | bird | cat
-----|------|----
-foo | foo  | foo
-bar | bar  | bar
-baz | baz  | baz
-
 way.js
 ======
 
@@ -49,67 +43,30 @@ Include the script with its dependencies
 Options can be passed via data attributes or JavaScript. For data attributes, append the option name to way-, as in way-data="".
 Set these options to the elements that have to be binded.
 
-**data** (String)
-
-Allows to define the dot separated path where the data will be stored. Can include arrays.
-
-```html
-<input type="text" way-data="some.property">
-```
-
-When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage.
-
-**persistent** (Boolean)
-
-Allows to store the data to localStorage everytime the binded data changes.
-
-```html
-<input type="text" way-data="some.property" way-persistent="true">
-```
-
-**readonly** (Boolean)
-
-Prevents the element changes from resetting the binded value.
-
-```html
-<input type="text" way-data="some.property" way-readonly="true">
-```
-
-**writeonly** (Boolean)
-
-Prevents the element from getting changed when the binded value changes.
-
-```html
-<input type="text" way-data="some.property" way-writeonly="false">
-```
-
-**pick** (String)
-
-A comma separated list of values to pick (in forms only) to sync with the storage. By default, all form inputs are synced.
+Name | Type | Default | Desription
+----|------|---- | ----
+data | string | null | Allows to define the dot separated path where the data will be stored. Can include arrays. When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage.
+persistent | boolean | true | Allows to store the data to localStorage everytime the binded data changes.
+readonly | boolean | false | Prevents the element changes from resetting the binded value.
+writeonly | Boolean | false | Prevents the element from getting changed when the binded value changes.
+pick | array | null | A comma separated list of values to pick (in forms only) to sync with the storage. By default, all form inputs are synced.
+omit | array | null | A comma separated list of values (in forms only) to not sync with the storage. By default, no form input is omitted.
+default | string | null | A link to a default data to set on an element, in case there is no binded value.
+json | boolean | false | Returns pretty-printed json data to its DOM element.
 
 ```html
 <form way-data="some.form" way-pick="some,properties,that,can.be.nested">
 ```
 
-**omit** (String)
-
-A comma separated list of values (in forms only) to not sync with the storage. By default, no form input is omitted.
 
 ```html
 <form way-data="some.form" way-omit="dont,want.those">
 ```
 
-**default** (String)
-
-A link to a default data to set on an element, in case there is no binded value.
 
 ```html
 <img way-data="some.image" way-default="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
 ```
-
-**json** (Boolean)
-
-Returns pretty-printed json data to its DOM element.
 
 ```html
 <pre way-data="some.image" way-json="true"></pre>
