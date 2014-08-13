@@ -194,7 +194,7 @@ way.get();
 >> {}
 ```
 
-### Bindings methods
+### Binding methods
 
 **way.registerBindings()**  
 Triggers a scan of the DOM to find for element with the [way-data] attribute, that will be binded with some data. 
@@ -208,7 +208,7 @@ Updates the bindings for the given selector. If omitted, all (excluding write-on
 <pre way-data="some.image" way-json="true"></pre>
 ```
 
-### Watchers methods
+### Watcher methods
 
 **way.watch(selector, callback[value])**  
 Watches changes of a given value.
