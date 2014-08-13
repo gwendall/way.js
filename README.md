@@ -194,6 +194,20 @@ way.get();
 >> {}
 ```
 
+### localStorage methods
+
+**way.backup()**  
+Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
+```javascript
+way.backup();
+```
+
+**way.restore()**  
+Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
+```javascript
+way.restore();
+```
+
 ### Binding methods
 
 **way.registerBindings()**  
@@ -224,20 +238,6 @@ Watches changes of a given value.
 way.watchAll(function(selector, value) {
 	console.log("The data " + selector + "has been changed.", value);
 });
-```
-
-### localStorage methods
-
-**way.backup()**  
-Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
-```javascript
-way.backup();
-```
-
-**way.restore()**  
-Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
-```javascript
-way.restore();
 ```
 
 ## To do ##
