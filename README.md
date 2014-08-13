@@ -78,7 +78,7 @@ Examples:
 - prettyprint (?)
 -->
 
-## Functions ##
+## Methods ##
 
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 
@@ -87,18 +87,20 @@ Notes:
 - [element] refers to the jQuery selector of a DOM element
 - [options] is optional. By default, options are read from the HTML tags of the elements. But you can overwrite them, by passing this parameter.
 
-**way.dom([element]).toStorage([options])**
-
+**way.dom([element]).toStorage([options])**  
 Stores the element's value to the in-store memory.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.dom([element]).fromStorage([options])**
-
+**way.dom([element]).fromStorage([options])**  
 Sets the element's value from the stored one.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.dom([element]).toJSON([options])**
-
+**way.dom([element]).toJSON([options])**  
 Returns a JSON with the parsed data of the input (particularly handy for forms).
-
 ```javascript
 way.toJSON("#someForm");
 
@@ -110,62 +112,68 @@ way.toJSON("#someForm");
 	}
 ```
 
-**way.dom([element]).fromJSON([data], [options])**
-
+**way.dom([element]).fromJSON([data], [options])**  
 Sets the element's value from any data (in json).
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.dom([element]).getOptions()**
-
+**way.dom([element]).getOptions()**  
 Returns an object with the "way-" options passed to the element.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.dom([element]).getOptions()**
-
+**way.dom([element]).getOptions()**  
 Returns an object with the "way-" options passed to the element.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.dom([element]).setDefault([force])**
-
+**way.dom([element]).setDefault([force])**  
 Sets the default value of an element. Pass a [force] parameter to force setting the default value in-memory.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.set([selector], [data])**
-
+**way.set([selector], [data])**  
 Saves the data in memory under the specified pathname.
-
 ```javascript
 way.set("some.path", "bonjour!");
 way.get("some.path");
 >> "bonjour"
 ```
 
-**way.get([selector])**
-
+**way.get([selector])**  
 Returns the value of the data stored under a given pathname.
-
-**way.digestBindings([selector])**
-
-Updates the bindings for the given selector. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
-
 ```html
-<input type="text" way-data="some.property">
+<pre way-data="some.image" way-json="true"></pre>
 ```
-**way.watch([selector], [callback])**
 
+**way.digestBindings([selector])**  
+Updates the bindings for the given selector. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
+
+**way.watch([selector], [callback])**  
 Watches changes of a given value.
-
 ```javascript
 way.watch("some.data", function(value) {
 	console.log("Data has been updated to value: " + value);
 });
 ```
-**way.restore([selector])**
 
+**way.restore([selector])**  
 Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
-
 ```javascript
 way.restore("some.data");
 ```
-**way.setDefaults()**
-
+**way.setDefaults()**  
 Sets all the default values of elements
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
 ## Notes ##
 
