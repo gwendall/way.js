@@ -155,7 +155,7 @@ Updates the bindings for the given selector. If omitted, all (excluding write-on
 <pre way-data="some.image" way-json="true"></pre>
 ```
 
-**way.watch(selector, callback[data])**  
+**way.watch(selector, callback[value])**  
 Watches changes of a given value.
 ```javascript
 way.watch("some.data", function(value) {
