@@ -46,13 +46,13 @@ Set these options to the elements that have to be binded.
 Name | Type | Default | Desription
 ----|------|---- | ----
 data | string | null | Allows to define the dot separated path where the data will be stored. Can include arrays. When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage.
+default | string | null | A link to a default data to set on an element, in case there is no binded value.
 persistent | boolean | true | Allows to store the data to localStorage everytime the binded data changes.
 readonly | boolean | false | Prevents the element changes from resetting the binded value.
 writeonly | Boolean | false | Prevents the element from getting changed when the binded value changes.
+json | boolean | false | Returns pretty-printed json data to its DOM element.
 pick | array | null | A comma separated list of values to pick (in forms only) to sync with the storage. By default, all form inputs are synced.
 omit | array | null | A comma separated list of values (in forms only) to not sync with the storage. By default, no form input is omitted.
-default | string | null | A link to a default data to set on an element, in case there is no binded value.
-json | boolean | false | Returns pretty-printed json data to its DOM element.
 
 ```html
 <form way-data="some.form" way-pick="some,properties,that,can.be.nested">
