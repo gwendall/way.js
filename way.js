@@ -305,8 +305,6 @@ window.way = {};
 	
 	WAY.prototype.registerBindings = function() {
 		
-		console.log('Registering bindings.');
-		
 		var self = this,
 			selector = "[" + tagPrefix + "-data]";
 		
@@ -317,7 +315,7 @@ window.way = {};
 				options = self.dom(element).getOptions();
 			if (!options.data) return;
 			self._bindings[options.data] = self._bindings[options.data] || [];
-			if (!_.contains(self._bindings[options.data], $(element))) self._bindings[options.data].push($(element));
+			if (!containsDomElement(self._bindings[options.data], element)) self._bindings[options.data].push($(element));
 		});
 				
 	}
@@ -326,9 +324,18 @@ window.way = {};
 		
 		var self = this;
 			self._bindings = self._bindings || {};
-
-		// Set bindings for the specified selector
-		var bindings = self._bindings[selector] || [];
+			
+		var bindings = [];
+		if (selector) {
+			// Set bindings for the specified selector
+			bindings = self._bindings[selector] || [];
+		} else {
+			// Set bindings for all selectors
+			for (var k in self._bindings) {
+				bindings = _.union(bindings, self._bindings[k]);			
+			}			
+		}
+		
 		bindings.forEach(function(element) {
 			var focused = (($(element).get(0).tagName == "FORM") && ($(element).get(0) == $(':focus').parents("form").get(0))) ? true : false;
 			if (!focused) self.dom(element).fromStorage();			
@@ -455,14 +462,14 @@ window.way = {};
 
 	WAY.prototype.clear = function() {
 		
-		this.remove(null, {persistent:true});
+		this.remove(null, { persistent: true });
 		
 	}
-		
+
 	//////////////////////////
 	// LOCALSTORAGE METHODS //
 	//////////////////////////
-	
+
 	WAY.prototype.backup = function(selector) {
 		
 		var self = this;
@@ -504,37 +511,52 @@ window.way = {};
 		return str.length >= starts.length && str.slice(0, starts.length) === starts;
 
 	}
+
+	var containsDomElement = function(list, element) {
+		
+		var contains = false;
+		list.every(function(item) {
+			if ($(item).get(0) === $(element).get(0)) {
+				contains = true;
+				return false;
+			} else {
+				return true;				
+			}
+		});
+		return contains;
+
+	}
 	
 	///////////////////////////////////
 	// INITIATE AND WATCH DOM EVENTS //
 	///////////////////////////////////
-	
+
 	way = new WAY();
-	
+
 	$(document).ready(function() {
 
 		way.registerBindings();
 		way.setDefaults();
 		way.restore();
-		
+
 		// For now, we register bindings like that (to get dynamically created ones)
 		// Maybe we should watch for DOM changes instead (excepting input value changes)?
-		
+
 		setInterval(function() {
 			if (way.options.autobindings) way.registerBindings();
 		}, 1000);
 
 	});
-	
+
 	var timeout = null;
 	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
-		
+
 		if (timeout) clearTimeout(timeout);
 		timeout = setTimeout(function() {
 			var element = $(e.target).parents("form");
 			way.dom(element).toStorage();
 		}, way.options.timeout);
-		
+
 	});
 
 	$(document).on("keyup change", ":input[" + tagPrefix + "-data]", function(e) {
@@ -546,5 +568,5 @@ window.way = {};
 		}, way.options.timeout);
 
 	});
-	
+
 }).call(this);
