@@ -85,7 +85,8 @@ window.way = {};
 		this.data = {};
 		this._bindings = {};
 		this.options = {
-			autobindings: true
+			autobindings: true,
+			timeout: 50
 		};
 
 	};
@@ -114,13 +115,10 @@ window.way = {};
 		var self = this,
 			element = element || self._element,
 			options = options || self.dom(element).getOptions(),
-			timeout = Number(options.timeout) || 0,
 			data = self.dom(element).toJSON(options);
 
 		if (options.readonly) return false;
-		_.throttle(function() {
-			self.set(options.data, data, options);
-		}, timeout)();
+		self.set(options.data, data, options);
 		
 	}
 	
@@ -528,17 +526,24 @@ window.way = {};
 
 	});
 	
+	var timeout = null;
 	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
-
-		var element = $(e.target).parents("form");
-		way.dom(element).toStorage();
-
+		
+		if (timeout) clearTimeout(timeout);
+		timeout = setTimeout(function() {
+			var element = $(e.target).parents("form");
+			way.dom(element).toStorage();
+		}, way.options.timeout);
+		
 	});
 
 	$(document).on("keyup change", ":input[" + tagPrefix + "-data]", function(e) {
 
-		var element = $(e.target);
-		way.dom(element).toStorage();
+		if (timeout) clearTimeout(timeout);
+		timeout = setTimeout(function() {
+			var element = $(e.target);
+			way.dom(element).toStorage();
+		}, way.options.timeout);
 
 	});
 	
