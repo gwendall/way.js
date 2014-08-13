@@ -163,7 +163,7 @@ way.watch("some.data", function(value) {
 });
 ```
 
-**way.watchAll(callback, [selector, data])**  
+**way.watchAll(callback[selector, value])**  
 Watches changes of a given value.
 ```javascript
 way.watchAll(function(selector, value) {
