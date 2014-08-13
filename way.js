@@ -14,10 +14,20 @@ window.way = {};
 	// EVENT EMITTER DEFINITION //
 	//////////////////////////////
 
-	var EventEmitter = function () {};
+	var EventEmitter = function () {
+		this._watchers = {};
+		this._watchersGlobal = {};
+	};
 
 	EventEmitter.prototype.constructor = EventEmitter;
-
+		
+	EventEmitter.prototype.watchAll = function(handler) {
+		
+		this._watchersGlobal = this._watchersGlobal || [];
+		if (!_.contains(this._watchersGlobal, handler)) this._watchersGlobal.push(handler);
+		
+	}
+	
 	EventEmitter.prototype.watch = function(selector, handler) {
 	
 		if (!this._watchers) this._watchers = {};		
@@ -25,17 +35,16 @@ window.way = {};
 		this._watchers[selector].push(handler);
 
 	}
-
+	
 	EventEmitter.prototype.findDependantWatchers = function(selector) {
 		
 		// Go up to look for parent watchers... (ex: if "some.nested.value" is the selector, it should also trigger for "some")
 		
 		var result = [];
 		var watchers = _.keys(this._watchers);
-		for (var i in watchers) {
-			var watcher = watchers[i];
-			if (startsWith(selector, watcher)) result.push(watcher);
-		}
+		watchers.forEach(function(watcher) {
+			if (startsWith(selector, watcher)) result.push(watcher);			
+		});
 		return result;
 		
 	}
@@ -44,18 +53,24 @@ window.way = {};
 
 		if (!this._watchers) this._watchers = {};
 		
-		var self = this;		
-		var deps = self.findDependantWatchers(selector);
+		var self = this;
 		
-		for (var i in deps) {
-			var item = deps[i];
+		// Send data down to the local watchers
+		var deps = self.findDependantWatchers(selector);		
+		deps.forEach(function(item) {
 			if (this._watchers[item]) {
 				this._watchers[item].forEach(function(handler) {
 					handler.apply(self, [self.get(item)]);
 				});				
 			}
-		}
-
+		});
+		
+		// Send data down to the global watchers
+		if (!self._watchersGlobal || !_.isArray(self._watchersGlobal)) return;
+		self._watchersGlobal.forEach(function(watcher) {
+			if (_.isFunction(watcher)) watcher.apply(self, [selector, self.get(selector)]);			
+		});
+		
 	}
 	
 	////////////////////
@@ -206,6 +221,7 @@ window.way = {};
 			'IMG': function(a) {
 
 				var isValidImageUrl = function(url, cb) {
+					$(element).addClass("way-loading");
 					$("<img>", {
 						src: url,
 						error: function() { cb(false); },
@@ -213,6 +229,7 @@ window.way = {};
 					});
 				}
 				isValidImageUrl(a, function(response) {
+					$(element).removeClass("way-loading");
 					if (response) {
 						$(element).removeClass("way-error").addClass("way-success");
 					} else {
@@ -246,7 +263,31 @@ window.way = {};
 		setter(data);
 
 	}
+	
+	WAY.prototype.setDefault = function(force, options, element) {
 
+		var self = this,
+			element = element || self._element,
+			options = options ? _.extend(self.dom(element).getOptions(), options) : self.dom(element).getOptions();
+			
+		// Should we just set the default value in the DOM, or also in the datastore?
+		if (options.default && (force == true)) self.set(options.data, options.default, options);
+		if (options.default && (force != true)) self.dom(element).setValue(options.default, options);
+
+	}
+	
+	WAY.prototype.setDefaults = function() {
+		
+		var self = this,
+			dataSelector = self.buildSelector(null, "default");
+		
+		$(dataSelector).each(function() {
+			var options = self.dom(this).getOptions();
+			self.dom(this).setValue(options.default);
+		});
+		
+	}
+	
 	//////////////////////////////////
 	// DOM METHODS: OPTIONS PARSING //
 	//////////////////////////////////
@@ -313,30 +354,12 @@ window.way = {};
 	    return attributes;
 		
 	}
-	
-	WAY.prototype.setDefault = function(force, options, element) {
-
-		var self = this,
-			element = element || self._element,
-			options = options ? _.extend(self.dom(element).getOptions(), options) : self.dom(element).getOptions();
-			
-		// Should we just set the default value in the DOM, or also in the datastore?
-		if (options.default && (force == true)) self.set(options.data, options.default, options);
-		if (options.default && (force != true)) self.dom(element).setValue(options.default, options);
-
-	}
-	
+		
 	///////////////////////
 	// REACTIVE BINDINGS //
 	///////////////////////
-		
+	
 	WAY.prototype.set = function(selector, value, options) {
-		
-		console.log('Setting!', {
-			selector: selector,
-			value: value,
-			options: options
-		});
 		
 		var self = this;
 		options = options || {};
@@ -344,8 +367,11 @@ window.way = {};
 		self.settr(self, selector, value);
 
 		self.emitChange(selector, value);
-		self.digestBindings(selector);
 		if (options.persistent) self.backup(selector);
+		
+		// Maybe we should instead watch the DOM on any change, and update this list 
+		self.getBindingsInDOM();
+		self.setBindingsInDOM(selector);
 		
 	}
 	
@@ -378,17 +404,30 @@ window.way = {};
 		}
 		
 		self.emitChange(selector, null);
-		self.digestBindings(selector);
+		self.setBindingsInDOM(selector);
 		self.backup(selector);
 		
 	}
-
-	WAY.prototype.buildSelector = function(selector, type) {
-		if (selector) return "[" + tagPrefix + "-" + type + "^='" + selector.split('.')[0] + "']";
-		if (!selector) return "[" + tagPrefix + "-" + type + "]";
-	}
 	
-	WAY.prototype.digestBindings = function(selector) {
+	WAY.prototype.getBindingsInDOM = function() {
+		
+		var self = this,
+			selector = "[" + tagPrefix + "-data]";
+		
+		self._binders = self._binders || {};
+		
+		$(selector).each(function() {
+			var element = this,
+				options = self.dom(element).getOptions();
+			if (options.data) {
+				self._binders[options.data] = self._binders[options.data] || [];
+				if (!_.contains(self._binders[options.data], $(element))) self._binders[options.data].push($(element));
+			}
+		});
+				
+	}
+		
+	WAY.prototype.setBindingsInDOM = function(selector) {
 		
 		var self = this;
 		
@@ -407,18 +446,11 @@ window.way = {};
 		
 	}
 	
-	WAY.prototype.setDefaults = function() {
-		
-		var self = this,
-			dataSelector = self.buildSelector(null, "default");
-		
-		$(dataSelector).each(function() {
-			var options = self.dom(this).getOptions();
-			self.dom(this).setValue(options.default);
-		});
-		
+	WAY.prototype.buildSelector = function(selector, type) {
+		if (selector) return "[" + tagPrefix + "-" + type + "^='" + selector.split('.')[0] + "']";
+		if (!selector) return "[" + tagPrefix + "-" + type + "]";
 	}
-
+	
 	//////////////////////////
 	// LOCAL STORAGE BACKUP //
 	//////////////////////////
@@ -441,7 +473,7 @@ window.way = {};
 		try {
 			var data = localStorage.getItem(tagPrefix);
 			try { 
-				data = JSON.parse(data); 
+				data = JSON.parse(data);
 				for (var key in data) {
 					self.set(key, data[key]);					
 				}

@@ -6,7 +6,7 @@
 //	- https://gist.github.com/furf/3208381
 //  - http://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects
 //	Version '0.1.0'
-	
+
 !function(root, String) {
 
 	'use strict';
@@ -50,12 +50,9 @@
 	var _json = {}
 
 	_json.VERSION = '0.1.0';
-	_json.debug = true;
 	
 	_json.exit = function(source, reason, data, value) {
-		
-		if (!_json.debug) return;
-		
+
 		var messages = {};
 		messages.noJSON = "Not a JSON";
 		messages.noString = "Not a String";
@@ -129,7 +126,8 @@
 		var array = _json.get(json, selector);
 		if (!_.isArray(array)) return _json.exit("push", "noArray", "array", array);
 		array.push(value);
-		return _json.set(json, selector, array);
+		_json.set(json, selector, array);
+		return;
 
 	}
 
@@ -141,7 +139,8 @@
 		var array = _json.get(json, selector);
 		if (!_.isArray(array)) return _json.exit("unshift", "noArray", "array", array);
 		array.unshift(value);
-		return _json.set(json, selector, array);
+		_json.set(json, selector, array);
+		return;
 
 	}
 	
@@ -196,5 +195,6 @@
 	// or create our own underscore object.
 	root._ = root._ || {};
 	root._.json = _json;
+	root._json = _json;
 
 }(this, String);
