@@ -306,17 +306,16 @@ window.way = {};
 	WAY.prototype.registerBindings = function() {
 		
 		var self = this,
-			selector = "[" + tagPrefix + "-data]";
-		
-		self._bindings = self._bindings || {};
+			selector = 	"[" + tagPrefix + "-data]";
+			self._bindings = self._bindings || {};
 		
 		// #TODO: deal with bindings removed from the DOM
 		$(selector).each(function() {
 			var element = this,
 				options = self.dom(element).getOptions();
-			if (!options.data) return;
+			if (!options.data) return false;
 			self._bindings[options.data] = self._bindings[options.data] || [];
-			if (!containsDomElement(self._bindings[options.data], element)) self._bindings[options.data].push($(element));
+			if (!containsDomElement(self._bindings[options.data], element)) self._bindings[options.data].push($(element));				
 		});
 				
 	}
@@ -530,7 +529,7 @@ window.way = {};
 		return contains;
 
 	}
-	
+		
 	var cleanEmptyKeys = function(object) {
 
 		return _.pick(object, _.compact(_.keys(object)));
