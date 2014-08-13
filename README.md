@@ -139,15 +139,14 @@ Sets the default value of an element. Pass a [force] parameter to force setting 
 Saves the data in memory under the specified pathname.
 ```javascript
 way.set("some.path", "bonjour!");
-way.get("some.path");
->> "bonjour"
 ```
 
 **way.get(selector)**  
 Returns the value of the data stored under a given pathname.
-```html
-<pre way-data="some.image" way-json="true"></pre>
-```
+```javascript
+way.set("some.path", "bonjour!");
+way.get("some.path");
+>> "bonjour"
 
 **way.digestBindings(selector)**  
 Updates the bindings for the given selector. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
