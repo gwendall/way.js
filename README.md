@@ -196,7 +196,7 @@ way.get();
 ### localStorage methods
 
 **way.backup()**  
-Restores the data saved in localStorage in the way datastore. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
+Stores the data saved in the way datastore to localStorage. If [selector] is omitted, all data wll be stored to localStorage.
 ```javascript
 way.backup();
 ```
@@ -211,14 +211,14 @@ way.restore();
 
 **way.registerBindings()**  
 Triggers a scan of the DOM to find and save the elements with the [way-data] attribute, that will be binded with some data. 
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.registerBindings()
 ```
 
 **way.updateBindings(selector)**  
 Updates the bindings for the given selector. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.updateBindings("formData.name")
 ```
 
 ### Watcher methods
