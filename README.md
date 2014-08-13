@@ -196,7 +196,7 @@ way.get();
 ### localStorage methods
 
 **way.backup()**  
-Stores the data saved in the way datastore to localStorage. If [selector] is omitted, all data wll be stored to localStorage.
+Stores the data saved in way.js' datastore to localStorage. If [selector] is omitted, all data wll be stored to localStorage.
 ```javascript
 way.backup();
 ```
