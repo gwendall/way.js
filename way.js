@@ -128,11 +128,9 @@ window.way = {};
 			element = element || self._element,
 			data = self.dom(element).getValue(),
 			options = options || self.dom(element).getOptions();
-			
-		// #TODO: Flatten / unflatten to allow for nested picks/omits
-		// ex: omit: ['some.nested.value']
-		if (_.isArray(options.pick)) data = _.pick(data, options.pick);
-		if (_.isArray(options.omit)) data = _.omit(data, options.omit);
+		
+		if (_.isArray(options.pick)) data = selectNested(data, options.pick, true);
+		if (_.isArray(options.omit)) data = selectNested(data, options.omit, false);
 
 		return data;
 
@@ -141,30 +139,6 @@ window.way = {};
 	//////////////////////////////
 	// DOM METHODS: JSON -> DOM //
 	//////////////////////////////
-	
-	WAY.prototype.fromJSON = function(data, options, element) {
-				
-		var self = this,
-			element = element || self._element,
-			options = options || self.dom(element).getOptions(),
-			currentData = self.dom(element).toJSON();
-
-		if (currentData == data) return false;
-		if (options.writeonly) return false;
-		
-		if (_.isObject(data) && _.isObject(currentData)) {
-			if (_.isArray(options.pick)) data = _.pick(data, options.pick);
-			if (_.isArray(options.omit)) data = _.omit(data, options.omit);
-			data = _.extend(currentData, data);		
-		}
-
-		if (options.json) {
-			data = _json.isStringified(data) ? data : _json.prettyprint(data);
-		}
-		
-		self.dom(element).setValue(data, options);
-
-	}
 	
 	WAY.prototype.fromStorage = function(options, element) {
 		
@@ -178,7 +152,30 @@ window.way = {};
 		self.dom(element).fromJSON(data, options);
 
 	}
+	
+	WAY.prototype.fromJSON = function(data, options, element) {
+				
+		var self = this,
+			element = element || self._element,
+			options = options || self.dom(element).getOptions();
 
+		if (options.writeonly) return false;
+		
+		if (_.isObject(data)) {
+			if (_.isArray(options.pick)) data = selectNested(data, options.pick, true);
+			if (_.isArray(options.omit)) data = selectNested(data, options.omit, false);			
+			var currentData = _.isObject(self.dom(element).toJSON()) ? self.dom(element).toJSON() : {};
+			data = _.extend(currentData, data);		
+		}
+
+		if (options.json) {
+			data = _json.isStringified(data) ? data : _json.prettyprint(data);
+		}
+		
+		self.dom(element).setValue(data, options);
+
+	}
+	
 	/////////////////////////////////
 	// DOM METHODS: GET - SET HTML //
 	/////////////////////////////////
@@ -484,7 +481,7 @@ window.way = {};
 			var data = self.data || {};
 			localStorage.setItem(tagPrefix, JSON.stringify(data));
 		} catch(e) {
-			console.log('Your browser does not support localStorage.');			
+			console.log("Your browser does not support localStorage.");			
 		}
 		
 	}
@@ -501,7 +498,7 @@ window.way = {};
 				}
 			} catch(e) {}
 		} catch(e) {
-			console.log('Your browser does not support localStorage.');	
+			console.log("Your browser does not support localStorage.");	
 		}
 		
 	}
@@ -532,6 +529,40 @@ window.way = {};
 		});
 		return contains;
 
+	}
+	
+	var cleanEmptyKeys = function(object) {
+
+		return _.pick(object, _.compact(_.keys(object)));
+
+	}
+
+	var filterStartingWith = function(object, string, type) { // true: pick - false: omit
+
+		var keys = _.keys(object);
+		keys.forEach(function(key) {
+			if (type) {
+				if (!startsWith(key, string)) delete object[key];				
+			} else {
+				if (startsWith(key, string)) delete object[key];				
+			}
+		});
+		return object;
+
+	}
+	
+	var selectNested = function(data, keys, type) { // true: pick - false: omit
+		
+		// Flatten / unflatten to allow for nested picks / omits (doesn't work with regular pick)
+		// ex:  data = {something:{nested:"value"}}
+		//		keys = ['something.nested']
+		
+		var flat = _json.flatten(data);
+		for (var i in keys) flat = filterStartingWith(flat, keys[i], type);
+		var unflat = _json.unflatten(flat);
+		// Unflatten returns an object with an empty property if it is given an empty object
+		return cleanEmptyKeys(unflat);
+		
 	}
 	
 	///////////////////////////////////
