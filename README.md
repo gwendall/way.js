@@ -135,7 +135,7 @@ Sets the default value of an element. Pass a [force] parameter to force setting 
 
 ### Data methods
 
-**way.set(selector, data)**  
+**way.set(selector, value)**  
 Saves the data in memory under the specified pathname.
 ```javascript
 way.set("some.path", "bonjour!");
