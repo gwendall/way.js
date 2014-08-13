@@ -87,11 +87,13 @@ Notes:
 - [element] refers to the jQuery selector of a DOM element
 - [options] is optional. By default, options are read from the HTML tags of the elements. But you can overwrite them, by passing this parameter.
 
+
 **way.dom(element).toStorage(options)**  
 Stores the element's value to the in-store memory.
 ```html
 <pre way-data="some.image" way-json="true"></pre>
 ```
+
 
 **way.dom(element).fromStorage(options)**  
 Sets the element's value from the stored one.
