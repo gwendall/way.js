@@ -1,0 +1,185 @@
+/* CSS declarations go here */
+body {
+	padding: 0px 20px;
+	background: rgba(0, 0, 0, .05);
+}
+
+.out-box {
+	background: white;
+	padding: 5px 20px;
+	-webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 10px rgba(0, 0, 0, .35);
+}
+
+.col-fixed {
+	position: fixed;
+	right: 0px;
+	top: 0px;
+	height: 100%;
+	overflow-y: scroll;
+	padding: 20px;/* CSS declarations go here */
+	body {
+		padding: 0px 20px;
+		margin: 0px 0px 50px 0px;
+		background: rgba(0, 0, 0, .05);
+	}
+
+	.out-box {
+		background: white;
+		padding: 20px;
+		-webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 10px rgba(0, 0, 0, .35);
+	}
+
+	.indent-1 {
+		margin-left:30px;
+	}
+
+	@media (min-width: 767px) {
+		.col-fixed {
+			position: fixed;
+			right: 10px;
+			top: 0px;
+			height: 100%;
+			overflow-y: scroll;
+			padding: 20px;
+			padding-top: 100px;
+		}	
+	}
+
+	@media (max-width: 767px) {
+		body {
+			padding: 0px 5px;
+		}
+		table tr td {
+			max-width: 100px;
+		}
+		.col-fixed {
+			padding-top: 50px;
+		}
+	}
+
+	h1 {
+		margin: 30px;
+		margin-left: 10px;
+	}
+
+	h3 {
+		margin: 20px;
+		margin-left: 5px;
+	}
+
+	.form-group label.col-sm-3 {
+		margin-top: 7px;
+	}
+
+	.form-group img {
+		min-width: 100px;
+		min-height: 100px;
+		background: rgba(0, 0, 0, .1);
+		margin-top: 20px;
+	}
+
+	.img-error-text {
+		position: absolute;
+	}
+
+	table img {
+		width: 100%;
+		min-height: 100px;
+		background: rgba(0, 0, 0, .05);
+		border: rgba(0, 0, 0, .05) solid 3px;
+	}
+
+	table img.way-loading {
+	/*	border: black solid 3px !important;*/
+	}
+
+	table img.way-success {
+		border: #5BEB89 solid 3px;
+	}
+
+	table img.way-error {
+		border: #EB5B5B solid 3px;
+	}
+
+	.img-error-texto {
+		color: red;
+		display: none !important;
+	}
+
+	table img.way-error + .img-error-text {
+	}
+
+	table tr td {
+		max-width: 300px;
+		word-wrap: break-word;
+	}
+
+	.alert {
+		border: rgba(0, 0, 0, .1) solid thin;
+		border-radius: 1px;
+		word-wrap: break-word;
+	}
+
+	pre {
+		border-radius: 1px;
+	}
+}
+
+.container-fluid {
+}
+
+h1 {
+	margin: 30px;
+	margin-left: 10px;
+}
+
+h3 {
+	margin: 20px;
+	margin-left: 5px;
+}
+
+.form-group label {
+	margin-top: 7px;
+}
+
+.form-group .checkbox {
+	padding-left: 45px;
+}
+
+.img-error-text {
+	position: absolute;
+}
+
+table img {
+	width: 350px;
+	min-height: 100px;
+	background: rgba(0, 0, 0, .05);
+	border: rgba(0, 0, 0, .05) solid 3px;
+}
+
+table img.way-success {
+	border: #5BEB89 solid 3px;
+}
+
+table img.way-error {
+	border: #EB5B5B solid 3px;
+}
+
+.img-error-texto {
+	color: red;
+	display: none !important;
+}
+
+table img.way-error + .img-error-text {
+}
+
+table * {
+	max-width: 470px;
+}
+
+.alert-change {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+	display: none;
+}
