@@ -83,8 +83,10 @@ window.way = {};
 	var WAY = function () {
 
 		this.data = {};
-		this.options = {};
 		this._bindings = {};
+		this.options = {
+			autobindings: true
+		};
 
 	};
 
@@ -305,6 +307,8 @@ window.way = {};
 	
 	WAY.prototype.registerBindings = function() {
 		
+		console.log('Registering bindings.');
+		
 		var self = this,
 			selector = "[" + tagPrefix + "-data]";
 		
@@ -428,9 +432,6 @@ window.way = {};
 		self.data = self.data || {};
 		self.data = selector ? _.json.set(self.data, selector, value) : {};
 		
-		// Maybe we should watch the DOM on any change [or] use a timeout to update _binders
-		// instead of scanning the DOM on any .set()?
-		self.registerBindings();
 		self.updateBindings(selector);
 		self.emitChange(selector, value);
 		if (options.persistent) self.backup(selector);
@@ -448,7 +449,6 @@ window.way = {};
 			self.data = {};
 		}
 		
-		self.registerBindings();
 		self.updateBindings(selector);
 		self.emitChange(selector, null);
 		if (options.persistent) self.backup(selector);
@@ -493,14 +493,7 @@ window.way = {};
 		}
 		
 	}
-	
-	$(document).ready(function() {
-
-		way.setDefaults();
-		way.restore();
-
-	});
-	
+		
 	//////////
 	// MISC //
 	//////////
@@ -514,9 +507,26 @@ window.way = {};
 
 	}
 	
-	////////////////
-	// DOM EVENTS //
-	////////////////
+	///////////////////////////////////
+	// INITIATE AND WATCH DOM EVENTS //
+	///////////////////////////////////
+	
+	way = new WAY();
+	
+	$(document).ready(function() {
+
+		way.registerBindings();
+		way.setDefaults();
+		way.restore();
+		
+		// For now, we register bindings like that (to get dynamically created ones)
+		// Maybe we should watch for DOM changes instead (excepting input value changes)?
+		
+		setInterval(function() {
+			if (way.options.autobindings) way.registerBindings();
+		}, 1000);
+
+	});
 	
 	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
 
@@ -532,10 +542,4 @@ window.way = {};
 
 	});
 	
-	////////////////////////////
-	// GO YOUR WAY LITTLE GUY //
-	////////////////////////////
-
-	way = new WAY();
-		
 }).call(this);
