@@ -268,10 +268,7 @@ window.way = {};
 		var elementType = $(element).get(0).tagName;
 		var setter = setters[elementType] || defaultSetter;
 		setter(data);
-		if (options.href) {
-			console.log("Setting href.", options);
-			$(element).attr("href", self.get(options.href)); // options.href
-		}
+
 	}
 	
 	WAY.prototype.setDefault = function(force, options, element) {

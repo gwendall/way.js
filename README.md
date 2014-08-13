@@ -103,21 +103,20 @@ Notes:
 
 **way.dom(element).toStorage(options)**  
 Stores the element's value to the in-store memory.
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.dom("#someForm").toStorage()
 ```
-
 
 **way.dom(element).fromStorage(options)**  
 Sets the element's value from the stored one.
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.dom("#someForm").fromStorage()
 ```
 
 **way.dom(element).toJSON(options)**  
 Returns a JSON with the parsed data of the input (particularly handy for forms).
 ```javascript
-way.toJSON("#someForm");
+way.dom("#someForm").toJSON()
 
 >> {
 		its: "values",
@@ -129,38 +128,38 @@ way.toJSON("#someForm");
 
 **way.dom(element).fromJSON(data, options)**  
 Sets the element's value from any data (in json).
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.dom("#someForm").fromJSON()
 ```
 
 **way.dom(element).getValue()**  
 Returns an object with the "way-" options passed to the element.
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.dom("#someForm").getValue()
 ```
 
 **way.dom(element).setValue(value, options)**  
 Returns an object with the "way-" options passed to the element.
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.dom("#someForm").setValue({name:"John Doe"})
 ```
 
 **way.dom(element).setDefault(force)**  
 Sets the default value of an element. By default, only the DOM element gets its value set to the default value. Its binded value in the datastore in unchanged. Pass a [force] parameter if you need to force setting in-memory value of this data to the element's default value.
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.dom("#someForm").setDefault()
 ```
 
 **way.setDefaults(force)**  
 Sets all the default values of binded DOM elements.
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.setDefaults()
 ```
 
 **way.dom(element).getOptions()**  
 Returns the list of the ["way-"] options attributed to a DOM element.
-```html
-<pre way-data="some.image" way-json="true"></pre>
+```javascript
+way.dom("#someForm").getOptions()
 ```
 
 ### Data methods
