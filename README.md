@@ -146,19 +146,19 @@ Returns an object with the "way-" options passed to the element.
 ```
 
 **way.dom(element).setDefault(force)**  
-Sets the default value of an element. Pass a [force] parameter to force setting the default value in-memory.
+Sets the default value of an element. By default, only the DOM element gets its value set to the default value. Its binded value in the datastore in unchanged. Pass a [force] parameter if you need to force setting in-memory value of this data to the element's default value.
 ```html
 <pre way-data="some.image" way-json="true"></pre>
 ```
 
-**way.setDefaults()**  
-Sets all the default values of elements
+**way.setDefaults(force)**  
+Sets all the default values of binded DOM elements.
 ```html
 <pre way-data="some.image" way-json="true"></pre>
 ```
 
 **way.dom(element).getOptions()**  
-Returns an object with the "way-" options passed to the element.
+Returns the list of the ["way-"] options attributed to a DOM element.
 ```html
 <pre way-data="some.image" way-json="true"></pre>
 ```
@@ -197,7 +197,7 @@ way.get();
 ### localStorage methods
 
 **way.backup()**  
-Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
+Restores the data saved in localStorage in the way datastore. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
 ```javascript
 way.backup();
 ```
@@ -239,6 +239,17 @@ way.watchAll(function(selector, value) {
 	console.log("The data " + selector + "has been changed.", value);
 });
 ```
+
+## Global options ##
+
+**way.options.persistent** (Boolean)
+Sets whether or not data will be saved to / restored from localStorage (true by default).
+
+**way.options.timeoutInput** (Number)
+Number of milliseconds of the timeout between keypresses on binded elements to store their values to the datastore (50 by default).
+
+**way.options.timeoutDOM** (Number)
+Number of milliseconds of the timeout between scans of the DOM to list binded elements on each DOM change (500 by default).
 
 ## To do ##
 
