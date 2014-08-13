@@ -147,6 +147,7 @@ Returns the value of the data stored under a given pathname.
 way.set("some.path", "bonjour!");
 way.get("some.path");
 >> "bonjour"
+```
 
 **way.digestBindings(selector)**  
 Updates the bindings for the given selector. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
