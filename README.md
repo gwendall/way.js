@@ -43,67 +43,32 @@ Include the script with its dependencies
 Options can be passed via data attributes or JavaScript. For data attributes, append the option name to way-, as in way-data="".
 Set these options to the elements that have to be binded.
 
-**data** (String)
+Name | Type | Default | Desription
+----|------|---- | ----
+data | string | null | Allows to define the dot separated path where the data will be stored. Can include arrays. When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage.
+default | string | null | A link to a default data to set on an element, in case there is no binded value.
+persistent | boolean | true | Allows to store the data to localStorage everytime the binded data changes.
+readonly | boolean | false | Prevents the element changes from resetting the binded value.
+writeonly | Boolean | false | Prevents the element from getting changed when the binded value changes.
+json | boolean | false | Returns pretty-printed json data to its DOM element.
+pick | array | null | A comma separated list of values to pick (in forms only) to sync with the storage. By default, all form inputs are synced.
+omit | array | null | A comma separated list of values (in forms only) to not sync with the storage. By default, no form input is omitted.
 
-Allows to define the dot separated path where the data will be stored. Can include arrays.
-
-```html
-<input type="text" way-data="some.property">
-```
-
-When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage.
-
-**persistent** (Boolean)
-
-Allows to store the data to localStorage everytime the binded data changes.
-
-```html
-<input type="text" way-data="some.property" way-persistent="true">
-```
-
-**readonly** (Boolean)
-
-Prevents the element changes from resetting the binded value.
-
-```html
-<input type="text" way-data="some.property" way-readonly="true">
-```
-
-**writeonly** (Boolean)
-
-Prevents the element from getting changed when the binded value changes.
-
-```html
-<input type="text" way-data="some.property" way-writeonly="false">
-```
-
-**pick** (String)
-
-A comma separated list of values to pick (in forms only) to sync with the storage. By default, all form inputs are synced.
+Examples:
 
 ```html
 <form way-data="some.form" way-pick="some,properties,that,can.be.nested">
 ```
 
-**omit** (String)
-
-A comma separated list of values (in forms only) to not sync with the storage. By default, no form input is omitted.
 
 ```html
 <form way-data="some.form" way-omit="dont,want.those">
 ```
 
-**default** (String)
-
-A link to a default data to set on an element, in case there is no binded value.
 
 ```html
 <img way-data="some.image" way-default="http://upload.wikimedia.org/wikipedia/en/a/a6/Bender_Rodriguez.png">
 ```
-
-**json** (Boolean)
-
-Returns pretty-printed json data to its DOM element.
 
 ```html
 <pre way-data="some.image" way-json="true"></pre>
@@ -113,7 +78,7 @@ Returns pretty-printed json data to its DOM element.
 - prettyprint (?)
 -->
 
-## Functions ##
+## Methods ##
 
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 
@@ -122,18 +87,23 @@ Notes:
 - [element] refers to the jQuery selector of a DOM element
 - [options] is optional. By default, options are read from the HTML tags of the elements. But you can overwrite them, by passing this parameter.
 
-**way.dom([element]).toStorage([options])**
+### DOM methods
 
+**way.dom(element).toStorage(options)**  
 Stores the element's value to the in-store memory.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.dom([element]).fromStorage([options])**
 
+**way.dom(element).fromStorage(options)**  
 Sets the element's value from the stored one.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.dom([element]).toJSON([options])**
-
+**way.dom(element).toJSON(options)**  
 Returns a JSON with the parsed data of the input (particularly handy for forms).
-
 ```javascript
 way.toJSON("#someForm");
 
@@ -145,70 +115,75 @@ way.toJSON("#someForm");
 	}
 ```
 
-**way.dom([element]).fromJSON([data], [options])**
-
+**way.dom(element).fromJSON(data, options)**  
 Sets the element's value from any data (in json).
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.dom([element]).getOptions()**
-
+**way.dom(element).getOptions()**  
 Returns an object with the "way-" options passed to the element.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.dom([element]).getOptions()**
-
-Returns an object with the "way-" options passed to the element.
-
-**way.dom([element]).setDefault([force])**
-
+**way.dom(element).setDefault(force)**  
 Sets the default value of an element. Pass a [force] parameter to force setting the default value in-memory.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
-**way.set([selector], [data])**
+### Data methods
 
+**way.set(selector, value)**  
 Saves the data in memory under the specified pathname.
+```javascript
+way.set("some.path", "bonjour!");
+```
 
+**way.get(selector)**  
+Returns the value of the data stored under a given pathname.
 ```javascript
 way.set("some.path", "bonjour!");
 way.get("some.path");
 >> "bonjour"
 ```
 
-**way.get([selector])**
-
-Returns the value of the data stored under a given pathname.
-
-**way.digestBindings([selector])**
-
+**way.digestBindings(selector)**  
 Updates the bindings for the given selector. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
-
 ```html
-<input type="text" way-data="some.property">
+<pre way-data="some.image" way-json="true"></pre>
 ```
-**way.watch([selector], [callback])**
 
+**way.watch(selector, callback[value])**  
 Watches changes of a given value.
-
 ```javascript
 way.watch("some.data", function(value) {
 	console.log("Data has been updated to value: " + value);
 });
 ```
-**way.restore([selector])**
 
+**way.watchAll(callback[selector, value])**  
+Watches changes of a given value.
+```javascript
+way.watchAll(function(selector, value) {
+	console.log("The data " + selector + "has been changed.", value);
+});
+```
+
+**way.restore(selector)**  
 Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
-
 ```javascript
 way.restore("some.data");
 ```
-**way.setDefaults()**
-
+**way.setDefaults()**  
 Sets all the default values of elements
-
-## Notes ##
-
-xxx
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
 
 ## To do ##
 
-- localStorage (localForage?) integration
 - document a bit more the code
 - test
 - enjoy
