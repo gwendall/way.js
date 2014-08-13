@@ -4,6 +4,9 @@ way.js
 Simple, lightweight, persistent, framework-agnostic two-way databinding (with very little javascript)
 Two-way databinding is useful, but you may not want to use a whole framework to enjoy it.
 
+[Demo](https://gwendall.github.io/way).
+[jsFiddle](https://gwendall.github.io/way).
+
 ## Quick start ##
 
 Declare an HTML element with some tags.
