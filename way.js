@@ -128,7 +128,9 @@ window.way = {};
 			element = element || self._element,
 			data = self.dom(element).getValue(),
 			options = options || self.dom(element).getOptions();
-
+			
+		// #TODO: Flatten / unflatten to allow for nested picks/omits
+		// ex: omit: ['some.nested.value']
 		if (_.isArray(options.pick)) data = _.pick(data, options.pick);
 		if (_.isArray(options.omit)) data = _.omit(data, options.omit);
 
@@ -157,7 +159,7 @@ window.way = {};
 		}
 
 		if (options.json) {
-			data = _.json.isStringified(data) ? data : JSON.stringify(data, undefined, 2);
+			data = _.json.isStringified(data) ? data : _.json.prettyprint(data);
 		}
 		
 		self.dom(element).setValue(data, options);
@@ -177,9 +179,9 @@ window.way = {};
 
 	}
 
-	/////////////////////////////////////////
-	// DOM METHODS: HTML GETTERS / SETTERS //
-	/////////////////////////////////////////
+	/////////////////////////////////
+	// DOM METHODS: GET - SET HTML //
+	/////////////////////////////////
 	
 	WAY.prototype.getValue = function(element) {
 
@@ -297,6 +299,46 @@ window.way = {};
 
 	}
 	
+	/////////////////////////////////////
+	// DOM METHODS: GET - SET BINDINGS //
+	/////////////////////////////////////
+	
+	WAY.prototype.registerBindings = function() {
+		
+		var self = this,
+			selector = "[" + tagPrefix + "-data]";
+		
+		self._bindings = self._bindings || {};
+		
+		$(selector).each(function() {
+			var element = this,
+				options = self.dom(element).getOptions();
+			if (!options.data) return;
+			self._bindings[options.data] = self._bindings[options.data] || [];
+			if (!_.contains(self._bindings[options.data], $(element))) self._bindings[options.data].push($(element));
+		});
+				
+	}
+
+	WAY.prototype.updateBindings = function(selector) {
+		
+		var self = this;
+			self._bindings = self._bindings || {};
+
+		// Set bindings for the specified selector
+		var bindings = self._bindings[selector] || [];
+		bindings.forEach(function(element) {
+			var focused = (($(element).get(0).tagName == "FORM") && ($(element).get(0) == $(':focus').parents("form").get(0))) ? true : false;
+			if (!focused) self.dom(element).fromStorage();			
+		});
+		
+		// Set bindings for the global selector
+		self._bindings["__all__"].forEach(function(element) {
+			self.dom(element).fromJSON(self.data);
+		});			
+		
+	}
+	
 	//////////////////////////////////
 	// DOM METHODS: OPTIONS PARSING //
 	//////////////////////////////////
@@ -364,46 +406,6 @@ window.way = {};
 		
 	}
 	
-	/////////////////////////////////////
-	// DOM METHODS: GET - SET BINDINGS //
-	/////////////////////////////////////
-	
-	WAY.prototype.getBindingsInDOM = function() {
-		
-		var self = this,
-			selector = "[" + tagPrefix + "-data]";
-		
-		self._bindings = self._bindings || {};
-		
-		$(selector).each(function() {
-			var element = this,
-				options = self.dom(element).getOptions();
-			if (!options.data) return;
-			self._bindings[options.data] = self._bindings[options.data] || [];
-			if (!_.contains(self._bindings[options.data], $(element))) self._bindings[options.data].push($(element));
-		});
-				
-	}
-		
-	WAY.prototype.setBindingsInDOM = function(selector) {
-		
-		var self = this;
-			self._bindings = self._bindings || {};
-
-		// Set bindings for the specified selector
-		var bindings = self._bindings[selector] || [];
-		bindings.forEach(function(element) {
-			var focused = (($(element).get(0).tagName == "FORM") && ($(element).get(0) == $(':focus').parents("form").get(0))) ? true : false;
-			if (!focused) self.dom(element).fromStorage();			
-		});
-		
-		// Set bindings for the global selector
-		self._bindings["__all__"].forEach(function(element) {
-			self.dom(element).fromJSON(self.data);
-		});			
-		
-	}
-		
 	//////////////////
 	// DATA METHODS //
 	//////////////////
@@ -428,8 +430,8 @@ window.way = {};
 		
 		// Maybe we should watch the DOM on any change [or] use a timeout to update _binders
 		// instead of scanning the DOM on any .set()?
-		self.getBindingsInDOM();
-		self.setBindingsInDOM(selector);
+		self.registerBindings();
+		self.updateBindings(selector);
 		self.emitChange(selector, value);
 		if (options.persistent) self.backup(selector);
 		
@@ -446,8 +448,8 @@ window.way = {};
 			self.data = {};
 		}
 		
-		self.getBindingsInDOM();
-		self.setBindingsInDOM(selector);
+		self.registerBindings();
+		self.updateBindings(selector);
 		self.emitChange(selector, null);
 		if (options.persistent) self.backup(selector);
 		
