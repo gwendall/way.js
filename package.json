@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/gwendall/way.js/issues"
   },
-  "homepage": "https://github.com/gwendall/way.js"
+  "homepage": "https://github.com/gwendall/way.js",
+  "devDependencies": {
+    "grunt": "^0.4.5"
+  }
 }
