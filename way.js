@@ -473,7 +473,7 @@ window.way = {};
 	// LOCALSTORAGE METHODS //
 	//////////////////////////
 
-	WAY.prototype.backup = function(selector) {
+	WAY.prototype.backup = function() {
 		
 		var self = this;
 		try { 
@@ -485,7 +485,7 @@ window.way = {};
 		
 	}
 
-	WAY.prototype.restore = function(selector) {
+	WAY.prototype.restore = function() {
 		
 		var self = this;
 		try {

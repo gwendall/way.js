@@ -5,7 +5,7 @@ Simple, lightweight, persistent, framework-agnostic two-way databinding (with ve
 Two-way databinding is useful, but you may not want to use a whole framework to enjoy it.
 
 [Demo](https://gwendall.github.io/way)  
-[jsFiddle](http://jsfiddle.net/gwendall/aoovyn37/30/)  
+[jsFiddle](http://jsfiddle.net/gwendall/aoovyn37/)  
 
 ## Quick start ##
 
@@ -133,7 +133,13 @@ Sets the element's value from any data (in json).
 <pre way-data="some.image" way-json="true"></pre>
 ```
 
-**way.dom(element).getOptions()**  
+**way.dom(element).getValue()**  
+Returns an object with the "way-" options passed to the element.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
+
+**way.dom(element).setValue(value, options)**  
 Returns an object with the "way-" options passed to the element.
 ```html
 <pre way-data="some.image" way-json="true"></pre>
@@ -145,27 +151,64 @@ Sets the default value of an element. Pass a [force] parameter to force setting 
 <pre way-data="some.image" way-json="true"></pre>
 ```
 
+**way.setDefaults()**  
+Sets all the default values of elements
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
+
+**way.dom(element).getOptions()**  
+Returns an object with the "way-" options passed to the element.
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
+
 ### Data methods
 
-**way.set(selector, value)**  
+**way.get(selector)**  
+Returns the value of the data stored under a given pathname.
+```javascript
+way.get("some.path");
+>> "bonjour"
+```
+
+**way.set(selector, value, options)**  
 Saves the data in memory under the specified pathname.
 ```javascript
 way.set("some.path", "bonjour!");
 ```
 
-**way.get(selector)**  
-Returns the value of the data stored under a given pathname.
+**way.remove(selector, options)**  
+Removes the data stored under a given pathname.
 ```javascript
-way.set("some.path", "bonjour!");
+way.remove("some.path");
 way.get("some.path");
->> "bonjour"
+>> undefined
 ```
 
-**way.digestBindings(selector)**  
+**way.clear(options)**  
+Clears all the data
+```javascript
+way.clear();
+way.get();
+>> {}
+```
+
+### Bindings methods
+
+**way.registerBindings()**  
+Triggers a scan of the DOM to find for element with the [way-data] attribute, that will be binded with some data. 
+```html
+<pre way-data="some.image" way-json="true"></pre>
+```
+
+**way.updateBindings(selector)**  
 Updates the bindings for the given selector. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
 ```html
 <pre way-data="some.image" way-json="true"></pre>
 ```
+
+### Watchers methods
 
 **way.watch(selector, callback[value])**  
 Watches changes of a given value.
@@ -183,15 +226,18 @@ way.watchAll(function(selector, value) {
 });
 ```
 
-**way.restore(selector)**  
+### localStorage methods
+
+**way.backup()**  
 Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
 ```javascript
-way.restore("some.data");
+way.backup();
 ```
-**way.setDefaults()**  
-Sets all the default values of elements
-```html
-<pre way-data="some.image" way-json="true"></pre>
+
+**way.restore()**  
+Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
+```javascript
+way.restore();
 ```
 
 ## To do ##
