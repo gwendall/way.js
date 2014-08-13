@@ -30,16 +30,7 @@ Enough talk, [see it in action](https://gwendall.github.io/way).
 
 ## Installation ##
 
-Step 1: Include the bundled library in the header of your script.
-
-```html
-<script src="/way.bundle.js"></script>
-```
-
-Step 2: There is no step 2. You are good to go.
-
-
-Note: The bundled version contains the required dependencies (listed below). Feel free to include them separately.
+Step 1: Include the library with its dependencies.
 
 ```html
 <script src="/vendor/jquery.js"></script>
@@ -49,6 +40,8 @@ Note: The bundled version contains the required dependencies (listed below). Fee
 <script src="/vendor/js2form.js"></script>
 <script src="/way.js"></script>
 ```
+
+Step 2: There is no step 2. You are good to go.
 
 ## Options ##
 
