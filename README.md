@@ -1,7 +1,7 @@
 way.js
 ======
 
-Simple, lightweight, persistent, framework-agnostic two-way databinding Javascript library.  
+Simple, lightweight, persistent, framework-agnostic two-way databinding Javascript library (with no to little JS code to write).
 
 [Demo](https://gwendall.github.io/way)  
 [jsFiddle](http://jsfiddle.net/gwendall/aoovyn37/)  
@@ -29,7 +29,16 @@ Enough talk, [see it in action](https://gwendall.github.io/way).
 
 ## Installation ##
 
-Step 1: Include the library with its dependencies.
+Step 1: Include the bundled library to your page.
+
+```html
+<script src="/way.bundle.min.js"></script>
+```
+
+Step 2: There is no step 2. You are good to go.
+
+
+Note: The bundled version contains the required dependencies (listed below). Feel free to include them separately.
 
 ```html
 <script src="/vendor/jquery.js"></script>
@@ -37,10 +46,8 @@ Step 1: Include the library with its dependencies.
 <script src="/vendor/underscore.json.js"></script>
 <script src="/vendor/form2js.js"></script>
 <script src="/vendor/js2form.js"></script>
-<script src="/way.js"></script>
+<script src="/way.min.js"></script>
 ```
-
-Step 2: There is no step 2. You are good to go.
 
 ## Options ##
 
