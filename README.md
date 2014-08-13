@@ -242,13 +242,13 @@ way.watchAll(function(selector, value) {
 
 ## Global options ##
 
-**way.options.persistent** (Boolean)
+**way.options.persistent** (Boolean)  
 Sets whether or not data will be saved to / restored from localStorage (true by default).
 
-**way.options.timeoutInput** (Number)
+**way.options.timeoutInput** (Number)  
 Number of milliseconds of the timeout between keypresses on binded elements to store their values to the datastore (50 by default).
 
-**way.options.timeoutDOM** (Number)
+**way.options.timeoutDOM** (Number)  
 Number of milliseconds of the timeout between scans of the DOM to list binded elements on each DOM change (500 by default).
 
 ## To do ##
