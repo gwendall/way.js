@@ -211,7 +211,8 @@ window.way = {};
 	WAY.prototype.setValue = function(data, options, element) {
 		
 		var self = this,
-			element = element || self._element;
+			element = element || self._element,
+			options = options || self.dom(element).getOptions();
 		
 		var setters = {
 			'FORM': function(a) {
@@ -231,7 +232,6 @@ window.way = {};
 			'IMG': function(a) {
 				
 				if (!a) {
-					var options = self.dom(element).getOptions() || {};
 					a = options.default || "";
 					$(element).attr('src', a);
 					return false;
@@ -256,7 +256,6 @@ window.way = {};
 						} else {
 							$(element).removeClass("way-error").removeClass("way-success");
 						}
-						var options = self.dom(element).getOptions() || {};
 						a = options.default || "";
 					}
 					// if (a) $(element).attr('src', a); // Preserve the previous image or not?
@@ -271,7 +270,10 @@ window.way = {};
 		var elementType = $(element).get(0).tagName;
 		var setter = setters[elementType] || defaultSetter;
 		setter(data);
-
+		if (options.href) {
+			console.log("Setting href.", options);
+			$(element).attr("href", self.get(options.href)); // options.href
+		}
 	}
 	
 	WAY.prototype.setDefault = function(force, options, element) {
@@ -329,12 +331,14 @@ window.way = {};
 			
 		var bindings = [];
 		if (selector) {
-			// Set bindings for the specified selector
-			bindings = self._bindings[selector] || [];
+			// Set bindings for the specified selector (bindings with keys starting with, to include nested bindings)
+			for (var key in self._bindings) {
+				if (startsWith(key, selector)) bindings = _.union(bindings, self._bindings[key]);
+			}
 		} else {
 			// Set bindings for all selectors
-			for (var k in self._bindings) {
-				bindings = _.union(bindings, self._bindings[k]);			
+			for (var key in self._bindings) {
+				bindings = _.union(bindings, self._bindings[key]);			
 			}			
 		}
 		
