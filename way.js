@@ -159,7 +159,7 @@ window.way = {};
 		}
 
 		if (options.json) {
-			data = _.json.isStringified(data) ? data : _.json.prettyprint(data);
+			data = _json.isStringified(data) ? data : _json.prettyprint(data);
 		}
 		
 		self.dom(element).setValue(data, options);
@@ -359,6 +359,7 @@ window.way = {};
 		var self = this,
 			element = element || self._element,
 			defaultOptions = {
+				data: null,
 				readonly: false,
 				writeonly: false,
 				persistent: false
@@ -426,7 +427,7 @@ window.way = {};
 		var self = this;
 		if (selector != undefined && !_.isString(selector)) return false;
 		if (!self.data) return {};
-		return selector ? _.json.get(self.data, selector) : self.data;
+		return selector ? _json.get(self.data, selector) : self.data;
 
 	}
 	
@@ -437,7 +438,7 @@ window.way = {};
 		
 		if (selector && !_.isString(selector)) return false;
 		self.data = self.data || {};
-		self.data = selector ? _.json.set(self.data, selector, value) : {};
+		self.data = selector ? _json.set(self.data, selector, value) : {};
 		
 		self.updateBindings(selector);
 		self.emitChange(selector, value);
@@ -451,7 +452,7 @@ window.way = {};
 		options = options || {};
 
 		if (selector) {
-			self.data = _.json.remove(self.data, selector);
+			self.data = _json.remove(self.data, selector);
 		} else {
 			self.data = {};
 		}
@@ -572,6 +573,13 @@ window.way = {};
 			var element = $(e.target);
 			way.dom(element).toStorage();
 		}, way.options.timeout);
+
+	});
+
+	$(document).on("click", "[" + tagPrefix + "-clear]", function(e) {
+
+		var options = way.dom(this).getOptions();
+		way.remove(options.data, options);
 
 	});
 
