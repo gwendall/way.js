@@ -15,16 +15,18 @@ window.way = {};
 	//////////////////////////////
 
 	var EventEmitter = function () {
+
 		this._watchers = {};
-		this._watchersGlobal = {};
+		this._watchersAll = {};
+
 	};
 
 	EventEmitter.prototype.constructor = EventEmitter;
 		
 	EventEmitter.prototype.watchAll = function(handler) {
 		
-		this._watchersGlobal = this._watchersGlobal || [];
-		if (!_.contains(this._watchersGlobal, handler)) this._watchersGlobal.push(handler);
+		this._watchersAll = this._watchersAll || [];
+		if (!_.contains(this._watchersAll, handler)) this._watchersAll.push(handler);
 		
 	}
 	
@@ -36,9 +38,10 @@ window.way = {};
 
 	}
 	
-	EventEmitter.prototype.findDependantWatchers = function(selector) {
+	EventEmitter.prototype.findWatcherDeps = function(selector) {
 		
-		// Go up to look for parent watchers... (ex: if "some.nested.value" is the selector, it should also trigger for "some")
+		// Go up to look for parent watchers
+		// ex: if "some.nested.value" is the selector, it should also trigger for "some"
 		
 		var result = [];
 		var watchers = _.keys(this._watchers);
@@ -56,7 +59,7 @@ window.way = {};
 		var self = this;
 		
 		// Send data down to the local watchers
-		var deps = self.findDependantWatchers(selector);		
+		var deps = self.findWatcherDeps(selector);		
 		deps.forEach(function(item) {
 			if (this._watchers[item]) {
 				this._watchers[item].forEach(function(handler) {
@@ -66,8 +69,8 @@ window.way = {};
 		});
 		
 		// Send data down to the global watchers
-		if (!self._watchersGlobal || !_.isArray(self._watchersGlobal)) return;
-		self._watchersGlobal.forEach(function(watcher) {
+		if (!self._watchersAll || !_.isArray(self._watchersAll)) return;
+		self._watchersAll.forEach(function(watcher) {
 			if (_.isFunction(watcher)) watcher.apply(self, [selector, self.get(selector)]);			
 		});
 		
@@ -78,8 +81,11 @@ window.way = {};
 	////////////////////
 
 	var WAY = function () {
+
 		this.data = {};
 		this.options = {};
+		this._bindings = {};
+
 	};
 
 	// Inherit from EventEmitter
@@ -91,8 +97,10 @@ window.way = {};
 	//////////////////////////
 	
 	WAY.prototype.dom = function(element) {
+
 		this._element = $(element);
 		return this;
+
 	};
 	
 	//////////////////////////////
@@ -219,7 +227,14 @@ window.way = {};
 				$(element).html(a);				
 			},
 			'IMG': function(a) {
-
+				
+				if (!a) {
+					var options = self.dom(element).getOptions() || {};
+					a = options.default || "";
+					$(element).attr('src', a);
+					return false;
+				}
+				
 				var isValidImageUrl = function(url, cb) {
 					$(element).addClass("way-loading");
 					$("<img>", {
@@ -228,6 +243,7 @@ window.way = {};
 						load: function() { cb(true); }
 					});
 				}
+				
 				isValidImageUrl(a, function(response) {
 					$(element).removeClass("way-loading");
 					if (response) {
@@ -244,15 +260,7 @@ window.way = {};
 					// if (a) $(element).attr('src', a); // Preserve the previous image or not?
 					$(element).attr('src', a);
 				});
-				/*
-				if (a) {
-				} else {
-					var options = self.dom(element).getOptions() || {};
-					a = options.img || "";
-					$(element).removeClass("way-error");
-					if (a) $(element).attr('src', a);
-				}
-				*/
+
 			}
 		}
 		var defaultSetter = function(a) {
@@ -268,24 +276,25 @@ window.way = {};
 
 		var self = this,
 			element = element || self._element,
+			force = force || false,
 			options = options ? _.extend(self.dom(element).getOptions(), options) : self.dom(element).getOptions();
 			
 		// Should we just set the default value in the DOM, or also in the datastore?
-		if (options.default && (force == true)) self.set(options.data, options.default, options);
-		if (options.default && (force != true)) self.dom(element).setValue(options.default, options);
+		if (!options.default) return false;
+		if (!force) return self.dom(element).setValue(options.default, options);
+		if (force) return self.set(options.data, options.default, options);
 
 	}
 	
 	WAY.prototype.setDefaults = function() {
-		
+
 		var self = this,
-			dataSelector = self.buildSelector(null, "default");
+			dataSelector = "[" + tagPrefix + "-default]";
 		
 		$(dataSelector).each(function() {
-			var options = self.dom(this).getOptions();
-			self.dom(this).setValue(options.default);
+			self.dom(this).setDefault();
 		});
-		
+
 	}
 	
 	//////////////////////////////////
@@ -354,35 +363,50 @@ window.way = {};
 	    return attributes;
 		
 	}
-		
-	///////////////////////
-	// REACTIVE BINDINGS //
-	///////////////////////
 	
-	WAY.prototype.set = function(selector, value, options) {
+	/////////////////////////////////////
+	// DOM METHODS: GET - SET BINDINGS //
+	/////////////////////////////////////
+	
+	WAY.prototype.getBindingsInDOM = function() {
+		
+		var self = this,
+			selector = "[" + tagPrefix + "-data]";
+		
+		self._bindings = self._bindings || {};
+		
+		$(selector).each(function() {
+			var element = this,
+				options = self.dom(element).getOptions();
+			if (!options.data) return;
+			self._bindings[options.data] = self._bindings[options.data] || [];
+			if (!_.contains(self._bindings[options.data], $(element))) self._bindings[options.data].push($(element));
+		});
+				
+	}
+		
+	WAY.prototype.setBindingsInDOM = function(selector) {
 		
 		var self = this;
-		options = options || {};
-		
-		self.settr(self, selector, value);
+			self._bindings = self._bindings || {};
 
-		self.emitChange(selector, value);
-		if (options.persistent) self.backup(selector);
+		// Set bindings for the specified selector
+		var bindings = self._bindings[selector] || [];
+		bindings.forEach(function(element) {
+			var focused = (($(element).get(0).tagName == "FORM") && ($(element).get(0) == $(':focus').parents("form").get(0))) ? true : false;
+			if (!focused) self.dom(element).fromStorage();			
+		});
 		
-		// Maybe we should instead watch the DOM on any change, and update this list 
-		self.getBindingsInDOM();
-		self.setBindingsInDOM(selector);
+		// Set bindings for the global selector
+		self._bindings["__all__"].forEach(function(element) {
+			self.dom(element).fromJSON(self.data);
+		});			
 		
 	}
-	
-	WAY.prototype.settr = function(self, selector, value) {
 		
-		// Separate settr so that we can easily adapt to other data stores.
-		if (selector && !_.isString(selector)) return false;
-		self.data = self.data || {};
-		self.data = selector ? _.json.set(self.data, selector, value) : {};
-
-	}
+	//////////////////
+	// DATA METHODS //
+	//////////////////
 	
 	WAY.prototype.get = function(selector) {
 		
@@ -392,10 +416,29 @@ window.way = {};
 		return selector ? _.json.get(self.data, selector) : self.data;
 
 	}
-
+	
+	WAY.prototype.set = function(selector, value, options) {
+		
+		var self = this;
+		options = options || {};
+		
+		if (selector && !_.isString(selector)) return false;
+		self.data = self.data || {};
+		self.data = selector ? _.json.set(self.data, selector, value) : {};
+		
+		// Maybe we should watch the DOM on any change [or] use a timeout to update _binders
+		// instead of scanning the DOM on any .set()?
+		self.getBindingsInDOM();
+		self.setBindingsInDOM(selector);
+		self.emitChange(selector, value);
+		if (options.persistent) self.backup(selector);
+		
+	}
+	
 	WAY.prototype.remove = function(selector, options) {
 		
 		var self = this;
+		options = options || {};
 
 		if (selector) {
 			self.data = _.json.remove(self.data, selector);
@@ -403,56 +446,21 @@ window.way = {};
 			self.data = {};
 		}
 		
-		self.emitChange(selector, null);
+		self.getBindingsInDOM();
 		self.setBindingsInDOM(selector);
-		self.backup(selector);
+		self.emitChange(selector, null);
+		if (options.persistent) self.backup(selector);
 		
 	}
-	
-	WAY.prototype.getBindingsInDOM = function() {
+
+	WAY.prototype.clear = function() {
 		
-		var self = this,
-			selector = "[" + tagPrefix + "-data]";
-		
-		self._binders = self._binders || {};
-		
-		$(selector).each(function() {
-			var element = this,
-				options = self.dom(element).getOptions();
-			if (options.data) {
-				self._binders[options.data] = self._binders[options.data] || [];
-				if (!_.contains(self._binders[options.data], $(element))) self._binders[options.data].push($(element));
-			}
-		});
-				
-	}
-		
-	WAY.prototype.setBindingsInDOM = function(selector) {
-		
-		var self = this;
-		
-		var dataSelector = self.buildSelector(selector, "data");
-		$(dataSelector).each(function() {
-			// Make sure the currently focused input is not getting refreshed
-			var focused = (($(this).get(0).tagName == "FORM") && ($(this).get(0) == $(':focus').parents("form").get(0))) ? true : false;
-			if (!focused) self.dom(this).fromStorage();
-		});
-		
-		// Selectors for all data (mainly for debug)
-		var allSelector = "[" + tagPrefix + "-data='']";
-		$(allSelector).each(function() {
-			self.dom(this).fromJSON(self.data);
-		});
+		this.remove(null, {persistent:true});
 		
 	}
-	
-	WAY.prototype.buildSelector = function(selector, type) {
-		if (selector) return "[" + tagPrefix + "-" + type + "^='" + selector.split('.')[0] + "']";
-		if (!selector) return "[" + tagPrefix + "-" + type + "]";
-	}
-	
+		
 	//////////////////////////
-	// LOCAL STORAGE BACKUP //
+	// LOCALSTORAGE METHODS //
 	//////////////////////////
 	
 	WAY.prototype.backup = function(selector) {
@@ -485,8 +493,10 @@ window.way = {};
 	}
 	
 	$(document).ready(function() {
+
 		way.setDefaults();
 		way.restore();
+
 	});
 	
 	//////////
