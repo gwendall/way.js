@@ -202,7 +202,7 @@ way.backup();
 ```
 
 **way.restore()**  
-Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default.
+Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default (can be changed with [global options](https://github.com/Gwendall/way.js#global-options)).
 ```javascript
 way.restore();
 ```
