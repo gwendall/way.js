@@ -6,7 +6,7 @@
 //	- https://gist.github.com/furf/3208381
 //  - http://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects
 //	Version '0.1.0'
-
+	
 !function(root, String) {
 
 	'use strict';
@@ -50,9 +50,12 @@
 	var _json = {}
 
 	_json.VERSION = '0.1.0';
+	_json.debug = true;
 	
 	_json.exit = function(source, reason, data, value) {
-
+		
+		if (!_json.debug) return;
+		
 		var messages = {};
 		messages.noJSON = "Not a JSON";
 		messages.noString = "Not a String";
@@ -68,13 +71,8 @@
 	
 	_json.is = function(json) {
 		
-		try {
-	        JSON.stringify(json);
-	        return true;
-	    } catch (e) {
-	        return false;
-	    }
-		
+		return (toString.call(json) == "[object Object]");
+
 	}
 	
 	_json.isStringified = function(string) {
@@ -126,8 +124,7 @@
 		var array = _json.get(json, selector);
 		if (!_.isArray(array)) return _json.exit("push", "noArray", "array", array);
 		array.push(value);
-		_json.set(json, selector, array);
-		return;
+		return _json.set(json, selector, array);
 
 	}
 
@@ -139,8 +136,7 @@
 		var array = _json.get(json, selector);
 		if (!_.isArray(array)) return _json.exit("unshift", "noArray", "array", array);
 		array.unshift(value);
-		_json.set(json, selector, array);
-		return;
+		return _json.set(json, selector, array);
 
 	}
 	
@@ -170,7 +166,7 @@
 		return result;
 		
 	}
-	
+
 	_json.unflatten = function(data) {
 		
 		if (Object(data) !== data || Array.isArray(data))
@@ -189,6 +185,12 @@
 		}
 		return result[""];
 		
+	}
+	
+	_json.prettyprint = function(json) {
+
+		return JSON.stringify(json, undefined, 2);
+
 	}
 	
 	// Integrate with Underscore.js if defined
