@@ -66,7 +66,7 @@ json | boolean | false | Returns pretty-printed json data to its DOM element.
 pick | array | null | A comma separated list of values to pick (in forms only) to sync with the storage. By default, all form inputs are synced.
 omit | array | null | A comma separated list of values (in forms only) to not sync with the storage. By default, no form input is omitted.
 
-Examples:
+Some examples:
 
 ```html
 <form way-data="some.form" way-pick="some,properties,that,can.be.nested">
