@@ -85,8 +85,8 @@ window.way = {};
 		this.data = {};
 		this._bindings = {};
 		this.options = {
-			autobindings: true,
-			timeout: 50
+			timeoutInput: 50,
+			timeoutDOM: 100
 		};
 
 	};
@@ -303,6 +303,7 @@ window.way = {};
 	// DOM METHODS: GET - SET BINDINGS //
 	/////////////////////////////////////
 	
+	// Scans the DOM to look for new bindings
 	WAY.prototype.registerBindings = function() {
 		
 		var self = this,
@@ -310,6 +311,7 @@ window.way = {};
 		
 		self._bindings = self._bindings || {};
 		
+		// #TODO: deal with bindings removed from the DOM
 		$(selector).each(function() {
 			var element = this,
 				options = self.dom(element).getOptions();
@@ -533,36 +535,40 @@ window.way = {};
 
 	way = new WAY();
 
+	var timeoutDOM = null;
 	$(document).ready(function() {
 
 		way.registerBindings();
 		way.setDefaults();
 		way.restore();
 
-		// For now, we register bindings like that (to get dynamically created ones)
-		// Maybe we should watch for DOM changes instead (excepting input value changes)?
-
-		setInterval(function() {
-			if (way.options.autobindings) way.registerBindings();
-		}, 1000);
-
+		// We need to register dynamically added bindings so we do it by watching DOM changes
+		// We use a timeout since "DOMSubtreeModified" gets triggered on every change in the DOM (even input value changes)
+		// so we can limit the number of scans when a user is typing something
+		$("body").bind("DOMSubtreeModified", function() {
+			if (timeoutDOM) clearTimeout(timeoutDOM);
+			timeoutDOM = setTimeout(function() {
+				way.registerBindings();
+			}, way.options.timeoutDOM);
+		});
+		
 	});
 
-	var timeout = null;
+	var timeoutInput = null;
 	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
 
-		if (timeout) clearTimeout(timeout);
-		timeout = setTimeout(function() {
+		if (timeoutInput) clearTimeout(timeoutInput);
+		timeoutInput = setTimeout(function() {
 			var element = $(e.target).parents("form");
 			way.dom(element).toStorage();
-		}, way.options.timeout);
+		}, way.options.timeoutInput);
 
 	});
 
 	$(document).on("keyup change", ":input[" + tagPrefix + "-data]", function(e) {
 
-		if (timeout) clearTimeout(timeout);
-		timeout = setTimeout(function() {
+		if (timeoutInput) clearTimeout(timeoutInput);
+		timeoutInput = setTimeout(function() {
 			var element = $(e.target);
 			way.dom(element).toStorage();
 		}, way.options.timeout);
