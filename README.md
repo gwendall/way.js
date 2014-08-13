@@ -155,11 +155,19 @@ Updates the bindings for the given selector. If omitted, all (excluding write-on
 <pre way-data="some.image" way-json="true"></pre>
 ```
 
-**way.watch(selector, callback)**  
+**way.watch(selector, callback[data])**  
 Watches changes of a given value.
 ```javascript
 way.watch("some.data", function(value) {
 	console.log("Data has been updated to value: " + value);
+});
+```
+
+**way.watchAll(callback[selector, data])**  
+Watches changes of a given value.
+```javascript
+way.watchAll(function(selector, value) {
+	console.log("The data " + selector + "has been changed.", value);
 });
 ```
 
@@ -174,13 +182,8 @@ Sets all the default values of elements
 <pre way-data="some.image" way-json="true"></pre>
 ```
 
-## Notes ##
-
-xxx
-
 ## To do ##
 
-- localStorage (localForage?) integration
 - document a bit more the code
 - test
 - enjoy
