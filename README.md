@@ -211,7 +211,7 @@ way.restore();
 ### Binding methods
 
 **way.registerBindings()**  
-Triggers a scan of the DOM to find for element with the [way-data] attribute, that will be binded with some data. 
+Triggers a scan of the DOM to find and save the elements with the [way-data] attribute, that will be binded with some data. 
 ```html
 <pre way-data="some.image" way-json="true"></pre>
 ```
