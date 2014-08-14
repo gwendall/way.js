@@ -216,7 +216,7 @@ way.registerBindings()
 ```
 
 **way.updateBindings(selector)**  
-Updates the bindings for the given selector. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
+Sets the value of all the DOM elements binded to a data selector with their values in way.js' datastore. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed.
 ```javascript
 way.updateBindings("formData.name")
 ```
