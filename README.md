@@ -129,7 +129,7 @@ way.dom("#someForm").toJSON()
 **way.dom(element).fromJSON(data, options)**  
 Sets the element's value from any data (in json).
 ```javascript
-way.dom("#someForm").fromJSON()
+way.dom("#someForm").fromJSON({name:"John Doe"})
 ```
 
 **way.dom(element).getValue()**  
@@ -139,7 +139,7 @@ way.dom("#someForm").getValue()
 ```
 
 **way.dom(element).setValue(value, options)**  
-Returns an object with the "way-" options passed to the element.
+Sets the element's value from any data (in json).
 ```javascript
 way.dom("#someForm").setValue({name:"John Doe"})
 ```
