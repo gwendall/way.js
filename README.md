@@ -256,7 +256,7 @@ way.watch("some.data", function(value) {
 Watches all changes in way.js' datastore.
 ```javascript
 way.watchAll(function(selector, value) {
-	console.log("The data " + selector + "has been changed.", value);
+	console.log("The data " + selector + " has been changed.", value);
 });
 ```
 
@@ -271,13 +271,13 @@ way.options.persistent = true
 **way.options.timeoutInput** (Number)  
 Number of milliseconds of the timeout between keypresses on bound elements to store their values to the datastore (50 by default).
 ```javascript
-way.options.persistent = 50
+way.options.timeoutInput = 50
 ```
 
 **way.options.timeoutDOM** (Number)  
 Number of milliseconds of the timeout between scans of the DOM to list bound elements on each DOM change (500 by default).
 ```javascript
-way.options.persistent = 500
+way.options.timeoutDOM = 500
 ```
 
 ## To do ##
@@ -305,7 +305,7 @@ Otherwise changes will be rejected.
 
 The MIT License
 
-Copyright (c) 2011 Gwendall Esnault gwendall.esnault@gmail.com
+Copyright (c) 2014 Gwendall Esnault gwendall.esnault@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
