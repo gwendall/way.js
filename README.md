@@ -7,6 +7,8 @@ Simple, lightweight, persistent, framework-agnostic two-way databinding Javascri
 [Codepen](http://codepen.io/anon/pen/fkEqw)  
 [jsFiddle](http://jsfiddle.net/gwendall/pazk0903/)  
 
+Follow us on Twitter: [@way_js](https://twitter.com/way_js)  
+
 ## Quick start ##
 
 Declare an HTML element with some tags.
