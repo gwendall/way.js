@@ -9,7 +9,7 @@ Simple, lightweight, persistent, framework-agnostic two-way databinding Javascri
 
 ## Quick start ##
 
-Declare an HTML element with some tags.
+Declare an HTML element with some tags.ba
 
 ```html
 
@@ -196,13 +196,13 @@ way.get();
 ### localStorage methods
 
 **way.backup()**  
-Stores the data saved in way.js' datastore to localStorage. If [selector] is omitted, all data wll be stored to localStorage.
+Stores the data saved in way.js' datastore to localStorage.
 ```javascript
 way.backup();
 ```
 
 **way.restore()**  
-Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default (can be changed with [global options](way.js#global-options)).
+Restores the data saved in localStorage. Called on $(document).ready by default (can be changed with [global options](way.js#global-options)).
 ```javascript
 way.restore();
 ```
