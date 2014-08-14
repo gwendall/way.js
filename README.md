@@ -133,7 +133,7 @@ way.dom("#someForm").fromJSON()
 ```
 
 **way.dom(element).getValue()**  
-Returns an object with the "way-" options passed to the element.
+Returns a structured JSON containing the value of the DOM element.
 ```javascript
 way.dom("#someForm").getValue()
 ```
