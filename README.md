@@ -105,7 +105,7 @@ way-success | When... Well, you got it.
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 ```javascript
 way.set("image.url", "somethingThatsNotAnImageURL");
-```
+```  
 ```html
 <img way-data="image.url">
 <!-- Gets a class ".way-error" attributed -->
