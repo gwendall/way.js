@@ -232,7 +232,7 @@ way.watch("some.data", function(value) {
 ```
 
 **way.watchAll(callback[selector, value])**  
-Watches changes of a given value.
+Watches all changes in way.js' datastore.
 ```javascript
 way.watchAll(function(selector, value) {
 	console.log("The data " + selector + "has been changed.", value);
