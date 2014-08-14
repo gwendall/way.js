@@ -9,7 +9,7 @@ Simple, lightweight, persistent, framework-agnostic two-way databinding Javascri
 
 ## Quick start ##
 
-Declare an HTML element with some tags.
+Declare an HTML element with some tags.ba
 
 ```html
 
@@ -129,17 +129,17 @@ way.dom("#someForm").toJSON()
 **way.dom(element).fromJSON(data, options)**  
 Sets the element's value from any data (in json).
 ```javascript
-way.dom("#someForm").fromJSON()
+way.dom("#someForm").fromJSON({name:"John Doe"})
 ```
 
 **way.dom(element).getValue()**  
-Returns an object with the "way-" options passed to the element.
+Returns a structured JSON containing the value of the DOM element.
 ```javascript
 way.dom("#someForm").getValue()
 ```
 
 **way.dom(element).setValue(value, options)**  
-Returns an object with the "way-" options passed to the element.
+Sets the element's value from any data (in json).
 ```javascript
 way.dom("#someForm").setValue({name:"John Doe"})
 ```
@@ -196,13 +196,13 @@ way.get();
 ### localStorage methods
 
 **way.backup()**  
-Stores the data saved in way.js' datastore to localStorage. If [selector] is omitted, all data wll be stored to localStorage.
+Stores the data saved in way.js' datastore to localStorage.
 ```javascript
 way.backup();
 ```
 
 **way.restore()**  
-Restores the data saved in localStorage. If [selector] is omitted, all data in localStorage will be restored in-memory. Called on $(document).ready by default (can be changed with [global options](way.js#global-options)).
+Restores the data saved in localStorage. Called on $(document).ready by default (can be changed with [global options](way.js#global-options)).
 ```javascript
 way.restore();
 ```
@@ -216,7 +216,7 @@ way.registerBindings()
 ```
 
 **way.updateBindings(selector)**  
-Updates the bindings for the given selector. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed with values from the in-store memory.
+Sets the value of all the DOM elements binded to a data selector with their values in way.js' datastore. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed.
 ```javascript
 way.updateBindings("formData.name")
 ```
@@ -232,7 +232,7 @@ way.watch("some.data", function(value) {
 ```
 
 **way.watchAll(callback[selector, value])**  
-Watches changes of a given value.
+Watches all changes in way.js' datastore.
 ```javascript
 way.watchAll(function(selector, value) {
 	console.log("The data " + selector + "has been changed.", value);
