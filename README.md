@@ -55,7 +55,7 @@ Note: The bundled version contains the required dependencies (listed below). Fee
 Options can be passed via data attributes or JavaScript. For data attributes, append the option name to way-, as in way-data="".
 Set these options to the elements that have to be bound.
 
-Name | Type | Default | Desription
+Name | Type | Default | Description
 ----|------|---- | ----
 data | string | null | Allows to define the dot separated path where the data will be stored. Can include arrays. When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage. Pass the "\_\_all\_\_" path to access all way.js' data.
 default | string | null | A link to a default data to set on an element, in case there is no bound value.
@@ -94,8 +94,9 @@ Some examples:
 
 **For images only**    
 Way.js adds classes to your DOM elements to easily display errors with the data they get passed.  
+
 Class | Description
-----|------
+---- | ------
 way-loading | When an image is getting downloaded to a DOM element
 way-error | When no image is returned from the URL provided
 way-success | When... Well, you got it.
