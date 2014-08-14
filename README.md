@@ -101,9 +101,6 @@ way-loading | When an image is getting downloaded to a DOM element
 way-error | When no image is returned from the URL provided
 way-success | When... Well, you got it.
 
-## Methods ##
-
-Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 ```javascript
 way.set("image.url", "somethingThatsNotAnImageURL");
 ```  
@@ -111,6 +108,10 @@ way.set("image.url", "somethingThatsNotAnImageURL");
 <img way-data="image.url">
 <!-- Gets a class ".way-error" attributed -->
 ```
+
+## Methods ##
+
+Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
 
 Notes: 
 - [element] refers to the jQuery selector of a DOM element
