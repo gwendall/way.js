@@ -93,7 +93,7 @@ Some examples:
 ## Helper classes ##
 
 **For images only**    
-Way.js adds classes to your DOM elements to easily display errors with the data they get passed.  
+Way.js adds classes to your DOM elements to easily detect loading/error/success of the data they are provided.  
 
 Class | Description
 ---- | ------
