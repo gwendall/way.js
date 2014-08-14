@@ -225,7 +225,8 @@ window.way = {};
 				$(element).val(a || '');
 			},
 			'PRE': function(a) {
-				$(element).html(a);				
+				if (options.html) $(element).html(a);
+				else $(element).text(a);			
 			},
 			'IMG': function(a) {
 				
@@ -263,7 +264,8 @@ window.way = {};
 			}
 		}
 		var defaultSetter = function(a) {
-			$(element).html(a);
+			if (options.html) $(element).html(a);
+			else $(element).text(a);			
 		}
 		var elementType = $(element).get(0).tagName;
 		var setter = setters[elementType] || defaultSetter;
@@ -358,6 +360,7 @@ window.way = {};
 			element = element || self._element,
 			defaultOptions = {
 				data: null,
+				html: false,
 				readonly: false,
 				writeonly: false,
 				persistent: false
@@ -379,6 +382,7 @@ window.way = {};
 				readonly: "boolean",
 				writeonly: "boolean",
 				json: "boolean",
+				html: "boolean",
 				persistent: "boolean"
 			};
 

@@ -63,6 +63,7 @@ persistent | boolean | true | Allows to store the data to localStorage everytime
 readonly | boolean | false | Prevents the element changes from resetting the bound value.
 writeonly | Boolean | false | Prevents the element from getting changed when the bound value changes.
 json | boolean | false | Returns pretty-printed json data to its DOM element.
+html | boolean | false | Declares whether the data attributed to an element should be parsed as HTML or not.
 pick | array | null | A comma separated list of values to pick (in forms only) to sync with the storage. By default, all form inputs are synced.
 omit | array | null | A comma separated list of values (in forms only) to not sync with the storage. By default, no form input is omitted.
 
