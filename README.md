@@ -57,7 +57,7 @@ Set these options to the elements that have to be bound.
 
 Name | Type | Default | Desription
 ----|------|---- | ----
-data | string | null | Allows to define the dot separated path where the data will be stored. Can include arrays. When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage. Pass the "__all__" path to access all way.js' data.
+data | string | null | Allows to define the dot separated path where the data will be stored. Can include arrays. When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage. Pass the "\_\_all\_\_" path to access all way.js' data.
 default | string | null | A link to a default data to set on an element, in case there is no bound value.
 persistent | boolean | true | Allows to store the data to localStorage everytime the bound data changes.
 readonly | boolean | false | Prevents the element changes from resetting the bound value.
