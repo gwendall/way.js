@@ -9,7 +9,7 @@ Simple, lightweight, persistent, framework-agnostic two-way databinding Javascri
 
 ## Quick start ##
 
-Declare an HTML element with some tags.ba
+Declare an HTML element with some tags.
 
 ```html
 
