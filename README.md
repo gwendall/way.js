@@ -23,7 +23,7 @@ Declare an HTML element with some tags.
 
 ```
 
-Boom. Now every change in the form will be stored in-memory. The binded span's html will be changed on the fly. And the binded data will be persistent, meaning your HTML will be populated with your data on page reloads.
+Boom. Now every change in the form will be stored in-memory. The bound span's html will be changed on the fly. And the bound data will be persistent, meaning your HTML will be populated with your data on page reloads.
 
 Enough talk, [see it in action](https://gwendall.github.io/way).
 
@@ -53,15 +53,15 @@ Note: The bundled version contains the required dependencies (listed below). Fee
 ## Options ##
 
 Options can be passed via data attributes or JavaScript. For data attributes, append the option name to way-, as in way-data="".
-Set these options to the elements that have to be binded.
+Set these options to the elements that have to be bound.
 
 Name | Type | Default | Desription
 ----|------|---- | ----
-data | string | null | Allows to define the dot separated path where the data will be stored. Can include arrays. When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage.
-default | string | null | A link to a default data to set on an element, in case there is no binded value.
-persistent | boolean | true | Allows to store the data to localStorage everytime the binded data changes.
-readonly | boolean | false | Prevents the element changes from resetting the binded value.
-writeonly | Boolean | false | Prevents the element from getting changed when the binded value changes.
+data | string | null | Allows to define the dot separated path where the data will be stored. Can include arrays. When used on a form, a json variable made of all the included inputs with a [name] attribute will be created and stored in the specified storage. Pass the "__all__" path to access all way.js' data.
+default | string | null | A link to a default data to set on an element, in case there is no bound value.
+persistent | boolean | true | Allows to store the data to localStorage everytime the bound data changes.
+readonly | boolean | false | Prevents the element changes from resetting the bound value.
+writeonly | Boolean | false | Prevents the element from getting changed when the bound value changes.
 json | boolean | false | Returns pretty-printed json data to its DOM element.
 pick | array | null | A comma separated list of values to pick (in forms only) to sync with the storage. By default, all form inputs are synced.
 omit | array | null | A comma separated list of values (in forms only) to not sync with the storage. By default, no form input is omitted.
@@ -145,13 +145,13 @@ way.dom("#someForm").setValue({name:"John Doe"})
 ```
 
 **way.dom(element).setDefault(force)**  
-Sets the default value of an element. By default, only the DOM element gets its value set to the default value. Its binded value in the datastore in unchanged. Pass a [force] parameter if you need to force setting in-memory value of this data to the element's default value.
+Sets the default value of an element. By default, only the DOM element gets its value set to the default value. Its bound value in the datastore in unchanged. Pass a [force] parameter if you need to force setting in-memory value of this data to the element's default value.
 ```javascript
 way.dom("#someForm").setDefault()
 ```
 
 **way.setDefaults(force)**  
-Sets all the default values of binded DOM elements.
+Sets all the default values of bound DOM elements.
 ```javascript
 way.setDefaults()
 ```
@@ -210,7 +210,7 @@ way.restore();
 ### Binding methods
 
 **way.registerBindings()**  
-Triggers a scan of the DOM to find and save the elements with the [way-data] attribute, that will be binded with some data. 
+Triggers a scan of the DOM to find and save the elements with the [way-data] attribute, that will be bound with some data. 
 ```javascript
 way.registerBindings()
 ```
@@ -248,13 +248,13 @@ way.options.persistent = true
 ```
 
 **way.options.timeoutInput** (Number)  
-Number of milliseconds of the timeout between keypresses on binded elements to store their values to the datastore (50 by default).
+Number of milliseconds of the timeout between keypresses on bound elements to store their values to the datastore (50 by default).
 ```javascript
 way.options.persistent = 50
 ```
 
 **way.options.timeoutDOM** (Number)  
-Number of milliseconds of the timeout between scans of the DOM to list binded elements on each DOM change (500 by default).
+Number of milliseconds of the timeout between scans of the DOM to list bound elements on each DOM change (500 by default).
 ```javascript
 way.options.persistent = 500
 ```
