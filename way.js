@@ -5,11 +5,11 @@
 window.way = {};
 
 (function(){
-	
+
 	'use strict';
 
-	var tagPrefix = "way";
-	
+	var tagPrefix = 'way';
+
 	//////////////////////////////
 	// EVENT EMITTER DEFINITION //
 	//////////////////////////////
@@ -22,60 +22,60 @@ window.way = {};
 	};
 
 	EventEmitter.prototype.constructor = EventEmitter;
-		
+
 	EventEmitter.prototype.watchAll = function(handler) {
-		
+
 		this._watchersAll = this._watchersAll || [];
 		if (!_.contains(this._watchersAll, handler)) this._watchersAll.push(handler);
-		
+
 	}
-	
+
 	EventEmitter.prototype.watch = function(selector, handler) {
-	
-		if (!this._watchers) this._watchers = {};		
+
+		if (!this._watchers) this._watchers = {};
 		this._watchers[selector] = this._watchers[selector] || [];
 		this._watchers[selector].push(handler);
 
 	}
-	
+
 	EventEmitter.prototype.findWatcherDeps = function(selector) {
-		
+
 		// Go up to look for parent watchers
 		// ex: if "some.nested.value" is the selector, it should also trigger for "some"
-		
+
 		var result = [];
 		var watchers = _.keys(this._watchers);
 		watchers.forEach(function(watcher) {
-			if (startsWith(selector, watcher)) result.push(watcher);			
+			if (startsWith(selector, watcher)) result.push(watcher);
 		});
 		return result;
-		
+
 	}
-		
+
 	EventEmitter.prototype.emitChange = function(selector /* , arguments */) {
 
 		if (!this._watchers) this._watchers = {};
-		
+
 		var self = this;
-		
+
 		// Send data down to the local watchers
-		var deps = self.findWatcherDeps(selector);		
+		var deps = self.findWatcherDeps(selector);
 		deps.forEach(function(item) {
 			if (this._watchers[item]) {
 				this._watchers[item].forEach(function(handler) {
 					handler.apply(self, [self.get(item)]);
-				});				
+				});
 			}
 		});
-		
+
 		// Send data down to the global watchers
 		if (!self._watchersAll || !_.isArray(self._watchersAll)) return;
 		self._watchersAll.forEach(function(watcher) {
-			if (_.isFunction(watcher)) watcher.apply(self, [selector, self.get(selector)]);			
+			if (_.isFunction(watcher)) watcher.apply(self, [selector, self.get(selector)]);
 		});
-		
+
 	}
-	
+
 	////////////////////
 	// WAY DEFINITION //
 	////////////////////
@@ -99,20 +99,20 @@ window.way = {};
 	//////////////////////////
 	// DOM METHODS CHAINING //
 	//////////////////////////
-	
+
 	WAY.prototype.dom = function(element) {
 
 		this._element = $(element);
 		return this;
 
 	};
-	
+
 	//////////////////////////////
 	// DOM METHODS: DOM -> JSON //
 	//////////////////////////////
-	
+
 	WAY.prototype.toStorage = function(options, element) {
-		
+
 		var self = this,
 			element = element || self._element,
 			options = options || self.dom(element).getOptions(),
@@ -120,16 +120,16 @@ window.way = {};
 
 		if (options.readonly) return false;
 		self.set(options.data, data, options);
-		
+
 	}
-	
+
 	WAY.prototype.toJSON = function(options, element) {
 
 		var self = this,
 			element = element || self._element,
 			data = self.dom(element).getValue(),
 			options = options || self.dom(element).getOptions();
-		
+
 		if (_.isArray(options.pick)) data = selectNested(data, options.pick, true);
 		if (_.isArray(options.omit)) data = selectNested(data, options.omit, false);
 
@@ -140,47 +140,47 @@ window.way = {};
 	//////////////////////////////
 	// DOM METHODS: JSON -> DOM //
 	//////////////////////////////
-	
+
 	WAY.prototype.fromStorage = function(options, element) {
-		
+
 		var self = this,
 			element = element || self._element,
 			options = options || self.dom(element).getOptions();
-		
+
 		if (options.writeonly) return false;
-		
+
 		var data = self.get(options.data);
 		self.dom(element).fromJSON(data, options);
 
 	}
-	
+
 	WAY.prototype.fromJSON = function(data, options, element) {
-				
+
 		var self = this,
 			element = element || self._element,
 			options = options || self.dom(element).getOptions();
 
 		if (options.writeonly) return false;
-		
+
 		if (_.isObject(data)) {
 			if (_.isArray(options.pick)) data = selectNested(data, options.pick, true);
-			if (_.isArray(options.omit)) data = selectNested(data, options.omit, false);			
+			if (_.isArray(options.omit)) data = selectNested(data, options.omit, false);
 			var currentData = _.isObject(self.dom(element).toJSON()) ? self.dom(element).toJSON() : {};
-			data = _.extend(currentData, data);		
+			data = _.extend(currentData, data);
 		}
 
 		if (options.json) {
 			data = _json.isStringified(data) ? data : _json.prettyprint(data);
 		}
-		
+
 		self.dom(element).setValue(data, options);
 
 	}
-	
+
 	/////////////////////////////////
 	// DOM METHODS: GET - SET HTML //
 	/////////////////////////////////
-	
+
 	WAY.prototype.getValue = function(element) {
 
 		var self = this,
@@ -207,11 +207,11 @@ window.way = {};
 	}
 
 	WAY.prototype.setValue = function(data, options, element) {
-		
+
 		var self = this,
 			element = element || self._element,
 			options = options || self.dom(element).getOptions();
-		
+
 		var setters = {
 			'FORM': function(a) {
 				js2form($(element).get(0), a);
@@ -226,36 +226,36 @@ window.way = {};
 			},
 			'PRE': function(a) {
 				if (options.html) $(element).html(a);
-				else $(element).text(a);			
+				else $(element).text(a);
 			},
 			'IMG': function(a) {
-				
+
 				if (!a) {
-					a = options.default || "";
+					a = options.default || '';
 					$(element).attr('src', a);
 					return false;
 				}
-				
+
 				var isValidImageUrl = function(url, cb) {
-					$(element).addClass("way-loading");
-					$("<img>", {
+					$(element).addClass('way-loading');
+					$('<img>', {
 						src: url,
 						error: function() { cb(false); },
 						load: function() { cb(true); }
 					});
 				}
-				
+
 				isValidImageUrl(a, function(response) {
-					$(element).removeClass("way-loading");
+					$(element).removeClass('way-loading');
 					if (response) {
-						$(element).removeClass("way-error").addClass("way-success");
+						$(element).removeClass('way-error').addClass('way-success');
 					} else {
 						if (a) {
-							$(element).addClass("way-error");
+							$(element).addClass('way-error');
 						} else {
-							$(element).removeClass("way-error").removeClass("way-success");
+							$(element).removeClass('way-error').removeClass('way-success');
 						}
-						a = options.default || "";
+						a = options.default || '';
 					}
 					// if (a) $(element).attr('src', a); // Preserve the previous image or not?
 					$(element).attr('src', a);
@@ -265,69 +265,69 @@ window.way = {};
 		}
 		var defaultSetter = function(a) {
 			if (options.html) $(element).html(a);
-			else $(element).text(a);			
+			else $(element).text(a);
 		}
 		var elementType = $(element).get(0).tagName;
 		var setter = setters[elementType] || defaultSetter;
 		setter(data);
 
 	}
-	
+
 	WAY.prototype.setDefault = function(force, options, element) {
 
 		var self = this,
 			element = element || self._element,
 			force = force || false,
 			options = options ? _.extend(self.dom(element).getOptions(), options) : self.dom(element).getOptions();
-			
+
 		// Should we just set the default value in the DOM, or also in the datastore?
 		if (!options.default) return false;
 		if (!force) return self.dom(element).setValue(options.default, options);
 		if (force) return self.set(options.data, options.default, options);
 
 	}
-	
+
 	WAY.prototype.setDefaults = function() {
 
 		var self = this,
-			dataSelector = "[" + tagPrefix + "-default]";
-		
+			dataSelector = '[' + tagPrefix + '-default]';
+
 		$(dataSelector).each(function() {
 			self.dom(this).setDefault();
 		});
 
 	}
-	
+
 	/////////////////////////////////////
 	// DOM METHODS: GET - SET BINDINGS //
 	/////////////////////////////////////
-	
+
 	// Scans the DOM to look for new bindings
 	WAY.prototype.registerBindings = function() {
-		
+
 		var self = this,
-			selector = 	"[" + tagPrefix + "-data]";
-		
+			selector = 	'[' + tagPrefix + '-data]';
+
 		// Dealing with bindings removed from the DOM by just resetting all the bindings all the time.
 		// Isn't there a better way?
 		self._bindings = {};
 		// self._bindings = self._bindings || {};
-		
+
 		$(selector).each(function() {
 			var element = this,
 				options = self.dom(element).getOptions();
 			if (!options.data) return false;
 			self._bindings[options.data] = self._bindings[options.data] || [];
-			if (!containsDomElement(self._bindings[options.data], element)) self._bindings[options.data].push($(element));				
+			if (!containsDomElement(self._bindings[options.data], element)) self._bindings[options.data].push($(element));
 		});
-				
+
 	}
 
 	WAY.prototype.updateBindings = function(selector) {
-		
+
 		var self = this;
 			self._bindings = self._bindings || {};
-			
+
 		var bindings = [];
 		if (selector) {
 			// Set bindings for the specified selector (bindings with keys starting with, to include nested bindings)
@@ -337,26 +337,26 @@ window.way = {};
 		} else {
 			// Set bindings for all selectors
 			for (var key in self._bindings) {
-				bindings = _.union(bindings, self._bindings[key]);			
-			}			
+				bindings = _.union(bindings, self._bindings[key]);
+			}
 		}
-		
+
 		bindings.forEach(function(element) {
-			var focused = (($(element).get(0).tagName == "FORM") && ($(element).get(0) == $(':focus').parents("form").get(0))) ? true : false;
-			if (!focused) self.dom(element).fromStorage();			
+			var focused = (($(element).get(0).tagName == 'FORM') && ($(element).get(0) == $(':focus').parents('form').get(0))) ? true : false;
+			if (!focused) self.dom(element).fromStorage();
 		});
-		
+
 		// Set bindings for the global selector
-		self._bindings["__all__"].forEach(function(element) {
+		self._bindings['__all__'].forEach(function(element) {
 			self.dom(element).fromJSON(self.data);
-		});			
-		
+		});
+
 	}
-	
+
 	//////////////////////////////////
 	// DOM METHODS: OPTIONS PARSING //
 	//////////////////////////////////
-		
+
 	WAY.prototype.getOptions = function(element) {
 
 		var self = this,
@@ -376,17 +376,17 @@ window.way = {};
 
 		var self = this,
 			element = element || self._element;
-		
+
 		var parseAttrValue = function(key, value) {
 
 			var attrTypes = {
-				pick: "array",
-				omit: "array",
-				readonly: "boolean",
-				writeonly: "boolean",
-				json: "boolean",
-				html: "boolean",
-				persistent: "boolean"
+				pick: 'array',
+				omit: 'array',
+				readonly: 'boolean',
+				writeonly: 'boolean',
+				json: 'boolean',
+				html: 'boolean',
+				persistent: 'boolean'
 			};
 
 			var parsers = {
@@ -394,9 +394,9 @@ window.way = {};
 					return value.split(',');
 				},
 				boolean: function(value) {
-					if (value == "true") return true;
-					if (value == "false") return false;
-					return false;				
+					if (value == 'true') return true;
+					if (value == 'false') return false;
+					return false;
 				}
 			};
 			var defaultParser = function() { return value; };
@@ -414,45 +414,45 @@ window.way = {};
 				if (include) {
 					var name = (prefix) ? attr.name.slice(prefix.length + 1, attr.name.length) : attr.name;
 					var value = parseAttrValue(name, attr.value);
-					attributes[name] = value;				
+					attributes[name] = value;
 				}
-			}); 
+			});
 		}
-		
+
 	    return attributes;
-		
+
 	}
-	
+
 	//////////////////
 	// DATA METHODS //
 	//////////////////
-	
+
 	WAY.prototype.get = function(selector) {
-		
+
 		var self = this;
 		if (selector != undefined && !_.isString(selector)) return false;
 		if (!self.data) return {};
 		return selector ? _json.get(self.data, selector) : self.data;
 
 	}
-	
+
 	WAY.prototype.set = function(selector, value, options) {
-		
+
 		var self = this;
 		options = options || {};
-		
+
 		if (selector && !_.isString(selector)) return false;
 		self.data = self.data || {};
 		self.data = selector ? _json.set(self.data, selector, value) : {};
-		
+
 		self.updateBindings(selector);
 		self.emitChange(selector, value);
 		if (options.persistent) self.backup(selector);
-		
+
 	}
-	
+
 	WAY.prototype.remove = function(selector, options) {
-		
+
 		var self = this;
 		options = options || {};
 
@@ -461,17 +461,17 @@ window.way = {};
 		} else {
 			self.data = {};
 		}
-		
+
 		self.updateBindings(selector);
 		self.emitChange(selector, null);
 		if (options.persistent) self.backup(selector);
-		
+
 	}
 
 	WAY.prototype.clear = function() {
-		
+
 		this.remove(null, { persistent: true });
-		
+
 	}
 
 	//////////////////////////
@@ -479,40 +479,40 @@ window.way = {};
 	//////////////////////////
 
 	WAY.prototype.backup = function() {
-		
+
 		var self = this;
-		try { 
+		try {
 			var data = self.data || {};
 			localStorage.setItem(tagPrefix, JSON.stringify(data));
 		} catch(e) {
-			console.log("Your browser does not support localStorage.");			
+			console.log('Your browser does not support localStorage.');
 		}
-		
+
 	}
 
 	WAY.prototype.restore = function() {
-		
+
 		var self = this;
 		try {
 			var data = localStorage.getItem(tagPrefix);
-			try { 
+			try {
 				data = JSON.parse(data);
 				for (var key in data) {
-					self.set(key, data[key]);					
+					self.set(key, data[key]);
 				}
 			} catch(e) {}
 		} catch(e) {
-			console.log("Your browser does not support localStorage.");	
+			console.log('Your browser does not support localStorage.');
 		}
-		
+
 	}
-		
+
 	//////////
 	// MISC //
 	//////////
 
 	var startsWith = function(str, starts) {
-		
+
 		if (starts === '') return true;
 		if (str == null || starts == null) return false;
 		str = String(str); starts = String(starts);
@@ -521,20 +521,20 @@ window.way = {};
 	}
 
 	var containsDomElement = function(list, element) {
-		
+
 		var contains = false;
 		list.every(function(item) {
 			if ($(item).get(0) === $(element).get(0)) {
 				contains = true;
 				return false;
 			} else {
-				return true;				
+				return true;
 			}
 		});
 		return contains;
 
 	}
-		
+
 	var cleanEmptyKeys = function(object) {
 
 		return _.pick(object, _.compact(_.keys(object)));
@@ -546,29 +546,29 @@ window.way = {};
 		var keys = _.keys(object);
 		keys.forEach(function(key) {
 			if (type) {
-				if (!startsWith(key, string)) delete object[key];				
+				if (!startsWith(key, string)) delete object[key];
 			} else {
-				if (startsWith(key, string)) delete object[key];				
+				if (startsWith(key, string)) delete object[key];
 			}
 		});
 		return object;
 
 	}
-	
+
 	var selectNested = function(data, keys, type) { // true: pick - false: omit
-		
+
 		// Flatten / unflatten to allow for nested picks / omits (doesn't work with regular pick)
 		// ex:  data = {something:{nested:"value"}}
 		//		keys = ['something.nested']
-		
+
 		var flat = _json.flatten(data);
 		for (var i in keys) flat = filterStartingWith(flat, keys[i], type);
 		var unflat = _json.unflatten(flat);
 		// Unflatten returns an object with an empty property if it is given an empty object
 		return cleanEmptyKeys(unflat);
-		
+
 	}
-	
+
 	///////////////////////////////////
 	// INITIATE AND WATCH DOM EVENTS //
 	///////////////////////////////////
@@ -585,27 +585,27 @@ window.way = {};
 		// We need to register dynamically added bindings so we do it by watching DOM changes
 		// We use a timeout since "DOMSubtreeModified" gets triggered on every change in the DOM (even input value changes)
 		// so we can limit the number of scans when a user is typing something
-		$("body").bind("DOMSubtreeModified", function() {
+		$('body').bind('DOMSubtreeModified', function() {
 			if (timeoutDOM) clearTimeout(timeoutDOM);
 			timeoutDOM = setTimeout(function() {
 				way.registerBindings();
 			}, way.options.timeoutDOM);
 		});
-		
+
 	});
 
 	var timeoutInput = null;
-	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
+	$(document).on('keyup change', 'form[' + tagPrefix + '-data] :input', function(e) {
 
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
-			var element = $(e.target).parents("form");
+			var element = $(e.target).parents('form');
 			way.dom(element).toStorage();
 		}, way.options.timeoutInput);
 
 	});
 
-	$(document).on("keyup change", ":input[" + tagPrefix + "-data]", function(e) {
+	$(document).on('keyup change', ':input[' + tagPrefix + '-data]', function(e) {
 
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
@@ -615,7 +615,7 @@ window.way = {};
 
 	});
 
-	$(document).on("click", "[" + tagPrefix + "-clear]", function(e) {
+	$(document).on('click', '[' + tagPrefix + '-clear]', function(e) {
 
 		var options = way.dom(this).getOptions();
 		way.remove(options.data, options);
