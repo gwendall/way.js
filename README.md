@@ -90,6 +90,16 @@ Some examples:
 - prettyprint (?)
 -->
 
+## Helper classes ##
+
+**For images only**    
+Way.js adds classes to your DOM elements to easily display errors with the data they get passed.  
+Class | Description
+----|------
+way-loading | When an image is getting downloaded to a DOM element
+way-error | When no image is returned from the URL provided
+way-success | When... Well, you got it.
+
 ## Methods ##
 
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
