@@ -83,7 +83,7 @@ Some examples:
 ```
 
 ```html
-<pre way-data="some.image" way-json="true"></pre>
+<pre way-data="some.json" way-json="true"></pre>
 ```
 
 <!--
