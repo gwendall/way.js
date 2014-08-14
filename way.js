@@ -307,9 +307,12 @@ window.way = {};
 		
 		var self = this,
 			selector = 	"[" + tagPrefix + "-data]";
-			self._bindings = self._bindings || {};
 		
-		// #TODO: deal with bindings removed from the DOM
+		// Dealing with bindings removed from the DOM by just resetting all the bindings all the time.
+		// Isn't there a better way?
+		self._bindings = {};
+		// self._bindings = self._bindings || {};
+		
 		$(selector).each(function() {
 			var element = this,
 				options = self.dom(element).getOptions();
