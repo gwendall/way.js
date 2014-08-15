@@ -5,7 +5,7 @@ Simple, lightweight, persistent, framework-agnostic two-way databinding Javascri
 
 [Demo](https://gwendall.github.io/way)
 [Codepen](http://codepen.io/anon/pen/rihBs)  
-[jsFiddle](http://jsfiddle.net/gwendall/pazk0903/)  
+[jsFiddle](http://jsfiddle.net/gwendall/s5zzc84m/)  
 
 Follow us on Twitter: [@way_js](https://twitter.com/way_js)  
 

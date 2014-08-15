@@ -1005,7 +1005,7 @@ window.way = {};
 			element = element || self._element,
 			options = options || self.dom(element).getOptions(),
 			data = self.dom(element).toJSON(options);
-
+		
 		if (options.readonly) return false;
 		self.set(options.data, data, options);
 		
@@ -1017,7 +1017,7 @@ window.way = {};
 			element = element || self._element,
 			data = self.dom(element).getValue(),
 			options = options || self.dom(element).getOptions();
-		
+
 		if (_.isArray(options.pick)) data = selectNested(data, options.pick, true);
 		if (_.isArray(options.omit)) data = selectNested(data, options.omit, false);
 
@@ -1079,6 +1079,9 @@ window.way = {};
 			'FORM': function() {
 				return form2js($(element).get(0));
 			},
+			'SELECT': function() {
+				return $(element).val();
+			},
 			'INPUT': function() {
 				return $(element).val();
 			},
@@ -1089,6 +1092,7 @@ window.way = {};
 		var defaultGetter = function(a) {
 			$(element).html();
 		}
+		
 		var elementType = $(element).get(0).tagName;
 		var getter = getters[elementType] || defaultGetter;
 		return getter();
@@ -1105,9 +1109,18 @@ window.way = {};
 			'FORM': function(a) {
 				js2form($(element).get(0), a);
 			},
+			'SELECT': function(a) {
+				if (a == $(element).val()) $(element).prop("selected", true);
+				else $(element).removeAttr("selected");
+			},
 			'INPUT': function(a) {
 				if (!_.isString(a)) a = JSON.stringify(a);
-				$(element).val(a || '');
+				var type = $(element).get(0).type;
+				if (_.contains(["text", "password"], type)) $(element).val(a || '');
+				if (_.contains(["checkbox", "radio"], type)) {
+					if (a == $(element).val()) $(element).prop("checked", true);
+					else $(element).removeAttr("checked");
+				}
 			},
 			'TEXTAREA': function(a) {
 				if (!_.isString(a)) a = JSON.stringify(a);
@@ -1159,7 +1172,7 @@ window.way = {};
 		
 		}
 		
-		var elementType = $(element).get(0).tagName;
+		var elementType = $(element).get(0).tagName;		
 		var setter = setters[elementType] || defaultSetter;		
 		setter(data);			
 		
@@ -1663,6 +1676,7 @@ window.way = {};
 
 	$(document).on("click", "[" + tagPrefix + "-clear]", function(e) {
 
+		e.preventDefault();
 		var options = way.dom(this).getOptions();
 		way.remove(options.data, options);
 
