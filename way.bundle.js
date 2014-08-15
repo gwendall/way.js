@@ -1246,28 +1246,28 @@ window.way = {};
 		var self = this;
 		var selector = "[" + tagPrefix + "-repeat]";
 		self._repeats = self._repeats || {}; 
+		self._repeatsCount = self._repeatsCount || 0; 
 		
-		var id = 0;
 		$(selector).each(function() {
 			var element = this,
 				options = self.dom(element).getOptions();
 			self._repeats[options.repeat] = self._repeats[options.repeat] || [];
 
-			var wrapperAttr = tagPrefix + '-repeat-wrapper="' + id + '"';
+			var wrapperAttr = tagPrefix + '-repeat-wrapper="' + self._repeatsCount + '"';
 			if (!$(element).parents("[" + wrapperAttr + "]").length) {
 
 				self._repeats[options.repeat].push({
-					id: id,
+					id: self._repeatsCount,
 					element: $(element).clone().removeAttr(tagPrefix + "-repeat"),
 					selector: options.repeat
 				});
 				
 				var wrapper = document.createElement('div');
-				$(wrapper).attr(tagPrefix + "-repeat-wrapper", id);
+				$(wrapper).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount);
 				$(element).replaceWith(wrapper);
 				self.updateRepeats(options.repeat);
 				
-				id++;
+				self._repeatsCount++;
 				
 			}				
 			
