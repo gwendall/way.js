@@ -1668,17 +1668,17 @@ window.way = {};
 	$(document).on("click", "[" + tagPrefix + "-action-push]", function(e) {
 
 		var options = way.dom(this).getOptions(),
-			split = options.push.split(":"),
+			split = options["action-push"].split(":"),
 			selector = split[0] || null,
 			value = split[1] || null;
 		way.push(selector, value, options);
-
+		
 	});
 
 	$(document).on("click", "[" + tagPrefix + "-action-remove]", function(e) {
 
 		var options = way.dom(this).getOptions();
-		way.remove(options.remove, options);
+		way.remove(options["action-remove"], options);
 
 	});
 
