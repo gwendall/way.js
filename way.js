@@ -751,7 +751,7 @@ window.way = {};
 	});
 
 	var timeoutInput = null;
-	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
+	$(document).on("input", "form[" + tagPrefix + "-data] :input", function(e) {
 
 		if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
@@ -762,7 +762,7 @@ window.way = {};
 
 	});
 
-	$(document).on("keyup change", ":input[" + tagPrefix + "-data]", function(e) {
+	$(document).on("input", ":input[" + tagPrefix + "-data]", function(e) {
 		
 		if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
