@@ -1270,7 +1270,7 @@ window.way = {};
 			self._repeats[options.repeat] = self._repeats[options.repeat] || [];
 
 			var wrapperAttr = tagPrefix + '-repeat-wrapper="' + self._repeatsCount + '"';
-			if (!$(element).parents("[" + wrapperAttr + "]").length) {
+			if (!$(element).parent("[" + wrapperAttr + "]").length) {
 
 				self._repeats[options.repeat].push({
 					id: self._repeatsCount,
