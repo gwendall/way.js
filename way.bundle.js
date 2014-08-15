@@ -1668,7 +1668,7 @@ window.way = {};
 	$(document).on("click", "[" + tagPrefix + "-action-push]", function(e) {
 
 		var options = way.dom(this).getOptions();
-		if (!options || options["action-push"]) return;
+		if (!options || !options["action-push"]) return;
 		var split = options["action-push"].split(":"),
 			selector = split[0] || null,
 			value = split[1] || null;
@@ -1679,7 +1679,7 @@ window.way = {};
 	$(document).on("click", "[" + tagPrefix + "-action-remove]", function(e) {
 
 		var options = way.dom(this).getOptions();
-		if (!options || options["action-remove"]) return;
+		if (!options || !options["action-remove"]) return;
 		way.remove(options["action-remove"], options);
 
 	});
