@@ -368,7 +368,7 @@ window.way = {};
 				options = self.dom(element).getOptions();
 			self._repeats[options.repeat] = self._repeats[options.repeat] || [];
 
-			var wrapperAttr = tagPrefix + 'repeat-wrapper="' + id + '"';
+			var wrapperAttr = tagPrefix + '-repeat-wrapper="' + id + '"';
 			if (!$(element).parents("[" + wrapperAttr + "]").length) {
 
 				self._repeats[options.repeat].push({
