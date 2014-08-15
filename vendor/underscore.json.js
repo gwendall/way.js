@@ -30,7 +30,8 @@
 			}
 			
 			if (remove) {
-				delete obj[keys[i]];
+				if (_.isArray(obj)) obj.splice(obj.indexOf(keys[i]), 1);
+				else delete obj[keys[i]];
 			} else {
 				obj[keys[i]] = value;				
 			}
@@ -113,16 +114,21 @@
 		if (selector == undefined) return _json.exit("remove", "missing", "selector", selector);
 		if (!_.isString(selector)) return _json.exit("remove", "noString", "selector", selector);
 		return deepJSON(json, selector, null, true);
-
+		
 	}
 
-	_json.push = function(json, selector, value) {
+	_json.push = function(json, selector, value, force) {
 		
 		if (json == undefined) return _json.exit("push", "missing", "json", json);
 		if (selector == undefined) return _json.exit("push", "missing", "selector", selector);
-		if (value == undefined) return _json.exit("push", "missing", "value", value);
 		var array = _json.get(json, selector);
-		if (!_.isArray(array)) return _json.exit("push", "noArray", "array", array);
+		if (!_.isArray(array)) {
+			if (force) {
+				array = [];				
+			} else {
+				return _json.exit("push", "noArray", "array", array);
+			}
+		}	
 		array.push(value);
 		return _json.set(json, selector, array);
 

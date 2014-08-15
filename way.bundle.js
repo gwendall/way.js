@@ -41,7 +41,8 @@ if(k&&j[k]&&(e||j[k].data)||void 0!==d||"string"!=typeof b)return k||(k=i?a[h]=c
 			}
 			
 			if (remove) {
-				delete obj[keys[i]];
+				if (_.isArray(obj)) obj.splice(obj.indexOf(keys[i]), 1);
+				else delete obj[keys[i]];
 			} else {
 				obj[keys[i]] = value;				
 			}
@@ -124,16 +125,21 @@ if(k&&j[k]&&(e||j[k].data)||void 0!==d||"string"!=typeof b)return k||(k=i?a[h]=c
 		if (selector == undefined) return _json.exit("remove", "missing", "selector", selector);
 		if (!_.isString(selector)) return _json.exit("remove", "noString", "selector", selector);
 		return deepJSON(json, selector, null, true);
-
+		
 	}
 
-	_json.push = function(json, selector, value) {
+	_json.push = function(json, selector, value, force) {
 		
 		if (json == undefined) return _json.exit("push", "missing", "json", json);
 		if (selector == undefined) return _json.exit("push", "missing", "selector", selector);
-		if (value == undefined) return _json.exit("push", "missing", "value", value);
 		var array = _json.get(json, selector);
-		if (!_.isArray(array)) return _json.exit("push", "noArray", "array", array);
+		if (!_.isArray(array)) {
+			if (force) {
+				array = [];				
+			} else {
+				return _json.exit("push", "noArray", "array", array);
+			}
+		}	
 		array.push(value);
 		return _json.set(json, selector, array);
 
@@ -1028,11 +1034,12 @@ window.way = {};
 		
 		if (options.writeonly) return false;
 		
-		var data = self.get(options.data);
+		var selector = options.data;
+		var data = self.get(selector);
 		self.dom(element).fromJSON(data, options);
 
 	}
-	
+
 	WAY.prototype.fromJSON = function(data, options, element) {
 				
 		var self = this,
@@ -1143,13 +1150,16 @@ window.way = {};
 			}
 		}
 		var defaultSetter = function(a) {
+			
 			if (options.html) $(element).html(a);
-			else $(element).text(a);			
+			else $(element).text(a);
+		
 		}
+		
 		var elementType = $(element).get(0).tagName;
-		var setter = setters[elementType] || defaultSetter;
-		setter(data);
-
+		var setter = setters[elementType] || defaultSetter;		
+		setter(data);			
+		
 	}
 	
 	WAY.prototype.setDefault = function(force, options, element) {
@@ -1181,55 +1191,137 @@ window.way = {};
 	// DOM METHODS: GET - SET BINDINGS //
 	/////////////////////////////////////
 	
-	// Scans the DOM to look for new bindings
+	// Scans the DOM to look for new bindings	
 	WAY.prototype.registerBindings = function() {
-		
-		var self = this,
-			selector = 	"[" + tagPrefix + "-data]";
-		
-		// Dealing with bindings removed from the DOM by just resetting all the bindings all the time.
+
+		// Dealing with bindings removed from the DOM by just resetting all the bindings all the time. 
 		// Isn't there a better way?
-		self._bindings = {};
-		// self._bindings = self._bindings || {};
+		// One idea would be to add a "way-bound" class to bound elements
+		// self._bindings = {};
 		
+		var self = this;
+		var selector = "[" + tagPrefix + "-data]";
+		self._bindings = {}; 
+
 		$(selector).each(function() {
 			var element = this,
 				options = self.dom(element).getOptions();
-			if (!options.data) return false;
 			self._bindings[options.data] = self._bindings[options.data] || [];
-			if (!containsDomElement(self._bindings[options.data], element)) self._bindings[options.data].push($(element));				
-		});
-				
-	}
+			if (!containsDomElement(self._bindings[options.data], element)) {
+				self._bindings[options.data].push($(element));
+			}
 
+		});
+		
+	}
+			
 	WAY.prototype.updateBindings = function(selector) {
 		
 		var self = this;
 			self._bindings = self._bindings || {};
-			
-		var bindings = [];
-		if (selector) {
-			// Set bindings for the specified selector (bindings with keys starting with, to include nested bindings)
-			for (var key in self._bindings) {
-				if (startsWith(key, selector)) bindings = _.union(bindings, self._bindings[key]);
-			}
-		} else {
-			// Set bindings for all selectors
-			for (var key in self._bindings) {
-				bindings = _.union(bindings, self._bindings[key]);			
-			}			
-		}
-		
+
+		// Set bindings for the data selector
+		var bindings = pickAndMergeParentArrays(self._bindings, selector);
 		bindings.forEach(function(element) {
 			var focused = (($(element).get(0).tagName == "FORM") && ($(element).get(0) == $(':focus').parents("form").get(0))) ? true : false;
 			if (!focused) self.dom(element).fromStorage();			
 		});
-		
+
 		// Set bindings for the global selector
-		self._bindings["__all__"].forEach(function(element) {
-			self.dom(element).fromJSON(self.data);
-		});			
+		if (self._bindings["__all__"]) {
+			self._bindings["__all__"].forEach(function(element) {
+				self.dom(element).fromJSON(self.data);
+			});			
+		}
 		
+	}
+	
+	////////////////////////////////////
+	// DOM METHODS: GET - SET REPEATS //
+	////////////////////////////////////
+	
+	WAY.prototype.registerRepeats = function() {
+		
+		// Register repeats
+		var self = this;
+		var selector = "[" + tagPrefix + "-repeat]";
+		self._repeats = self._repeats || {}; 
+		
+		var id = 0;
+		$(selector).each(function() {
+			var element = this,
+				options = self.dom(element).getOptions();
+			self._repeats[options.repeat] = self._repeats[options.repeat] || [];
+
+			var wrapperAttr = tagPrefix + '-repeat-wrapper="' + id + '"';
+			if (!$(element).parents("[" + wrapperAttr + "]").length) {
+
+				self._repeats[options.repeat].push({
+					id: id,
+					element: $(element).clone().removeAttr(tagPrefix + "-repeat"),
+					selector: options.repeat
+				});
+				
+				var wrapper = document.createElement('div');
+				$(wrapper).attr(tagPrefix + "-repeat-wrapper", id);
+				$(element).replaceWith(wrapper);
+				self.updateRepeats(options.repeat);
+				
+				id++;
+				
+			}				
+			
+		});
+		
+	}
+		
+	WAY.prototype.updateRepeats = function(selector) {
+
+		var self = this;
+			self._repeats = self._repeats || {};
+			
+		var repeats = pickAndMergeParentArrays(self._repeats, selector);		
+		repeats.forEach(function(repeat) {
+			
+			var wrapper = "[" + tagPrefix + "-repeat-wrapper='" + repeat.id + "']",
+				data = self.get(repeat.selector),
+				items = [];
+			
+			if (data && (data.length == $(wrapper + " > *").length)) return;
+			
+			$(wrapper).empty();			
+			for (var key in data) {
+				var _this = repeat.selector + '.' + key,
+					html = repeat.element.get(0).outerHTML;
+				html = html.replace(new RegExp("way-data='this", "gi"), "way-data='" + _this);
+				html = html.replace(new RegExp('way-data="this', "gi"), 'way-data="' + _this);
+				html = html.replace(/\$\$key/gi, key);
+				items.push(html);
+			}
+			$(wrapper).html(items);
+			self.registerBindings();
+			self.updateBindings();
+			
+		});
+
+	}
+
+	/////////////////////////////////////////////
+	// DOM METHODS: GET - SET ALL DEPENDENCIES //
+	/////////////////////////////////////////////
+	
+	WAY.prototype.registerDependencies = function() {
+
+		this.registerBindings();
+		this.registerRepeats();
+
+	}
+
+	WAY.prototype.updateDependencies = function() {
+		
+		this.updateBindings();
+		this.updateRepeats();
+
 	}
 	
 	//////////////////////////////////
@@ -1316,17 +1408,43 @@ window.way = {};
 	}
 	
 	WAY.prototype.set = function(selector, value, options) {
+
+		if (!selector) return false;
+		if (selector.split(".")[0] === "this") {
+			console.log('Sorry, "this" is a reserved word in way.js'); 
+			return false;
+		}
 		
 		var self = this;
 		options = options || {};
 		
 		if (selector && !_.isString(selector)) return false;
-		self.data = self.data || {};
-		self.data = selector ? _json.set(self.data, selector, value) : {};
 		
-		self.updateBindings(selector);
-		self.emitChange(selector, value);
-		if (options.persistent) self.backup(selector);
+		if (selector) {
+			self.data = self.data || {};
+			self.data = selector ? _json.set(self.data, selector, value) : {};
+
+			self.updateDependencies(selector);
+			self.emitChange(selector, value);
+			if (options.persistent) self.backup(selector);			
+		}
+		
+	}
+	
+	WAY.prototype.push = function(selector, value, options) {
+		
+		if (!selector) return false;
+		
+		var self = this;
+		options = options || {};
+		
+		if (selector) {
+			self.data = selector ? _json.push(self.data, selector, value, true) : {};
+		}
+
+		self.updateDependencies(selector);
+		self.emitChange(selector, null);
+		if (options.persistent) self.backup(selector);			
 		
 	}
 	
@@ -1341,7 +1459,7 @@ window.way = {};
 			self.data = {};
 		}
 		
-		self.updateBindings(selector);
+		self.updateDependencies(selector);
 		self.emitChange(selector, null);
 		if (options.persistent) self.backup(selector);
 		
@@ -1413,7 +1531,7 @@ window.way = {};
 		return contains;
 
 	}
-		
+
 	var cleanEmptyKeys = function(object) {
 
 		return _.pick(object, _.compact(_.keys(object)));
@@ -1448,6 +1566,47 @@ window.way = {};
 		
 	}
 	
+	var pickAndMergeParentArrays = function(object, selector) {
+		
+		// Example:
+		// object = { a: [1,2,3], a.b: [4,5,6], c: [7,8,9] }
+		// fn(object, "a.b")
+		// > [1,2,3,4,5,6]
+		
+		var keys = [];
+		if (selector) {
+			// Set bindings for the specified selector (bindings with keys starting with, to include nested bindings)
+			for (var key in object) {
+				if (startsWith(key, selector)) keys = _.union(keys, object[key]);
+			}
+		} else {
+			// Set bindings for all selectors
+			for (var key in object) {
+				keys = _.union(keys, object[key]);			
+			}			
+		}
+		return keys;
+		
+	}
+	
+	var isPrintableKey = function(e) {
+
+	    var keycode = e.keyCode;
+		if (!keycode) return true;
+
+	    var valid = 
+        	(keycode == 8)					 || // delete
+	        (keycode > 47 && keycode < 58)   || // number keys
+	        keycode == 32 || keycode == 13   || // spacebar & return key(s) (if you want to allow carriage returns)
+	        (keycode > 64 && keycode < 91)   || // letter keys
+	        (keycode > 95 && keycode < 112)  || // numpad keys
+	        (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
+	        (keycode > 218 && keycode < 223);   // [\]' (in order)
+
+	    return valid;
+		
+	}
+	
 	///////////////////////////////////
 	// INITIATE AND WATCH DOM EVENTS //
 	///////////////////////////////////
@@ -1457,7 +1616,8 @@ window.way = {};
 	var timeoutDOM = null;
 	$(document).ready(function() {
 
-		way.registerBindings();
+		way.registerDependencies();
+		
 		way.setDefaults();
 		if (way.options.persistent) way.restore();
 
@@ -1465,10 +1625,12 @@ window.way = {};
 		// We use a timeout since "DOMSubtreeModified" gets triggered on every change in the DOM (even input value changes)
 		// so we can limit the number of scans when a user is typing something
 		$("body").bind("DOMSubtreeModified", function() {
+
 			if (timeoutDOM) clearTimeout(timeoutDOM);
 			timeoutDOM = setTimeout(function() {
-				way.registerBindings();
+				way.registerDependencies();
 			}, way.options.timeoutDOM);
+
 		});
 		
 	});
@@ -1476,6 +1638,7 @@ window.way = {};
 	var timeoutInput = null;
 	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
 
+		if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
 			var element = $(e.target).parents("form");
@@ -1485,7 +1648,8 @@ window.way = {};
 	});
 
 	$(document).on("keyup change", ":input[" + tagPrefix + "-data]", function(e) {
-
+		
+		if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
 			var element = $(e.target);
@@ -1498,6 +1662,23 @@ window.way = {};
 
 		var options = way.dom(this).getOptions();
 		way.remove(options.data, options);
+
+	});
+
+	$(document).on("click", "[" + tagPrefix + "-push]", function(e) {
+
+		var options = way.dom(this).getOptions(),
+			split = options.push.split(":"),
+			selector = split[0] || null,
+			value = split[1] || null;
+		way.push(selector, value, options);
+
+	});
+
+	$(document).on("click", "[" + tagPrefix + "-remove]", function(e) {
+
+		var options = way.dom(this).getOptions();
+		way.remove(options.remove, options);
 
 	});
 
