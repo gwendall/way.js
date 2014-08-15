@@ -112,7 +112,7 @@ way.set("some.list", [
 </div>
 ```
 
-Will render:  
+Will render that:  
 ```html
 <div>0 - <span way-data="some.list.0.name">Pierre</span></div>
 <div>1 - <span way-data="some.list.1.name">Paul</span></div>
