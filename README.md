@@ -114,9 +114,9 @@ way.set("some.list", [
 
 Will render:  
 ```html
-<div>1 - Pierre</div>
-<div>2 - Paul</div>
-<div>3 - Jacques</div>
+<div>0 - <span way-data="some.list.0.name">Pierre</span></div>
+<div>1 - <span way-data="some.list.1.name">Paul</span></div>
+<div>2 - <span way-data="some.list.2.name">Jacques</span></div>
 ```
 
 ## Helper classes ##
