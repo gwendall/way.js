@@ -30,8 +30,11 @@
 			}
 			
 			if (remove) {
-				if (_.isArray(obj)) obj.splice(obj.indexOf(keys[i]), 1);
-				else delete obj[keys[i]];
+				if (_.isArray(obj)) {
+					obj.splice(keys[i], 1);
+				} else {
+					delete obj[keys[i]];
+				}
 			} else {
 				obj[keys[i]] = value;				
 			}
