@@ -94,7 +94,7 @@ Some examples:
 -->
 ## Repeats ##
 
-Loops through a data value and duplicated a DOM element for each of its keys.  
+Duplicates a DOM element for each of the values it can loop through in a way.js' passed data.  
 Note: On each loop, "this" corresponds to the current element looped, and "$$key" to its key.
 
 Having this:  
