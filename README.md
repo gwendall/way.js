@@ -92,10 +92,36 @@ Some examples:
 <!--
 - prettyprint (?)
 -->
+## Repeats ##
+
+Loops through a data value and duplicated a DOM element for each of its keys.  
+Note: On each loop, "this" corresponds to the current element looped, and "$$key" to its key.
+
+Having this:  
+```javascript
+way.set("some.list", [
+	{name:"Pierre"},
+	{name:"Paul"},
+	{name:"Jacques"}
+]);
+```
+
+```html
+<div way-repeat="some.list">
+	$$key - <span way-data="this.name"></span>
+</div>
+```
+
+Will render:  
+```html
+<div>1 - Pierre</div>
+<div>2 - Paul</div>
+<div>3 - Jacques</div>
+```
 
 ## Helper classes ##
 
-**For images only**    
+**For images only**
 way.js adds classes to your DOM elements to easily detect load / error / success statuses with the data they get passed.  
 
 Class | Description
@@ -240,6 +266,20 @@ way.registerBindings()
 Sets the value of all the DOM elements binded to a data selector with their values in way.js' datastore. If omitted, all (excluding write-only's and omitted) DOM elements with a "way-data=" attribute will be refreshed.
 ```javascript
 way.updateBindings("formData.name")
+```
+
+### Repeat methods
+
+**way.registerRepeats()**  
+Triggers a scan of the DOM to find and save the elements with the [way-repeat] attribute, that will be bound with some data. 
+```javascript
+way.registerRepeats()
+```
+
+**way.updateRepeats(selector)**  
+Triggers a refresh of the repeat elements with their respective data.
+```javascript
+way.updateRepeats("somethingToBeLooped")
 ```
 
 ### Watcher methods
