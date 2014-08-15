@@ -125,6 +125,9 @@ Will render that:
 </div>
 ```
 
+Demo:  
+[Codepen](http://codepen.io/anon/pen/CjbAh)  
+
 ## Helper elements ##
 
 Allows to perform simple tasks on your way.js' data with a click.
