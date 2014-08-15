@@ -3,8 +3,8 @@ way.js
 
 Simple, lightweight, persistent, framework-agnostic two-way databinding Javascript library (with no to little JS code to write).
 
-[Demo](https://gwendall.github.io/way)  
-[Codepen](http://codepen.io/anon/pen/fkEqw)  
+[Demo](https://gwendall.github.io/way)
+[Codepen](http://codepen.io/anon/pen/rihBs)  
 [jsFiddle](http://jsfiddle.net/gwendall/pazk0903/)  
 
 Follow us on Twitter: [@way_js](https://twitter.com/way_js)  

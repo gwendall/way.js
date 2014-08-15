@@ -775,13 +775,15 @@ window.way = {};
 
 	$(document).on("click", "[" + tagPrefix + "-clear]", function(e) {
 
+		e.preventDefault();
 		var options = way.dom(this).getOptions();
 		way.remove(options.data, options);
 
 	});
 
 	$(document).on("click", "[" + tagPrefix + "-action-push]", function(e) {
-
+		
+		e.preventDefault();
 		var options = way.dom(this).getOptions();
 		if (!options || !options["action-push"]) return;
 		var split = options["action-push"].split(":"),
@@ -793,6 +795,7 @@ window.way = {};
 
 	$(document).on("click", "[" + tagPrefix + "-action-remove]", function(e) {
 
+		e.preventDefault();
 		var options = way.dom(this).getOptions();
 		if (!options || !options["action-remove"]) return;
 		way.remove(options["action-remove"], options);
