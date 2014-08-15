@@ -132,7 +132,7 @@ Allows to perform simple tasks on your way.js' data with a click.
 Attribute | Description
 ---- | ------
 way-action-remove | Removes a way data
-way-action-push | if provided with an array, pushes an empty value to it 
+way-action-push | if provided with an array, pushes an null value to it 
 
 Example:
 
