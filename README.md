@@ -95,7 +95,7 @@ Some examples:
 ## Repeats ##
 
 Duplicates a DOM element for each of the values it can loop through in a way.js' passed data.  
-Note: On each loop, "$$this" corresponds to the current element looped, and "$$key" to its key.
+Note: On each loop, "$$this" corresponds to the absolute pathkey to the current element looped, and "$$key" to its key.
 
 Having this:  
 ```javascript
