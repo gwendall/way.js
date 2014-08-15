@@ -125,6 +125,41 @@ Will render that:
 </div>
 ```
 
+## Helper elements ##
+
+You can create functions for performing simple tasks on your way.js' data with a click.
+
+Attribute | Description
+---- | ------
+way-action-remove | Removes a way data
+way-action-push | if provided with an array, pushes an empty value to it 
+
+Example:
+
+```javascript
+way.set("some.list", [
+	"I",
+	"am",
+	"list"
+]);
+```
+
+```html
+<div id="clickToRemove" way-action-remove="some.list.2"></div>
+<div id="clickToPush" way-action-push="some.list"></div>
+```
+
+```javascript
+$("#clickToRemove").click();
+$("#clickToPush").click();
+way.get("some.list");
+>> [
+	"I",
+	"am",
+	null
+	]
+```
+
 ## Helper classes ##
 
 **For images only**

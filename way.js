@@ -780,7 +780,7 @@ window.way = {};
 
 	});
 
-	$(document).on("click", "[" + tagPrefix + "-push]", function(e) {
+	$(document).on("click", "[" + tagPrefix + "-action-push]", function(e) {
 
 		var options = way.dom(this).getOptions(),
 			split = options.push.split(":"),
@@ -790,7 +790,7 @@ window.way = {};
 
 	});
 
-	$(document).on("click", "[" + tagPrefix + "-remove]", function(e) {
+	$(document).on("click", "[" + tagPrefix + "-action-remove]", function(e) {
 
 		var options = way.dom(this).getOptions();
 		way.remove(options.remove, options);
