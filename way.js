@@ -410,7 +410,7 @@ window.way = {};
 					html = repeat.element.get(0).outerHTML;
 				html = html.replace(new RegExp("way-data='this", "gi"), "way-data='" + _this);
 				html = html.replace(new RegExp('way-data="this', "gi"), 'way-data="' + _this);
-				html = html.replace(/\[\$key\]/gi, "." + key);
+				html = html.replace(/\$\$key/gi, key);
 				items.push(html);
 			}
 			$(wrapper).html(items);
@@ -707,6 +707,7 @@ window.way = {};
 	var isPrintableKey = function(e) {
 
 	    var keycode = e.keyCode;
+		if (!keycode) return true;
 
 	    var valid = 
         	(keycode == 8)					 || // delete
@@ -751,7 +752,7 @@ window.way = {};
 
 	var timeoutInput = null;
 	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
-		
+
 		if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
@@ -762,7 +763,7 @@ window.way = {};
 	});
 
 	$(document).on("keyup change", ":input[" + tagPrefix + "-data]", function(e) {
-
+		
 		if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
