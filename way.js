@@ -343,9 +343,11 @@ window.way = {};
 		});
 
 		// Set bindings for the global selector
-		self._bindings["__all__"].forEach(function(element) {
-			self.dom(element).fromJSON(self.data);
-		});
+		if (self._bindings["__all__"]) {
+			self._bindings["__all__"].forEach(function(element) {
+				self.dom(element).fromJSON(self.data);
+			});			
+		}
 		
 	}
 	
@@ -366,17 +368,17 @@ window.way = {};
 				options = self.dom(element).getOptions();
 			self._repeats[options.repeat] = self._repeats[options.repeat] || [];
 
-			var wrapperAttr = 'way-repeat-wrapper="' + id + '"';
+			var wrapperAttr = tagPrefix + 'repeat-wrapper="' + id + '"';
 			if (!$(element).parents("[" + wrapperAttr + "]").length) {
 
 				self._repeats[options.repeat].push({
 					id: id,
-					element: $(element).clone(),
+					element: $(element).clone().removeAttr(tagPrefix + "-repeat"),
 					selector: options.repeat
 				});
 				
 				var wrapper = document.createElement('div');
-				$(wrapper).attr("way-repeat-wrapper", id);
+				$(wrapper).attr(tagPrefix + "-repeat-wrapper", id);
 				$(element).replaceWith(wrapper);
 				self.updateRepeats(options.repeat);
 				
@@ -389,30 +391,51 @@ window.way = {};
 	}
 		
 	WAY.prototype.updateRepeats = function(selector) {
-		
+
 		var self = this;
 			self._repeats = self._repeats || {};
 			
-		var repeats = pickAndMergeParentArrays(self._repeats, selector);
-		
-		repeats.forEach(function(item) {
+		var repeats = pickAndMergeParentArrays(self._repeats, selector);		
+		repeats.forEach(function(repeat) {
 			
-			var wrapper = $("[way-repeat-wrapper='" + item.id + "']"),
-				data = self.get(item.selector),
+			var wrapper = "[" + tagPrefix + "-repeat-wrapper='" + repeat.id + "']",
+				data = self.get(repeat.selector),
 				items = [];
-				
-			for (var i in data) {
-				var insert = item.element.clone()
-				  , html = insert.html();
-				html = html.replace(/\[i\]/g, '[' + i + ']');
-				insert.html(html);
-				items.push(insert);
+			
+			if (data && (data.length == $(wrapper + " > *").length)) return;
+			
+			$(wrapper).empty();			
+			for (var key in data) {
+				var _this = repeat.selector + '.' + key,
+					html = repeat.element.get(0).outerHTML;
+				html = html.replace(new RegExp("way-data='this", "gi"), "way-data='" + _this);
+				html = html.replace(new RegExp('way-data="this', "gi"), 'way-data="' + _this);
+				html = html.replace(/\[\$key\]/gi, "." + key);
+				items.push(html);
 			}
 			$(wrapper).html(items);
 			self.registerBindings();
 			self.updateBindings();
 			
 		});
+
+	}
+
+	/////////////////////////////////////////////
+	// DOM METHODS: GET - SET ALL DEPENDENCIES //
+	/////////////////////////////////////////////
+	
+	WAY.prototype.registerDependencies = function() {
+
+		this.registerBindings();
+		this.registerRepeats();
+
+	}
+
+	WAY.prototype.updateDependencies = function() {
+		
+		this.updateBindings();
+		this.updateRepeats();
 
 	}
 	
@@ -502,6 +525,10 @@ window.way = {};
 	WAY.prototype.set = function(selector, value, options) {
 
 		if (!selector) return false;
+		if (selector.split(".")[0] === "this") {
+			console.log('Sorry, "this" is a reserved word in way.js'); 
+			return false;
+		}
 		
 		var self = this;
 		options = options || {};
@@ -512,8 +539,7 @@ window.way = {};
 			self.data = self.data || {};
 			self.data = selector ? _json.set(self.data, selector, value) : {};
 
-			self.updateBindings(selector);
-			self.updateRepeats(selector);
+			self.updateDependencies(selector);
 			self.emitChange(selector, value);
 			if (options.persistent) self.backup(selector);			
 		}
@@ -528,14 +554,12 @@ window.way = {};
 		options = options || {};
 		
 		if (selector) {
-			console.log("Pushing.", _.extend({}, [self.data, selector, value]));
 			self.data = selector ? _json.push(self.data, selector, value, true) : {};
-
-			self.updateBindings(selector);
-			self.updateRepeats(selector);
-			self.emitChange(selector, null);
-			if (options.persistent) self.backup(selector);			
 		}
+
+		self.updateDependencies(selector);
+		self.emitChange(selector, null);
+		if (options.persistent) self.backup(selector);			
 		
 	}
 	
@@ -550,8 +574,7 @@ window.way = {};
 			self.data = {};
 		}
 		
-		self.updateBindings(selector);
-		self.updateRepeats(selector);
+		self.updateDependencies(selector);
 		self.emitChange(selector, null);
 		if (options.persistent) self.backup(selector);
 		
@@ -681,6 +704,23 @@ window.way = {};
 		
 	}
 	
+	var isPrintableKey = function(e) {
+
+	    var keycode = e.keyCode;
+
+	    var valid = 
+        	(keycode == 8)					 || // delete
+	        (keycode > 47 && keycode < 58)   || // number keys
+	        keycode == 32 || keycode == 13   || // spacebar & return key(s) (if you want to allow carriage returns)
+	        (keycode > 64 && keycode < 91)   || // letter keys
+	        (keycode > 95 && keycode < 112)  || // numpad keys
+	        (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
+	        (keycode > 218 && keycode < 223);   // [\]' (in order)
+
+	    return valid;
+		
+	}
+	
 	///////////////////////////////////
 	// INITIATE AND WATCH DOM EVENTS //
 	///////////////////////////////////
@@ -690,8 +730,7 @@ window.way = {};
 	var timeoutDOM = null;
 	$(document).ready(function() {
 
-		way.registerBindings();
-		way.registerRepeats();
+		way.registerDependencies();
 		
 		way.setDefaults();
 		if (way.options.persistent) way.restore();
@@ -703,8 +742,7 @@ window.way = {};
 
 			if (timeoutDOM) clearTimeout(timeoutDOM);
 			timeoutDOM = setTimeout(function() {
-				way.registerBindings();
-				way.registerRepeats();
+				way.registerDependencies();
 			}, way.options.timeoutDOM);
 
 		});
@@ -713,7 +751,8 @@ window.way = {};
 
 	var timeoutInput = null;
 	$(document).on("keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
-
+		
+		if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
 			var element = $(e.target).parents("form");
@@ -724,6 +763,7 @@ window.way = {};
 
 	$(document).on("keyup change", ":input[" + tagPrefix + "-data]", function(e) {
 
+		if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
 			var element = $(e.target);
@@ -746,6 +786,13 @@ window.way = {};
 			selector = split[0] || null,
 			value = split[1] || null;
 		way.push(selector, value, options);
+
+	});
+
+	$(document).on("click", "[" + tagPrefix + "-remove]", function(e) {
+
+		var options = way.dom(this).getOptions();
+		way.remove(options.remove, options);
 
 	});
 
