@@ -127,7 +127,7 @@ Will render that:
 
 ## Helper elements ##
 
-You can create functions for performing simple tasks on your way.js' data with a click.
+Allows to perform simple tasks on your way.js' data with a click.
 
 Attribute | Description
 ---- | ------
