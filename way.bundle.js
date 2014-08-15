@@ -1383,7 +1383,7 @@ window.way = {};
 				boolean: function(value) {
 					if (value == "true") return true;
 					if (value == "false") return false;
-					return false;				
+					return true;				
 				}
 			};
 			var defaultParser = function() { return value; };
