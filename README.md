@@ -95,7 +95,7 @@ Some examples:
 ## Repeats ##
 
 Duplicates a DOM element for each of the values it can loop through in a way.js' passed data.  
-Note: On each loop, "this" corresponds to the current element looped, and "$$key" to its key.
+Note: On each loop, "$$this" corresponds to the current element looped, and "$$key" to its key.
 
 Having this:  
 ```javascript
@@ -108,7 +108,7 @@ way.set("some.list", [
 
 ```html
 <div way-repeat="some.list">
-	$$key - <span way-data="this.name"></span>
+	$$key - <span way-data="$$this.name"></span>
 </div>
 ```
 

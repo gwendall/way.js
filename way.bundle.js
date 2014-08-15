@@ -1309,8 +1309,7 @@ window.way = {};
 			for (var key in data) {
 				var _this = repeat.selector + '.' + key,
 					html = repeat.element.get(0).outerHTML;
-				html = html.replace(new RegExp("way-data='this", "gi"), "way-data='" + _this);
-				html = html.replace(new RegExp('way-data="this', "gi"), 'way-data="' + _this);
+				html = html.replace(/\$\$this/gi, _this);
 				html = html.replace(/\$\$key/gi, key);
 				items.push(html);
 			}
