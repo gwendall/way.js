@@ -347,7 +347,7 @@ way.watchAll(function(selector, value) {
 ## Global options ##
 
 **way.options.persistent** (Boolean)  
-Sets whether or not data will be saved to / restored from localStorage on document.ready (true by default).
+Sets whether or not data will be restored from localStorage on document.ready (true by default).
 ```javascript
 way.options.persistent = true
 ```
