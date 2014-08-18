@@ -9,9 +9,6 @@ window.way = {};
 	'use strict';
 
 	var tagPrefix = "way";
-	var Q = function (selector) {
-		return document.querySelector(selector);
-	};
 
 	//////////////////////////////
 	// EVENT EMITTER DEFINITION //
@@ -124,7 +121,6 @@ window.way = {};
 			selector = scope ? scope + '.' + options.data : options.data;
 
 		if (options.readonly) return false;
-		console.log("Setting data.", _.extend({}, [selector, data]));
 		self.set(selector, data, options);
 
 	}
@@ -208,7 +204,6 @@ window.way = {};
 					return $(element).val();
 				}
 				if (_.contains(["checkbox", "radio"], type)) {
-					console.log("Getting checkbox value.", $(element).prop("checked"));
 					return $(element).prop("checked") ? $(element).val() : null;
 				}
 
@@ -545,21 +540,6 @@ window.way = {};
 
 	}
 
-	WAY.prototype.stripOptions = function(options, element) {
-
-		var self = this,
-			element = element || self._element,
-			defaultOptions = {
-				data: null,
-				html: false,
-				readonly: false,
-				writeonly: false,
-				persistent: false
-			};
-		return _.extend(defaultOptions, self.dom(element).getAttrs(tagPrefix));
-
-	}
-
 	WAY.prototype.getOptions = function(element) {
 
 		var self = this,
@@ -638,9 +618,6 @@ window.way = {};
 			scopeBreakAttr = tagPrefix + '-scope-break',
 			scopes = [],
 			scope = '';
-
-		// Check if parent scope-break
-		var scopeBreak = $(element).parents('['+scopeBreakAttr+']').get(0);
 
 		$(element).parents('['+scopeBreakAttr+'], ['+scopeAttr+']').each(function() {
 			if ($(this).attr(scopeBreakAttr)) return false;
@@ -886,7 +863,7 @@ window.way = {};
 	way = new WAY();
 
 	var timeoutDOM = null;
-	window.onload = function() {
+	$(document).ready(function() {
 
 		way.restore();
 		way.setDefaults();
@@ -904,7 +881,7 @@ window.way = {};
 
 		});
 
-	}
+	});
 
 	var timeoutInput = null;
 	/*
