@@ -132,7 +132,7 @@ Returns the scope of a given DOM element
 ```html
 <div way-scope="someScope">
   <div way-scope="with">
-    <div way-data="something" id="someDIV"></div> <!-- Will render "hello" -->
+    <div way-data="something" id="someDIV"></div>
   </div>
 </div>
 ```
