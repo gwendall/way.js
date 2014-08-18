@@ -92,10 +92,46 @@ Some examples:
 <!--
 - prettyprint (?)
 -->
+## Scopes ##
+
+You can set scopes to your DOM elements' data.
+
+**[way-scope]**  
+Passing this attribute to an element will point all its children's "way-data" attributes to this scope. Scopes can be nested.
+
+```javascript
+way.set("someScope", { with: { something: "hello" }})
+```
+
+```html
+<div way-scope="someScope">
+  <div way-scope="with">
+    <div way-data="something"></div> // Will render "hello"
+  </div>
+</div>
+```
+
+**[way-scope-break]**  
+Breaks a scope chain. All the child elements of this one will have no scope set.
+
+```javascript
+way.set("someScope", { with: { something: "hello" }})
+```
+
+```html
+<div way-scope="someScope">
+  <div way-scope-break="true">
+    <div way-data="someScope.with.something"></div> // Will render "hello"
+  </div>
+</div>
+```
+
 ## Repeats ##
 
 Duplicates a DOM element for each of the values it can loop through in a way.js' passed data.  
-Note: On each loop, "$$this" corresponds to the absolute pathkey to the current element looped, and "$$key" to its key.
+Notes:
+- Repeat blocks automatically set the appropriate scope to its child elements.
+- On each loop, "$$key" corresponds to the key of the current element looped.
 
 Having this:  
 ```javascript
@@ -108,20 +144,22 @@ way.set("some.list", [
 
 ```html
 <div way-repeat="some.list">
-	$$key - <span way-data="$$this.name"></span>
+	$$key - <span way-data="name"></span>
 </div>
 ```
 
 Will render that:  
 ```html
-<div>
-	0 - <span way-data="some.list.0.name">Pierre</span>
-</div>
-<div>
-	1 - <span way-data="some.list.1.name">Paul</span>
-</div>
-<div>
-	2 - <span way-data="some.list.2.name">Jacques</span>
+<div way-scope="some.list">
+  <div way-scope="1">
+    0 - <span way-data="name">Pierre</span>
+  </div>
+  <div way-scope="2">
+    1 - <span way-data="name">Paul</span>
+  </div>
+  <div way-scope="3">
+    2 - <span way-data="name">Jacques</span>
+  </div>
 </div>
 ```
 
@@ -135,7 +173,7 @@ Allows to perform simple tasks on your way.js' data with a click.
 Attribute | Description
 ---- | ------
 way-action-remove | Removes a way data
-way-action-push | if provided with an array, pushes an null value to it 
+way-action-push | if provided with an array, pushes an null value to it
 
 Example:
 
@@ -184,9 +222,9 @@ way.set("image.url", "somethingThatsNotAnImageURL");
 
 ## Methods ##
 
-Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements. 
+Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements.
 
-Notes: 
+Notes:
 - [element] refers to the jQuery selector of a DOM element
 - [options] is optional. By default, options are read from the HTML tags of the elements. But you can overwrite them, by passing this parameter.
 
@@ -301,7 +339,7 @@ way.restore();
 ### Binding methods
 
 **way.registerBindings()**  
-Triggers a scan of the DOM to find and save the elements with the [way-data] attribute, that will be bound with some data. 
+Triggers a scan of the DOM to find and save the elements with the [way-data] attribute, that will be bound with some data.
 ```javascript
 way.registerBindings()
 ```
@@ -315,7 +353,7 @@ way.updateBindings("formData.name")
 ### Repeat methods
 
 **way.registerRepeats()**  
-Triggers a scan of the DOM to find and save the elements with the [way-repeat] attribute, that will be bound with some data. 
+Triggers a scan of the DOM to find and save the elements with the [way-repeat] attribute, that will be bound with some data.
 ```javascript
 way.registerRepeats()
 ```
