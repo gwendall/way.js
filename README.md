@@ -106,7 +106,7 @@ way.set("someScope", { with: { something: "hello" }})
 ```html
 <div way-scope="someScope">
   <div way-scope="with">
-    <div way-data="something"></div> // Will render "hello"
+    <div way-data="something"></div> <!-- Will render "hello" -->
   </div>
 </div>
 ```
@@ -121,7 +121,7 @@ way.set("someScope", { with: { something: "hello" }})
 ```html
 <div way-scope="someScope">
   <div way-scope-break="true">
-    <div way-data="someScope.with.something"></div> // Will render "hello"
+    <div way-data="someScope.with.something"></div> <!-- Will render "hello" -->
   </div>
 </div>
 ```
@@ -132,7 +132,7 @@ Returns the scope of a given DOM element
 ```html
 <div way-scope="someScope">
   <div way-scope="with">
-    <div way-data="something" id="someDIV"></div> // Will render "hello"
+    <div way-data="something" id="someDIV"></div> <!-- Will render "hello" -->
   </div>
 </div>
 ```
