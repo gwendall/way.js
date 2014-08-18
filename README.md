@@ -146,7 +146,7 @@ way.dom("#someDIV").scope()
 
 Duplicates a DOM element for each of the values it can loop through in a way.js' passed data.  
 Notes:
-- Repeat blocks automatically set the appropriate scope to its child elements.
+- Repeat blocks automatically set the appropriate scope to their child elements.
 - On each loop, "$$key" corresponds to the key of the current element looped.
 
 Having this:  
