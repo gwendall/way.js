@@ -7,7 +7,7 @@
 //  - http://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects
 //	Version '0.1.0'
 	
-!function(root, String) {
+!function(root, undefined) {
 
 	'use strict';
 
@@ -36,7 +36,7 @@
 					delete obj[keys[i]];
 				}
 			} else {
-				obj[keys[i]] = value;				
+				obj[keys[i]] = value;
 			}
 
 			value = root;
@@ -44,7 +44,7 @@
 		// Get deep value
 		} else {
 			while ((obj = obj[keys[i++]]) != null && i < n) {};
-			value = i < n ? void 0 : obj;
+			value = i < n ? undefined : obj;
 		}
 
 		return value;
@@ -69,8 +69,7 @@
 		var error = { source: source, data: data, value: value };
 		error.message = messages[reason] ? messages[reason] : "No particular reason";
 		console.log('Error', error);
-		return;	
-			
+	
 	}
 	
 	_json.is = function(json) {
@@ -127,11 +126,11 @@
 		var array = _json.get(json, selector);
 		if (!_.isArray(array)) {
 			if (force) {
-				array = [];				
+				array = [];
 			} else {
 				return _json.exit("push", "noArray", "array", array);
 			}
-		}	
+		}
 		array.push(value);
 		return _json.set(json, selector, array);
 
@@ -155,12 +154,11 @@
 		
 		var result = {};
 		function recurse (cur, prop) {
-			if (Object(cur) !== cur) {
+			if (!_.isObject(cur)) {
 				result[prop] = cur;
-			} else if (Array.isArray(cur)) {
+			} else if (_.isArray(cur)) {
 				for (var i = 0, l = cur.length; i < l; i++) {
-					recurse(cur[i], prop ? prop + "." + i : "" + i);				
-					if (l == 0) result[prop] = [];
+					recurse(cur[i], prop ? prop + "." + i : "" + i);
 				}
 			} else {
 				var isEmpty = true;
@@ -178,7 +176,7 @@
 
 	_json.unflatten = function(data) {
 		
-		if (Object(data) !== data || Array.isArray(data))
+		if (!_.isObject(data) || _.isArray(data))
 			return data;
 		var result = {}, cur, prop, idx, last, temp;
 		for (var p in data) {
@@ -186,7 +184,7 @@
 			do {
 				idx = p.indexOf(".", last);
 				temp = p.substring(last, idx !== -1 ? idx : undefined);
-				cur = cur[prop] || (cur[prop] = (!isNaN(parseInt(temp)) ? [] : {}));
+				cur = cur[prop] || (cur[prop] = (!isNaN(temp) ? [] : {}));
 				prop = temp;
 				last = idx + 1;
 			} while(idx >= 0);
@@ -197,9 +195,7 @@
 	}
 	
 	_json.prettyprint = function(json) {
-
 		return JSON.stringify(json, undefined, 2);
-
 	}
 	
 	// Integrate with Underscore.js if defined
@@ -208,4 +204,4 @@
 	root._.json = _json;
 	root._json = _json;
 
-}(this, String);
+}(this);
