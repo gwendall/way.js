@@ -96,7 +96,7 @@ Some examples:
 
 You can set scopes to your DOM elements' data.
 
-**[way-scope]**  
+**[way-scope] attribute**  
 Passing this attribute to an element will point all its children's "way-data" attributes to this scope. Scopes can be nested.
 
 ```javascript
@@ -111,8 +111,8 @@ way.set("someScope", { with: { something: "hello" }})
 </div>
 ```
 
-**[way-scope-break]**  
-Breaks a scope chain. All the child elements of this one will have no scope set.
+**[way-scope-break] attribute**  
+Breaks a scope chain. All the child elements of this one will have no scope set. 
 
 ```javascript
 way.set("someScope", { with: { something: "hello" }})
@@ -124,6 +124,22 @@ way.set("someScope", { with: { something: "hello" }})
     <div way-data="someScope.with.something"></div> // Will render "hello"
   </div>
 </div>
+```
+
+**scope() method**  
+Returns the scope of a given DOM element
+
+```html
+<div way-scope="someScope">
+  <div way-scope="with">
+    <div way-data="something" id="someDIV"></div> // Will render "hello"
+  </div>
+</div>
+```
+
+```javascript
+way.dom("#someDIV").scope()  
+>> "someScope.with"
 ```
 
 ## Repeats ##
