@@ -106,7 +106,7 @@ way.set("someScope", { with: { something: "hello" }})
 ```html
 <div way-scope="someScope">
   <div way-scope="with">
-    <div way-data="something"></div> // Will render "hello"
+    <div way-data="something"></div> <!-- Will render "hello" -->
   </div>
 </div>
 ```
@@ -121,7 +121,7 @@ way.set("someScope", { with: { something: "hello" }})
 ```html
 <div way-scope="someScope">
   <div way-scope-break="true">
-    <div way-data="someScope.with.something"></div> // Will render "hello"
+    <div way-data="someScope.with.something"></div> <!-- Will render "hello" -->
   </div>
 </div>
 ```
@@ -132,7 +132,7 @@ Returns the scope of a given DOM element
 ```html
 <div way-scope="someScope">
   <div way-scope="with">
-    <div way-data="something" id="someDIV"></div> // Will render "hello"
+    <div way-data="something" id="someDIV"></div>
   </div>
 </div>
 ```
@@ -146,7 +146,7 @@ way.dom("#someDIV").scope()
 
 Duplicates a DOM element for each of the values it can loop through in a way.js' passed data.  
 Notes:
-- Repeat blocks automatically set the appropriate scope to its child elements.
+- Repeat blocks automatically set the appropriate scope to their child elements.
 - On each loop, "$$key" corresponds to the key of the current element looped.
 
 Having this:  
@@ -167,13 +167,13 @@ way.set("some.list", [
 Will render that:  
 ```html
 <div way-scope="some.list">
-  <div way-scope="1">
+  <div way-scope="0">
     0 - <span way-data="name">Pierre</span>
   </div>
-  <div way-scope="2">
+  <div way-scope="1">
     1 - <span way-data="name">Paul</span>
   </div>
-  <div way-scope="3">
+  <div way-scope="2">
     2 - <span way-data="name">Jacques</span>
   </div>
 </div>
