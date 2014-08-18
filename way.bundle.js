@@ -1344,7 +1344,7 @@ window.way = {};
 	// DOM METHODS: FORMS //
 	////////////////////////
 
-	WAY.prototype.registerForms = function() {
+	WAY.prototype.updateForms = function() {
 
 		// If we just parse the forms with form2js and set the data with way.set(),
 		// we have to reset the entire data for this element. It can cause the bug
@@ -1387,9 +1387,6 @@ window.way = {};
 
 		});
 
-		self.registerBindings();
-		self.updateBindings();
-
 	}
 
 	/////////////////////////////////////////////
@@ -1400,7 +1397,6 @@ window.way = {};
 
 		this.registerBindings();
 		this.registerRepeats();
-		this.registerForms();
 
 	}
 
@@ -1408,6 +1404,7 @@ window.way = {};
 
 		this.updateBindings();
 		this.updateRepeats();
+		this.updateForms();
 
 	}
 
@@ -1785,9 +1782,9 @@ window.way = {};
 	});
 	*/
 
-	$(document).on("input keyup change", ":input[" + tagPrefix + "-data]", function(e) {
+	$(document).on("input change", ":input[" + tagPrefix + "-data]", function(e) {
 
-		if (!isPrintableKey(e)) return;
+		// if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
 			var element = $(e.target);
