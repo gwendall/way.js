@@ -9,6 +9,9 @@ window.way = {};
 	'use strict';
 
 	var tagPrefix = "way";
+	var Q = function (selector) {
+		return document.querySelector(selector);
+	};
 
 	//////////////////////////////
 	// EVENT EMITTER DEFINITION //
@@ -121,6 +124,7 @@ window.way = {};
 			selector = scope ? scope + '.' + options.data : options.data;
 
 		if (options.readonly) return false;
+		console.log("Setting data.", _.extend({}, [selector, data]));
 		self.set(selector, data, options);
 
 	}
@@ -199,7 +203,15 @@ window.way = {};
 				return $(element).val();
 			},
 			'INPUT': function() {
-				return $(element).val();
+				var type = $(element).get(0).type;
+				if (_.contains(["text", "password"], type)) {
+					return $(element).val();
+				}
+				if (_.contains(["checkbox", "radio"], type)) {
+					console.log("Getting checkbox value.", $(element).prop("checked"));
+					return $(element).prop("checked") ? $(element).val() : null;
+				}
+
 			},
 			'TEXTAREA': function() {
 				return $(element).val();
@@ -303,8 +315,11 @@ window.way = {};
 
 		// Should we just set the default value in the DOM, or also in the datastore?
 		if (!options.default) return false;
-		if (!force) return self.dom(element).setValue(options.default, options);
-		if (force) return self.set(options.data, options.default, options);
+		if (force) {
+			self.set(options.data, options.default, options);
+		} else {
+			self.dom(element).setValue(options.default, options);
+		}
 
 	}
 
@@ -314,7 +329,10 @@ window.way = {};
 			dataSelector = "[" + tagPrefix + "-default]";
 
 		$(dataSelector).each(function() {
-			self.dom(this).setDefault();
+			var options = self.dom(this).getOptions(),
+					selector = options.data || null,
+					data = selector ? self.get(selector) : null;
+			if (!data) self.dom(this).setDefault();
 		});
 
 	}
@@ -425,7 +443,9 @@ window.way = {};
 			$(wrapper).empty();
 			for (var key in data) {
 				repeat.element.attr(tagPrefix + "-scope", key);
+//			var _this = repeat.selector + '.' + key,
 				var html = repeat.element.get(0).outerHTML;
+//			html = html.replace(/\$\$this/gi, _this);
 				html = html.replace(/\$\$key/gi, key);
 				items.push(html);
 			}
@@ -437,6 +457,58 @@ window.way = {};
 
 	}
 
+	////////////////////////
+	// DOM METHODS: FORMS //
+	////////////////////////
+
+	WAY.prototype.registerForms = function() {
+
+		// If we just parse the forms with form2js and set the data with way.set(),
+		// we have to reset the entire data for this element. It can cause the bug
+		// reported here: https://github.com/gwendall/way.js/issues/10
+		// Solution:
+		// 1. watch new forms with a [way-data] attribute
+		// 2. remove this attribute
+		// 3. attach the appropriate attribure to its inputs
+		// -> so that each input is set separately to way.js' datastore
+
+		var self = this;
+		var selector = "form[" + tagPrefix + "-data]";
+
+		$(selector).each(function() {
+
+			var form = this,
+					options = self.dom(form).getOptions(),
+					formDataSelector = options.data;
+			$(form).removeAttr(tagPrefix + "-data");
+
+			// Reverse needed to set the right index for "[]" names
+			var inputsSelector = $(form).find("[name]").get().reverse();
+			$(inputsSelector).each(function() {
+
+				var input = this,
+						name = $(input).attr("name");
+
+				if (endsWith(name, "[]")) {
+					var array = name.split("[]")[0],
+							arraySelector = "[name^='" + array + "']",
+							arrayIndex = $(form).find(arraySelector).length;
+					name = array + '.' + arrayIndex;
+				}
+				var selector = formDataSelector + '.' + name;
+				options.data = selector;
+				self.dom(input).setOptions(options);
+				$(input).removeAttr("name");
+
+			});
+
+		});
+
+		self.registerBindings();
+		self.updateBindings();
+
+	}
+
 	/////////////////////////////////////////////
 	// DOM METHODS: GET - SET ALL DEPENDENCIES //
 	/////////////////////////////////////////////
@@ -445,6 +517,7 @@ window.way = {};
 
 		this.registerBindings();
 		this.registerRepeats();
+		this.registerForms();
 
 	}
 
@@ -458,6 +531,34 @@ window.way = {};
 	//////////////////////////////////
 	// DOM METHODS: OPTIONS PARSING //
 	//////////////////////////////////
+
+	WAY.prototype.setOptions = function(options, element) {
+
+			var self = this,
+					element = self._element || element;
+
+			for (var k in options) {
+				var attr = tagPrefix + "-" + k,
+						value = options[k];
+				$(element).attr(attr, value);
+			}
+
+	}
+
+	WAY.prototype.stripOptions = function(options, element) {
+
+		var self = this,
+			element = element || self._element,
+			defaultOptions = {
+				data: null,
+				html: false,
+				readonly: false,
+				writeonly: false,
+				persistent: false
+			};
+		return _.extend(defaultOptions, self.dom(element).getAttrs(tagPrefix));
+
+	}
 
 	WAY.prototype.getOptions = function(element) {
 
@@ -538,6 +639,9 @@ window.way = {};
 			scopes = [],
 			scope = '';
 
+		// Check if parent scope-break
+		var scopeBreak = $(element).parents('['+scopeBreakAttr+']').get(0);
+
 		$(element).parents('['+scopeBreakAttr+'], ['+scopeAttr+']').each(function() {
 			if ($(this).attr(scopeBreakAttr)) return false;
 			scopes.unshift($(this).attr(scopeAttr));
@@ -575,15 +679,9 @@ window.way = {};
 		var self = this;
 		options = options || {};
 
-		if (selector && !_.isString(selector)) return false;
-
 		if (selector) {
 
-			if (_.isObject(value)) {
-				var prevValue = _.isObject(self.get(selector)) ? self.get(selector) : {};
-				value = _.extend(prevValue, value);
-			}
-
+			if (!_.isString(selector)) return false;
 			self.data = self.data || {};
 			self.data = selector ? _json.set(self.data, selector, value) : {};
 
@@ -641,6 +739,7 @@ window.way = {};
 	WAY.prototype.backup = function() {
 
 		var self = this;
+		if (!self.options.persistent) return;
 		try {
 			var data = self.data || {};
 			localStorage.setItem(tagPrefix, JSON.stringify(data));
@@ -653,6 +752,7 @@ window.way = {};
 	WAY.prototype.restore = function() {
 
 		var self = this;
+		if (!self.options.persistent) return;
 		try {
 			var data = localStorage.getItem(tagPrefix);
 			try {
@@ -677,6 +777,15 @@ window.way = {};
 		if (str == null || starts == null) return false;
 		str = String(str); starts = String(starts);
 		return str.length >= starts.length && str.slice(0, starts.length) === starts;
+
+	}
+
+	var endsWith = function(str, ends) {
+
+		if (ends === '') return true;
+		if (str == null || ends == null) return false;
+		str = String(str); ends = String(ends);
+		return str.length >= ends.length && str.slice(str.length - ends.length, str.length) === ends;
 
 	}
 
@@ -777,12 +886,11 @@ window.way = {};
 	way = new WAY();
 
 	var timeoutDOM = null;
-	$(document).ready(function() {
+	window.onload = function() {
 
-		way.registerDependencies();
-
+		way.restore();
 		way.setDefaults();
-		if (way.options.persistent) way.restore();
+		way.registerDependencies();
 
 		// We need to register dynamically added bindings so we do it by watching DOM changes
 		// We use a timeout since "DOMSubtreeModified" gets triggered on every change in the DOM (even input value changes)
@@ -796,9 +904,10 @@ window.way = {};
 
 		});
 
-	});
+	}
 
 	var timeoutInput = null;
+	/*
 	$(document).on("input keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
 
 		if (!isPrintableKey(e)) return;
@@ -809,6 +918,7 @@ window.way = {};
 		}, way.options.timeoutInput);
 
 	});
+	*/
 
 	$(document).on("input keyup change", ":input[" + tagPrefix + "-data]", function(e) {
 
