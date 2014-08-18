@@ -112,7 +112,7 @@ way.set("someScope", { with: { something: "hello" }})
 ```
 
 **[way-scope-break] attribute**  
-Breaks a scope chain. All the child elements of this one will have no scope set. 
+Breaks a scope chain. All the child elements of this one will have no scope set.
 
 ```javascript
 way.set("someScope", { with: { something: "hello" }})
@@ -194,11 +194,7 @@ way-action-push | if provided with an array, pushes an null value to it
 Example:
 
 ```javascript
-way.set("some.list", [
-	"I",
-	"am",
-	"list"
-]);
+way.set("some.list", ["I", "am", "list"]);
 ```
 
 ```html
@@ -210,11 +206,7 @@ way.set("some.list", [
 $("#clickToRemove").click();
 $("#clickToPush").click();
 way.get("some.list");
->> [
-	"I",
-	"am",
-	null
-	]
+>> ["I", "am", null]
 ```
 
 ## Helper classes ##
