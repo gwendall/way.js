@@ -395,7 +395,8 @@ window.way = {};
 				});
 
 				var wrapper = document.createElement('div');
-				$(wrapper).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount).attr(tagPrefix + "-scope", options.repeat);
+				$(wrapper).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount);
+				$(wrapper).attr(tagPrefix + "-scope", options.repeat);
 				$(element).replaceWith(wrapper);
 				self.updateRepeats(options.repeat);
 
@@ -424,9 +425,7 @@ window.way = {};
 			$(wrapper).empty();
 			for (var key in data) {
 				repeat.element.attr(tagPrefix + "-scope", key);
-//			var _this = repeat.selector + '.' + key,
 				var html = repeat.element.get(0).outerHTML;
-//			html = html.replace(/\$\$this/gi, _this);
 				html = html.replace(/\$\$key/gi, key);
 				items.push(html);
 			}
@@ -538,9 +537,6 @@ window.way = {};
 			scopeBreakAttr = tagPrefix + '-scope-break',
 			scopes = [],
 			scope = '';
-
-		// Check if parent scope-break
-		var scopeBreak = $(element).parents('['+scopeBreakAttr+']').get(0);
 
 		$(element).parents('['+scopeBreakAttr+'], ['+scopeAttr+']').each(function() {
 			if ($(this).attr(scopeBreakAttr)) return false;
