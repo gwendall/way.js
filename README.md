@@ -167,13 +167,13 @@ way.set("some.list", [
 Will render that:  
 ```html
 <div way-scope="some.list">
-  <div way-scope="1">
+  <div way-scope="0">
     0 - <span way-data="name">Pierre</span>
   </div>
-  <div way-scope="2">
+  <div way-scope="1">
     1 - <span way-data="name">Paul</span>
   </div>
-  <div way-scope="3">
+  <div way-scope="2">
     2 - <span way-data="name">Jacques</span>
   </div>
 </div>
