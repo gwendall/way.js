@@ -1136,7 +1136,7 @@ window.way = {};
 	$(document).on("input change", ":input[" + tagPrefix + "-data]", eventInputChange);
 	$(document).on("click", "[" + tagPrefix + "-action-push]", eventPush);
 	$(document).on("click", "[" + tagPrefix + "-action-remove]", eventRemove);
+	$(document).on("DOMSubtreeModified", "body", eventDOMChange);
 	$(document).ready(eventInit);
-	$("body").bind("DOMSubtreeModified", eventDOMChange);
 
 }).call(this);
