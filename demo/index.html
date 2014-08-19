@@ -1,7 +1,7 @@
 <!doctype html>
 
 <html lang="en">
-	
+
 	<head>
 
 		<meta charset="utf-8">
@@ -12,46 +12,38 @@
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="index.css">
 
-		<script src="../vendor/jquery.js"></script>
-		<script src="../vendor/underscore.js"></script>
-		<script src="../vendor/underscore.json.js"></script>
-		<script src="../vendor/form2js.js"></script>
-		<script src="../vendor/js2form.js"></script>
-		<script src="/way.js"></script>
-		<script src="index.js"></script>
-		
 	</head>
 	<body>
-		
+
 		<div class="container-fluid">
-			
+
 			<div class="row">
 
 				<div class="col-sm-6">
-					
+
 					<h1 style="color: rgba(0, 0, 0, .5);text-align: center;">
 						way.js
 					</h1>
-					
+
 					<div class="alert bg-warning">
 						way.js is a simple, lightweight, persistent, framework-agnostic javascript library that allows you to bind DOM elements to an in-memory datastore (with no to little JS code).<br/>
 						If you like buzzwords, that means super easy two-way databinding.<br/>
 						Once you tried it here, check the <a href="https://github.com/gwendall/way.js" target="_blank">documentation</a> or play with some code on this <a href="http://jsfiddle.net/gwendall/aoovyn37/" target="_blank">jsFiddle</a>.
 					</div>
-					
+
 					<div class="out-box">
-						
+
 						<h3 style="margin: 0px;margin-bottom: 20px;">Example</h3>
 
 						<div class="alert bg-success">
-							
-							This form is bound to the "formData" property and automatically parsed on each change. 
+
+							This form is bound to the "formData" property and automatically parsed on each change.
 							Data is set to persistent. Try refreshing the page after changing some of its values.
-							
+
 							<br/><br/>
 							The only code required) to achieve that is the following.
 							<br/>
-							
+
 							<code class="html">
 								&lt;form way-data="formData" way-persistent="true"&gt;
 									<br/>
@@ -67,27 +59,27 @@
 										&lt;img way-data="formData.picture" way-default="[some url]"&gt;
 									</span>
 									<br/>
-									<span class="indent-1">										
+									<span class="indent-1">
 										&lt;input type="checkbox" name="nationality[]" value="french"&gt;
 									</span>
 									<br/>
-									<span class="indent-1">										
+									<span class="indent-1">
 										&lt;input type="checkbox" name="nationality[]" value="american"&gt;
 									</span>
 									<br/>
-									<span class="indent-1">										
+									<span class="indent-1">
 										&lt;input type="checkbox" name="nationality[]" value="british"&gt;
 									</span>
 									<br/>
-									<span class="indent-1">										
+									<span class="indent-1">
 										&lt;input type="checkbox" name="nationality[]" value="chinese"&gt;
 									</span>
 									<br/>
 								&lt;/form&gt;
 							</code>
-						
+
 						</div>
-						
+
 						<form role="form" class="form-horizontal" way-data="formData" way-persistent="true">
 
 							<div class="form-group">
@@ -99,9 +91,9 @@
 							<div class="form-group">
 								<label class="col-sm-3">Picture</label>
 							    <div class="col-sm-9">
-									<input type="text" class="form-control" name="picture" placeholder="Enter an image's URL to see magic" 
+									<input type="text" class="form-control" name="picture" placeholder="Enter an image's URL to see magic"
 									autocomplete="off">
-							        <img class="img-responsive" way-data="formData.picture" 
+							        <img class="img-responsive" way-data="formData.picture"
 									way-default="http://creditworksusa.com/wp-content/uploads/2014/03/facebook-default-profile-photo.jpg">
 								</div>
 							</div>
@@ -126,7 +118,7 @@
 						</form>
 
 					</div>
-										
+
 				</div>
 
 				<div class="col-sm-6 col-fixed">
@@ -137,15 +129,23 @@
 							Clear data
 						</div>
 					</div>
-					
+
 					<pre way-data="__all__" way-json="true" way-default="{}"></pre>
-										
+
 				</div>
 
 			</div>
-			
+
 		</div>
-				
+
+		<script src="../vendor/jquery.js"></script>
+		<script src="../vendor/underscore.js"></script>
+		<script src="../vendor/underscore.json.js"></script>
+		<script src="../vendor/form2js.js"></script>
+		<script src="../vendor/js2form.js"></script>
+		<script src="../way.js"></script>
+		<script src="index.js"></script>
+
 	</body>
-	
+
 </html>
