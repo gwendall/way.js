@@ -185,6 +185,9 @@
 					if (!result[nameNormalized]) result[nameNormalized] = [];
 					result[nameNormalized].push(currNode);
 				}
+				else if (/INPUT/i.test(currNode.nodeName) && /FILE/i.test(currNode.type)) {
+					return false;
+				}
 				else
 				{
 					if (shouldClean)
