@@ -425,10 +425,6 @@ way.options.timeoutDOM = 500
 
 Otherwise changes will be rejected.
 
-## Credits ##
-
-[form2js' author](https://github.com/maxatwork/form2js)
-
 ## Licence ##
 
 The MIT License
