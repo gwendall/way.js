@@ -1075,63 +1075,47 @@ window.way = {};
 
 	way = new WAY();
 
-	var timeoutDOM = null;
-	$(document).ready(function() {
+	var eventInit = function() {
 
 		way.restore();
 		way.setDefaults();
 		way.registerDependencies();
 		way.updateDependencies();
 
+	}
+
+	var timeoutDOM = null;
+	var eventDOMChange = function() {
+
 		// We need to register dynamically added bindings so we do it by watching DOM changes
 		// We use a timeout since "DOMSubtreeModified" gets triggered on every change in the DOM (even input value changes)
 		// so we can limit the number of scans when a user is typing something
-		$("body").bind("DOMSubtreeModified", function() {
 
-			if (timeoutDOM) clearTimeout(timeoutDOM);
-			timeoutDOM = setTimeout(function() {
-				way.registerDependencies();
-			}, way.options.timeoutDOM);
+		if (timeoutDOM) clearTimeout(timeoutDOM);
+		timeoutDOM = setTimeout(function() {
+			way.registerDependencies();
+		}, way.options.timeoutDOM);
 
-		});
-
-	});
+	}
 
 	var timeoutInput = null;
-	/*
-	$(document).on("input keyup change", "form[" + tagPrefix + "-data] :input", function(e) {
-
-		if (!isPrintableKey(e)) return;
-		if (timeoutInput) clearTimeout(timeoutInput);
-		timeoutInput = setTimeout(function() {
-			var element = $(e.target).parents("form");
-			way.dom(element).toStorage();
-		}, way.options.timeoutInput);
-
-	});
-	*/
-
-	$(document).on("input change", ":input[" + tagPrefix + "-data]", function(e) {
-
+	var eventInputChange = function(e) {
 		// if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
 			var element = $(e.target);
 			way.dom(element).toStorage();
 		}, way.options.timeout);
+	}
 
-	});
-
-	$(document).on("click", "[" + tagPrefix + "-clear]", function(e) {
-
+	var eventClear = function(e) {
+		console.log("Clicked!");
 		e.preventDefault();
 		var options = way.dom(this).getOptions();
 		way.remove(options.data, options);
+	}
 
-	});
-
-	$(document).on("click", "[" + tagPrefix + "-action-push]", function(e) {
-
+	var eventPush = function(e) {
 		e.preventDefault();
 		var options = way.dom(this).getOptions();
 		if (!options || !options["action-push"]) return;
@@ -1139,16 +1123,20 @@ window.way = {};
 			selector = split[0] || null,
 			value = split[1] || null;
 		way.push(selector, value, options);
+	}
 
-	});
-
-	$(document).on("click", "[" + tagPrefix + "-action-remove]", function(e) {
-
+	var eventRemove = function(e) {
 		e.preventDefault();
 		var options = way.dom(this).getOptions();
 		if (!options || !options["action-remove"]) return;
 		way.remove(options["action-remove"], options);
+	}
 
-	});
+	$(document).on("click", "[" + tagPrefix + "-clear]", eventClear);
+	$(document).on("input change", ":input[" + tagPrefix + "-data]", eventInputChange);
+	$(document).on("click", "[" + tagPrefix + "-action-push]", eventPush);
+	$(document).on("click", "[" + tagPrefix + "-action-remove]", eventRemove);
+	$(document).ready(eventInit);
+	$("body").bind("DOMSubtreeModified", eventDOMChange);
 
 }).call(this);
