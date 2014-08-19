@@ -584,7 +584,7 @@ window.way = {};
 		// Set bindings for the data selector
 		var bindings = pickAndMergeParentArrays(self._bindings, selector);
 		bindings.forEach(function(element) {
-			var focused = (($(element).get(0).tagName == "FORM") && ($(element).get(0) == $(':focus').parents("form").get(0))) ? true : false;
+			var focused = ($(element).get(0) == $(':focus').get(0)) ? true : false;
 			if (!focused) self.dom(element).fromStorage();
 		});
 
