@@ -34,7 +34,11 @@
 					<div class="alert bg-warning">
 						way.js is a simple, lightweight, persistent, framework-agnostic javascript library that allows you to bind DOM elements to an in-memory datastore (with no to little JS code).<br/>
 						If you like buzzwords, that means super easy two-way databinding.<br/>
-						Once you tried it here, check the <a href="https://github.com/gwendall/way.js" target="_blank">documentation</a> or play with some code on this <a href="http://jsfiddle.net/gwendall/aoovyn37/" target="_blank">jsFiddle</a>.
+						Once you tried it here, check the
+						<a href="https://github.com/gwendall/way.js" target="_blank">documentation</a>
+						or play with some code on
+						<a href="http://codepen.io/anon/pen/rihBs" target="_blank">Codepen</a> /
+						<a href="http://jsfiddle.net/gwendall/s5zzc84m/" target="_blank">jsFiddle</a>.
 					</div>
 
 					<div class="out-box">
@@ -42,51 +46,12 @@
 						<h3 style="margin: 0px;margin-bottom: 20px;">Example</h3>
 
 						<div class="alert bg-success">
-
-							This form is bound to the "formData" property and automatically parsed on each change.
-							Data is set to persistent. Try refreshing the page after changing some of its values.
-
-							<br/><br/>
-							The only code required) to achieve that is the following.
-							<br/>
-
-							<code class="html">
-								&lt;form way-data="formData" way-persistent="true"&gt;
-									<br/>
-									<span class="indent-1">
-										&lt;input type="text" name="name"&gt;
-									</span>
-									<br/>
-									<span class="indent-1">
-										&lt;input type="text" name="picture"&gt;
-									</span>
-									<br/>
-									<span class="indent-1">
-										&lt;img way-data="formData.picture" way-default="[some url]"&gt;
-									</span>
-									<br/>
-									<span class="indent-1">
-										&lt;input type="checkbox" name="nationality[]" value="french"&gt;
-									</span>
-									<br/>
-									<span class="indent-1">
-										&lt;input type="checkbox" name="nationality[]" value="american"&gt;
-									</span>
-									<br/>
-									<span class="indent-1">
-										&lt;input type="checkbox" name="nationality[]" value="british"&gt;
-									</span>
-									<br/>
-									<span class="indent-1">
-										&lt;input type="checkbox" name="nationality[]" value="chinese"&gt;
-									</span>
-									<br/>
-								&lt;/form&gt;
-							</code>
-
+							This form is bound to the "formData" property and automatically parsed on each change.<br/>
+							Data is set to persistent. Try refreshing the page after changing some of its values.<br/>
+							Bonus: open the JS console to see watchers in action.
 						</div>
 
-						<form role="form" class="form-horizontal" way-data="formData" way-persistent="true">
+						<form role="form" class="form-horizontal" way-data="formData" way-persistent>
 
 							<div class="form-group">
 								<label class="col-sm-3">Name</label>
@@ -96,10 +61,10 @@
 							</div>
 							<div class="form-group">
 								<label class="col-sm-3">Picture</label>
-							    <div class="col-sm-9">
+									<div class="col-sm-9">
 									<input type="text" class="form-control" name="picture" placeholder="Enter an image's URL to see magic"
 									autocomplete="off">
-							        <img class="img-responsive" way-data="formData.picture"
+											<img class="img-responsive" way-data="formData.picture"
 									way-default="http://creditworksusa.com/wp-content/uploads/2014/03/facebook-default-profile-photo.jpg">
 								</div>
 							</div>
@@ -120,8 +85,103 @@
 									</label>
 								</div>
 							</div>
-
+							<div class="form-group">
+								<label class="col-sm-3">Gender</label>
+								<div class="col-sm-9">
+									<select class="form-control" name="gender">
+										<option>Female</option>
+										<option>Male</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3">Skills</label>
+								<div class="col-sm-9">
+									<a href="#" way-action-push="formData.skills" style="position: relative;
+									top: 5px;
+									left: 12px;">Add a skill</a>
+								</div>
+							</div>
+							<div class="form-group" way-repeat="formData.skills" style="padding: 0px;">
+								<label class="col-sm-3"></label>
+								<div class="col-sm-9">
+									<div class="item-entry">
+										<input type="text" class="form-control" placeholder="Skill title"
+										way-data="title" way-persistent>
+										<div>
+											<span style="margin-left: 10px;font-weight: bold;">Level</span>
+											<label>
+												<input type="radio" way-data="level" way-persistent value="noob">Noob
+											</label>
+											<label>
+												<input type="radio" way-data="level" way-persistent value="intermediate">Intermediate
+											</label>
+											<label>
+												<input type="radio" way-data="level" way-persistent value="advanced">Advanced
+											</label>
+											<label>
+												<input type="radio" way-data="level" way-persistent value="god">God
+											</label>
+										</div>
+										<div way-scope-break="true" style="padding: 8px 0px 0px 8px;
+border-top: rgba(0, 0, 0, .1) solid thin;
+margin-top: 8px;">
+											Name (in case you forgot): <span way-data="formData.name"></span>
+										</div>
+									</div>
+									<a href="#" way-action-remove="formData.skills.$$key" way-persistent>Remove</a>
+								</div>
+							</div>
 						</form>
+
+						<div class="alert bg-success">
+
+							The only code required to achieve that (wording excluded) is the following:
+							<br/><br/>
+
+							<code class="html" style="font-size: 12px;">
+								&lt;form way-data="formData" way-persistent&gt;
+									<br/>
+									<span class="indent-1">
+										&lt;input type="text" name="name"&gt;
+									</span>
+									<br/>
+									<span class="indent-1">
+										&lt;input type="text" name="picture"&gt;
+									</span>
+									<br/>
+									<span class="indent-1">
+										&lt;img way-data="formData.picture" way-default="[some url]"&gt;
+									</span>
+									<br/>
+									<span class="indent-1">
+										&lt;input type="checkbox" name="nationality[]" value="french"&gt; [...]
+									</span>
+									<br/>
+									<span class="indent-1">
+										&lt;a way-action-push="formData.skills"&gt;Add a skill&lt;/a&gt;
+									</span>
+									<br/>
+									<span class="indent-1">
+										&lt;div way-repeat="formData.skills"&gt;
+									</span>
+									<br/>
+									<span class="indent-2">
+										&lt;input type="text" way-data="title" way-persistent&gt;
+									</span>
+									<br/>
+									<span class="indent-2">
+										&lt;input type="radio" value="noob" way-data="level" way-persistent&gt; [...]
+									</span>
+									<br/>
+									<span class="indent-1">
+										&lt;/div&gt;
+									</span>
+									<br/>
+								&lt;/form&gt;
+							</code>
+
+						</div>
 
 					</div>
 
@@ -131,7 +191,7 @@
 
 					<div class="alert bg-warning">
 						This is the data stored in way.js
-						<div class="btn btn-sm btn-default pull-right" style="position:relative;top:-5px;" way-clear way-persistent="true">
+						<div class="btn btn-sm btn-default pull-right" style="position:relative;top:-5px;" way-clear way-persistent>
 							Clear data
 						</div>
 					</div>
