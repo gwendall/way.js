@@ -8,8 +8,6 @@ module.exports = function(grunt) {
 					'vendor/jquery.js',
 					'vendor/underscore.js',
 					'vendor/underscore.json.js',
-					'vendor/js2form.js',
-					'vendor/form2js.js',
 					'way.js'
 				],
 				dest : 'way.bundle.js'

@@ -47,8 +47,6 @@ Note: The bundled version contains the required dependencies (listed below). Fee
 <script src="/vendor/jquery.js"></script>
 <script src="/vendor/underscore.js"></script>
 <script src="/vendor/underscore.json.js"></script>
-<script src="/vendor/form2js.js"></script>
-<script src="/vendor/js2form.js"></script>
 <script src="/way.min.js"></script>
 ```
 
