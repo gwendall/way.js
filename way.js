@@ -1,6 +1,6 @@
 !function(root) {
 
-	'use strict';
+	"use strict";
 
 	var way, w, tagPrefix = "way";
 
@@ -112,7 +112,7 @@
 			options = options || self.dom(element).getOptions(),
 			data = self.dom(element).toJSON(options),
 			scope = self.dom(element).scope(),
-			selector = scope ? scope + '.' + options.data : options.data;
+			selector = scope ? scope + "." + options.data : options.data;
 
 		if (options.readonly) { return false; }
 		self.set(selector, data, options);
@@ -146,7 +146,7 @@
 		if (options.writeonly) { return false; }
 
 		var scope = self.dom(element).scope(),
-				selector = scope ? scope + '.' + options.data : options.data,
+				selector = scope ? scope + "." + options.data : options.data,
 				data = self.get(selector);
 
 		self.dom(element).fromJSON(data, options);
@@ -184,10 +184,10 @@
 			element = element || self._element;
 
 		var getters = {
-			'SELECT': function() {
+			"SELECT": function() {
 				return w.dom(element).val();
 			},
-			'INPUT': function() {
+			"INPUT": function() {
 				var type = w.dom(element).type();
 				if (_.contains(["text", "password"], type)) {
 					return w.dom(element).val();
@@ -197,7 +197,7 @@
 				}
 
 			},
-			'TEXTAREA': function() {
+			"TEXTAREA": function() {
 				return w.dom(element).val();
 			}
 		}
@@ -219,14 +219,14 @@
 
 		var setters = {
 
-			'SELECT': function(a) {
+			"SELECT": function(a) {
 				w.dom(element).val(a);
 			},
-			'INPUT': function(a) {
+			"INPUT": function(a) {
 				if (!_.isString(a)) { a = JSON.stringify(a); }
 				var type = w.dom(element).get(0).type;
 				if (_.contains(["text", "password"], type)) {
-					w.dom(element).val(a || '');
+					w.dom(element).val(a || "");
 				}
 				if (_.contains(["checkbox", "radio"], type)) {
 					if (a === w.dom(element).val()) {
@@ -236,22 +236,22 @@
 					}
 				}
 			},
-			'TEXTAREA': function(a) {
+			"TEXTAREA": function(a) {
 				if (!_.isString(a)) { a = JSON.stringify(a); }
-				w.dom(element).val(a || '');
+				w.dom(element).val(a || "");
 			},
-			'PRE': function(a) {
+			"PRE": function(a) {
 				if (options.html) {
 					w.dom(element).html(a);
 				} else {
 					w.dom(element).text(a);
 				}
 			},
-			'IMG': function(a) {
+			"IMG": function(a) {
 
 				if (!a) {
 					a = options.default || "";
-					w.dom(element).attr('src', a);
+					w.dom(element).attr("src", a);
 					return false;
 				}
 
@@ -276,7 +276,7 @@
 						}
 						a = options.default || "";
 					}
-					w.dom(element).attr('src', a);
+					w.dom(element).attr("src", a);
 				});
 
 			}
@@ -352,7 +352,7 @@
 			var element = elements[i],
 					options = self.dom(element).getOptions(),
 					scope = self.dom(element).scope(),
-					selector = scope ? scope + '.' + options.data : options.data;
+					selector = scope ? scope + "." + options.data : options.data;
 
 			self._bindings[selector] = self._bindings[selector] || [];
 			if (!_.contains(self._bindings[selector], w.dom(element).get(0))) {
@@ -371,7 +371,7 @@
 		// Set bindings for the data selector
 		var bindings = pickAndMergeParentArrays(self._bindings, selector);
 		bindings.forEach(function(element) {
-			var focused = (w.dom(element).get(0) === w.dom(':focus').get(0)) ? true : false;
+			var focused = (w.dom(element).get(0) === w.dom(":focus").get(0)) ? true : false;
 			if (!focused) { self.dom(element).fromStorage(); }
 		});
 
@@ -403,7 +403,7 @@
 
 			self._repeats[options.repeat] = self._repeats[options.repeat] || [];
 
-			var wrapperAttr = tagPrefix + '-repeat-wrapper="' + self._repeatsCount + '"',
+			var wrapperAttr = tagPrefix + "-repeat-wrapper=\"" + self._repeatsCount + "\"",
 					parent = w.dom(element).parent("[" + wrapperAttr + "]");
 			if (!parent.length) {
 
@@ -413,7 +413,7 @@
 					selector: options.repeat
 				});
 
-				var wrapper = document.createElement('div');
+				var wrapper = document.createElement("div");
 				w.dom(wrapper).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount);
 				w.dom(wrapper).attr(tagPrefix + "-scope", options.repeat);
 				w.dom(element).replaceWith(wrapper);
@@ -436,7 +436,7 @@
 
 		repeats.forEach(function(repeat) {
 
-			var wrapper = "[" + tagPrefix + "-repeat-wrapper='" + repeat.id + "']",
+			var wrapper = "[" + tagPrefix + "-repeat-wrapper=\"" + repeat.id + "\"]",
 					data = self.get(repeat.selector),
 					items = [];
 
@@ -493,9 +493,9 @@
 					var array = name.split("[]")[0],
 							arraySelector = "[name^='" + array + "']",
 							arrayIndex = w.dom(form).find(arraySelector).get().length;
-					name = array + '.' + arrayIndex;
+					name = array + "." + arrayIndex;
 				}
-				var selector = formDataSelector + '.' + name;
+				var selector = formDataSelector + "." + name;
 				options.data = selector;
 				self.dom(input).setOptions(options);
 				w.dom(input).removeAttr("name");
@@ -576,7 +576,7 @@
 
 			var parsers = {
 				array: function(value) {
-					return value.split(',');
+					return value.split(",");
 				},
 				boolean: function(value) {
 					if (value === "true") { return true; }
@@ -596,7 +596,7 @@
 		var attrs = w.dom(element).get(0).attributes;
 		for (var i in attrs) {
 			var attr = attrs[i];
-			var include = (prefix && startsWith(attr.name, prefix + '-')) ? true : false;
+			var include = (prefix && startsWith(attr.name, prefix + "-")) ? true : false;
 			if (include) {
 				var name = (prefix) ? attr.name.slice(prefix.length + 1, attr.name.length) : attr.name;
 				var value = parseAttrValue(name, attr.value);
@@ -616,12 +616,12 @@
 
 		var self = this,
 				element = element || self._element,
-				scopeAttr = tagPrefix + '-scope',
-				scopeBreakAttr = tagPrefix + '-scope-break',
+				scopeAttr = tagPrefix + "-scope",
+				scopeBreakAttr = tagPrefix + "-scope-break",
 				scopes = [],
-				scope = '';
+				scope = "";
 
-		var parentsSelector = '['+scopeBreakAttr+'], ['+scopeAttr+']';
+		var parentsSelector = "[" + scopeBreakAttr + "], [" + scopeAttr + "]";
 		var elements = w.dom(element).parents(parentsSelector).get();
 		for (var i in elements) {
 			var el = elements[i];
@@ -632,7 +632,7 @@
 		if (w.dom(element).attr(scopeAttr)) { scopes.push(w.dom(element).attr(scopeAttr)); }
 		if (w.dom(element).attr(scopeBreakAttr)) { scopes = []; }
 
-		scope = scopes.join('.');
+		scope = scopes.join(".");
 
 		return scope;
 
@@ -655,7 +655,7 @@
 
 		if (!selector) { return false; }
 		if (selector.split(".")[0] === "this") {
-			console.log('Sorry, "this" is a reserved word in way.js');
+			console.log("Sorry, \"this\" is a reserved word in way.js");
 			return false;
 		}
 
@@ -756,7 +756,7 @@
 
 	var startsWith = function(str, starts) {
 
-		if (starts === '') { return true; }
+		if (starts === "") { return true; }
 		if (str === null || starts === null) { return false; }
 		str = String(str); starts = String(starts);
 		return str.length >= starts.length && str.slice(0, starts.length) === starts;
@@ -765,7 +765,7 @@
 
 	var endsWith = function(str, ends) {
 
-		if (ends === '') { return true; }
+		if (ends === "") { return true; }
 		if (str === null || ends === null) { return false; }
 		str = String(str); ends = String(ends);
 		return str.length >= ends.length && str.slice(str.length - ends.length, str.length) === ends;
@@ -865,7 +865,7 @@
 	}
 
 	var escapeHTML = function(str) {
-		return str ? str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : str;
+		return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : str;
 	}
 
 	//////////////////////////////////////////
@@ -902,7 +902,7 @@
 
 		var self = this,
 				elements = self._elements;
-		events = events.split(' ');
+		events = events.split(" ");
 		for (var i = 0, lenEl = elements.length; i < lenEl; i++) {
 			var element = elements[i];
 			for (var j = 0, lenEv = events.length; j < lenEv; j++) {
@@ -960,13 +960,6 @@
 
 	wQuery.prototype.text = function(value) {
 		return this.prop("innerHTML", escapeHTML(value));
-		/*
-		var pre = document.createElement('pre');
-		var text = document.createTextNode(value);
-		pre.appendChild(text);
-		value = pre.innerHTML;
-		return this.prop("innerHTML", value);
-		*/
 	}
 
 	wQuery.prototype.prop = function(prop, value) {
