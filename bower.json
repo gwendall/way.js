@@ -1,0 +1,26 @@
+{
+  "name": "way.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/gwendall/way.js",
+  "authors": [
+    "Gwen <gwendall.esnault@gmail.com>"
+  ],
+  "description": "Simple, lightweight, persistent, framework-agnostic two-way databinding",
+  "main": "way.min.js",
+  "keywords": [
+    "javascript",
+    "databinding",
+    "database",
+    "form",
+    "input",
+    "frontend"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
