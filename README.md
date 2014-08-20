@@ -44,7 +44,6 @@ Step 2: There is no step 2. You are good to go.
 Note: The bundled version contains the required dependencies (listed below). Feel free to include them separately.
 
 ```html
-<script src="/vendor/jquery.js"></script>
 <script src="/vendor/underscore.js"></script>
 <script src="/vendor/underscore.json.js"></script>
 <script src="/way.min.js"></script>
@@ -231,7 +230,7 @@ way.set("image.url", "somethingThatsNotAnImageURL");
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements.
 
 Notes:
-- [element] refers to the jQuery selector of a DOM element
+- [element] refers to the CSS selector of a DOM element.
 - [options] is optional. By default, options are read from the HTML tags of the elements. But you can overwrite them, by passing this parameter.
 
 ### DOM methods
