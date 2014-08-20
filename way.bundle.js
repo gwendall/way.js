@@ -215,7 +215,17 @@
 
 }(this, String);
 
-!function(root) {
+(function (root, factory) {
+
+	if (typeof define === "function" && define.amd) {
+		define(factory);
+	} else if (typeof exports === "object") {
+		module.exports = factory();
+	} else {
+		root.way = factory();
+	}
+
+}(this, function () {
 
 	"use strict";
 
@@ -1365,6 +1375,22 @@
 
 	w.ready(eventInit);
 
-	root.way = way;
+	return way;
 
-}(this);
+}));
+
+/*
+FOR NO UNDERSCORE DEP BRING IN:
+isString
+isObject
+isArray
+isFunction
+extend
+isNumber
+isUndefined
+contains
+keys
+pick
+compact
+union
+*/
