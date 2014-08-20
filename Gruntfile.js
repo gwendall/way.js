@@ -5,7 +5,6 @@ module.exports = function(grunt) {
 		concat : {
 			bundle : {
 				src : [
-					'vendor/jquery.js',
 					'vendor/underscore.js',
 					'vendor/underscore.json.js',
 					'way.js'

@@ -424,7 +424,6 @@
 		var self = this;
 			self._repeats = self._repeats || {};
 
-		console.log("Updating repeats", selector);
 		var repeats = pickAndMergeParentArrays(self._repeats, selector);
 
 		repeats.forEach(function(repeat) {
@@ -433,8 +432,6 @@
 					data = self.get(repeat.selector),
 					items = [];
 
-			// if (data && (data.length == w.dom(wrapper + " > *").length)) return;
-
 			w.dom(wrapper).empty();
 			for (var key in data) {
 				w.dom(repeat.element).attr(tagPrefix + "-scope", key);
@@ -442,6 +439,7 @@
 				html = html.replace(/\$\$key/gi, key);
 				items.push(html);
 			}
+
 			w.dom(wrapper).html(items);
 			self.registerBindings();
 			self.updateBindings();
@@ -1116,7 +1114,6 @@
 		// so we can limit the number of scans when a user is typing something
 		if (timeoutDOM) clearTimeout(timeoutDOM);
 		timeoutDOM = setTimeout(function() {
-			console.log("DOM changed!");
 			way.registerDependencies();
 			setEventListeners();
 		}, way.options.timeoutDOM);
