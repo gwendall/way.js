@@ -1,14 +1,8 @@
-/*
-	Cheers!
-*/
-
-window.way = {};
-
-(function(){
+!function(root) {
 
 	'use strict';
 
-	var tagPrefix = "way";
+	var way, w, tagPrefix = "way";
 
 	//////////////////////////////
 	// EVENT EMITTER DEFINITION //
@@ -102,7 +96,7 @@ window.way = {};
 
 	WAY.prototype.dom = function(element) {
 
-		this._element = $(element);
+		this._element = w.dom(element).get(0);
 		return this;
 
 	};
@@ -162,8 +156,8 @@ window.way = {};
 	WAY.prototype.fromJSON = function(data, options, element) {
 
 		var self = this,
-			element = element || self._element,
-			options = options || self.dom(element).getOptions();
+				element = element || self._element,
+				options = options || self.dom(element).getOptions();
 
 		if (options.writeonly) return false;
 
@@ -193,27 +187,27 @@ window.way = {};
 
 		var getters = {
 			'SELECT': function() {
-				return $(element).val();
+				return w.dom(element).val();
 			},
 			'INPUT': function() {
-				var type = $(element).get(0).type;
+				var type = w.dom(element).type();
 				if (_.contains(["text", "password"], type)) {
-					return $(element).val();
+					return w.dom(element).val();
 				}
 				if (_.contains(["checkbox", "radio"], type)) {
-					return $(element).prop("checked") ? $(element).val() : null;
+					return w.dom(element).prop("checked") ? w.dom(element).val() : null;
 				}
 
 			},
 			'TEXTAREA': function() {
-				return $(element).val();
+				return w.dom(element).val();
 			}
 		}
 		var defaultGetter = function(a) {
-			$(element).html();
+			w.dom(element).html();
 		}
 
-		var elementType = $(element).get(0).tagName;
+		var elementType = w.dom(element).get(0).tagName;
 		var getter = getters[elementType] || defaultGetter;
 		return getter();
 
@@ -226,70 +220,71 @@ window.way = {};
 			options = options || self.dom(element).getOptions();
 
 		var setters = {
+
 			'SELECT': function(a) {
-				if (a == $(element).val()) $(element).prop("selected", true);
-				else $(element).removeAttr("selected");
+				w.dom(element).val(a);
 			},
 			'INPUT': function(a) {
 				if (!_.isString(a)) a = JSON.stringify(a);
-				var type = $(element).get(0).type;
-				if (_.contains(["text", "password"], type)) $(element).val(a || '');
+				var type = w.dom(element).get(0).type;
+				if (_.contains(["text", "password"], type)) w.dom(element).val(a || '');
 				if (_.contains(["checkbox", "radio"], type)) {
-					if (a == $(element).val()) $(element).prop("checked", true);
-					else $(element).removeAttr("checked");
+					if (a == w.dom(element).val()) w.dom(element).prop("checked", true);
+					else w.dom(element).prop("checked", false);
 				}
 			},
 			'TEXTAREA': function(a) {
 				if (!_.isString(a)) a = JSON.stringify(a);
-				$(element).val(a || '');
+				w.dom(element).val(a || '');
 			},
 			'PRE': function(a) {
-				if (options.html) $(element).html(a);
-				else $(element).text(a);
+				if (options.html) w.dom(element).html(a);
+				else w.dom(element).text(a);
 			},
 			'IMG': function(a) {
 
 				if (!a) {
 					a = options.default || "";
-					$(element).attr('src', a);
+					w.dom(element).attr('src', a);
 					return false;
 				}
 
 				var isValidImageUrl = function(url, cb) {
-					$(element).addClass("way-loading");
-					$("<img>", {
+					w.dom(element).addClass("way-loading");
+					w.dom("img", {
 						src: url,
-						error: function() { cb(false); },
-						load: function() { cb(true); }
+						onerror: function() { cb(false); },
+						onload: function() { cb(true); }
 					});
 				}
 
 				isValidImageUrl(a, function(response) {
-					$(element).removeClass("way-loading");
+					w.dom(element).removeClass("way-loading");
 					if (response) {
-						$(element).removeClass("way-error").addClass("way-success");
+						w.dom(element).removeClass("way-error").addClass("way-success");
 					} else {
 						if (a) {
-							$(element).addClass("way-error");
+							w.dom(element).addClass("way-error");
 						} else {
-							$(element).removeClass("way-error").removeClass("way-success");
+							w.dom(element).removeClass("way-error").removeClass("way-success");
 						}
 						a = options.default || "";
 					}
-					// if (a) $(element).attr('src', a); // Preserve the previous image or not?
-					$(element).attr('src', a);
+					// if (a) w.dom(element).attr('src', a); // Preserve the previous image or not?
+					w.dom(element).attr('src', a);
 				});
 
 			}
+
 		}
 		var defaultSetter = function(a) {
 
-			if (options.html) $(element).html(a);
-			else $(element).text(a);
+			if (options.html) w.dom(element).html(a);
+			else w.dom(element).text(a);
 
 		}
 
-		var elementType = $(element).get(0).tagName;
+		var elementType = w.dom(element).get(0).tagName;
 		var setter = setters[elementType] || defaultSetter;
 		setter(data);
 
@@ -317,12 +312,14 @@ window.way = {};
 		var self = this,
 			dataSelector = "[" + tagPrefix + "-default]";
 
-		$(dataSelector).each(function() {
-			var options = self.dom(this).getOptions(),
+		var elements = w.dom(dataSelector).get();
+		for (var i in elements) {
+			var element = elements[i],
+					options = self.dom(element).getOptions(),
 					selector = options.data || null,
 					data = selector ? self.get(selector) : null;
-			if (!data) self.dom(this).setDefault();
-		});
+			if (!data) self.dom(element).setDefault();
+		}
 
 	}
 
@@ -342,27 +339,31 @@ window.way = {};
 		var selector = "[" + tagPrefix + "-data]";
 		self._bindings = {};
 
-		$(selector).each(function() {
-			var element = this,
-				options = self.dom(element).getOptions();
-			self._bindings[options.data] = self._bindings[options.data] || [];
-			if (!containsDomElement(self._bindings[options.data], element)) {
-				self._bindings[options.data].push($(element));
+		var elements = w.dom(selector).get();
+		for (var i in elements) {
+			var element = elements[i],
+					options = self.dom(element).getOptions(),
+					scope = self.dom(element).scope(),
+					selector = scope ? scope + '.' + options.data : options.data;
+
+			self._bindings[selector] = self._bindings[selector] || [];
+			if (!_.contains(self._bindings[selector], w.dom(element).get(0))) {
+				self._bindings[selector].push(w.dom(element).get(0));
 			}
 
-		});
+		}
 
 	}
 
 	WAY.prototype.updateBindings = function(selector) {
 
 		var self = this;
-			self._bindings = self._bindings || {};
+				self._bindings = self._bindings || {};
 
 		// Set bindings for the data selector
 		var bindings = pickAndMergeParentArrays(self._bindings, selector);
 		bindings.forEach(function(element) {
-			var focused = ($(element).get(0) == $(':focus').get(0)) ? true : false;
+			var focused = (w.dom(element).get(0) == w.dom(':focus').get(0)) ? true : false;
 			if (!focused) self.dom(element).fromStorage();
 		});
 
@@ -387,31 +388,34 @@ window.way = {};
 		self._repeats = self._repeats || {};
 		self._repeatsCount = self._repeatsCount || 0;
 
-		$(selector).each(function() {
-			var element = this,
-				options = self.dom(element).getOptions();
+		var elements = w.dom(selector).get();
+		for (var i in elements) {
+			var element = elements[i],
+					options = self.dom(element).getOptions();
+
 			self._repeats[options.repeat] = self._repeats[options.repeat] || [];
 
-			var wrapperAttr = tagPrefix + '-repeat-wrapper="' + self._repeatsCount + '"';
-			if (!$(element).parent("[" + wrapperAttr + "]").length) {
+			var wrapperAttr = tagPrefix + '-repeat-wrapper="' + self._repeatsCount + '"',
+					parent = w.dom(element).parent("[" + wrapperAttr + "]");
+			if (!parent.length) {
 
 				self._repeats[options.repeat].push({
 					id: self._repeatsCount,
-					element: $(element).clone().removeAttr(tagPrefix + "-repeat"),
+					element: w.dom(element).clone(true).removeAttr(tagPrefix + "-repeat").get(0),
 					selector: options.repeat
 				});
 
 				var wrapper = document.createElement('div');
-				$(wrapper).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount);
-				$(wrapper).attr(tagPrefix + "-scope", options.repeat);
-				$(element).replaceWith(wrapper);
+				w.dom(wrapper).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount);
+				w.dom(wrapper).attr(tagPrefix + "-scope", options.repeat);
+				w.dom(element).replaceWith(wrapper);
 				self.updateRepeats(options.repeat);
 
 				self._repeatsCount++;
 
 			}
 
-		});
+		}
 
 	}
 
@@ -420,25 +424,25 @@ window.way = {};
 		var self = this;
 			self._repeats = self._repeats || {};
 
+		console.log("Updating repeats", selector);
 		var repeats = pickAndMergeParentArrays(self._repeats, selector);
+
 		repeats.forEach(function(repeat) {
 
 			var wrapper = "[" + tagPrefix + "-repeat-wrapper='" + repeat.id + "']",
-				data = self.get(repeat.selector),
-				items = [];
+					data = self.get(repeat.selector),
+					items = [];
 
-			if (data && (data.length == $(wrapper + " > *").length)) return;
+			// if (data && (data.length == w.dom(wrapper + " > *").length)) return;
 
-			$(wrapper).empty();
+			w.dom(wrapper).empty();
 			for (var key in data) {
-				repeat.element.attr(tagPrefix + "-scope", key);
-//			var _this = repeat.selector + '.' + key,
-				var html = repeat.element.get(0).outerHTML;
-//			html = html.replace(/\$\$this/gi, _this);
+				w.dom(repeat.element).attr(tagPrefix + "-scope", key);
+				var html = w.dom(repeat.element).get(0).outerHTML;
 				html = html.replace(/\$\$key/gi, key);
 				items.push(html);
 			}
-			$(wrapper).html(items);
+			w.dom(wrapper).html(items);
 			self.registerBindings();
 			self.updateBindings();
 
@@ -464,34 +468,35 @@ window.way = {};
 		var self = this;
 		var selector = "form[" + tagPrefix + "-data]";
 
-		$(selector).each(function() {
+		var elements = w.dom(selector).get();
+		for (var i in elements) {
 
-			var form = this,
+			var form = elements[i],
 					options = self.dom(form).getOptions(),
 					formDataSelector = options.data;
-			$(form).removeAttr(tagPrefix + "-data");
+			w.dom(form).removeAttr(tagPrefix + "-data");
 
 			// Reverse needed to set the right index for "[]" names
-			var inputsSelector = $(form).find("[name]").get().reverse();
-			$(inputsSelector).each(function() {
+			var inputs = w.dom(form).find("[name]").reverse().get();
+			for (var i in inputs) {
 
-				var input = this,
-						name = $(input).attr("name");
+				var input = inputs[i],
+						name = w.dom(input).attr("name");
 
 				if (endsWith(name, "[]")) {
 					var array = name.split("[]")[0],
 							arraySelector = "[name^='" + array + "']",
-							arrayIndex = $(form).find(arraySelector).length;
+							arrayIndex = w.dom(form).find(arraySelector).get().length;
 					name = array + '.' + arrayIndex;
 				}
 				var selector = formDataSelector + '.' + name;
 				options.data = selector;
 				self.dom(input).setOptions(options);
-				$(input).removeAttr("name");
+				w.dom(input).removeAttr("name");
 
-			});
+			}
 
-		});
+		}
 
 	}
 
@@ -506,11 +511,11 @@ window.way = {};
 
 	}
 
-	WAY.prototype.updateDependencies = function() {
+	WAY.prototype.updateDependencies = function(selector) {
 
-		this.updateBindings();
-		this.updateRepeats();
-		this.updateForms();
+		this.updateBindings(selector);
+		this.updateRepeats(selector);
+		this.updateForms(selector);
 
 	}
 
@@ -526,7 +531,7 @@ window.way = {};
 			for (var k in options) {
 				var attr = tagPrefix + "-" + k,
 						value = options[k];
-				$(element).attr(attr, value);
+				w.dom(element).attr(attr, value);
 			}
 
 	}
@@ -582,18 +587,18 @@ window.way = {};
 		}
 
 		var attributes = {};
-		if ($(element).length) {
-			$.each($(element).get(0).attributes, function(index, attr) {
-				var include = (prefix && startsWith(attr.name, prefix + '-')) ? true : false;
-				if (include) {
-					var name = (prefix) ? attr.name.slice(prefix.length + 1, attr.name.length) : attr.name;
-					var value = parseAttrValue(name, attr.value);
-					attributes[name] = value;
-				}
-			});
+		var attrs = w.dom(element).get(0).attributes;
+		for (var i in attrs) {
+			var attr = attrs[i];
+			var include = (prefix && startsWith(attr.name, prefix + '-')) ? true : false;
+			if (include) {
+				var name = (prefix) ? attr.name.slice(prefix.length + 1, attr.name.length) : attr.name;
+				var value = parseAttrValue(name, attr.value);
+				attributes[name] = value;
+			}
 		}
 
-			return attributes;
+		return attributes;
 
 	}
 
@@ -604,18 +609,22 @@ window.way = {};
 	WAY.prototype.scope = function(options, element) {
 
 		var self = this,
-			element = element || self._element,
-			scopeAttr = tagPrefix + '-scope',
-			scopeBreakAttr = tagPrefix + '-scope-break',
-			scopes = [],
-			scope = '';
+				element = element || self._element,
+				scopeAttr = tagPrefix + '-scope',
+				scopeBreakAttr = tagPrefix + '-scope-break',
+				scopes = [],
+				scope = '';
 
-		$(element).parents('['+scopeBreakAttr+'], ['+scopeAttr+']').each(function() {
-			if ($(this).attr(scopeBreakAttr)) return false;
-			scopes.unshift($(this).attr(scopeAttr));
-		});
-		if ($(element).attr(scopeAttr)) scopes.push($(element).attr(scopeAttr));
-		if ($(element).attr(scopeBreakAttr)) scopes = [];
+		var parentsSelector = '['+scopeBreakAttr+'], ['+scopeAttr+']';
+		var elements = w.dom(element).parents(parentsSelector).get();
+		for (var i in elements) {
+			var el = elements[i];
+			if (w.dom(el).attr(scopeBreakAttr)) break;
+			var attr = w.dom(el).attr(scopeAttr);
+			scopes.unshift(attr);
+		}
+		if (w.dom(element).attr(scopeAttr)) scopes.push(w.dom(element).attr(scopeAttr));
+		if (w.dom(element).attr(scopeBreakAttr)) scopes = [];
 
 		scope = scopes.join('.');
 
@@ -757,21 +766,6 @@ window.way = {};
 
 	}
 
-	var containsDomElement = function(list, element) {
-
-		var contains = false;
-		list.every(function(item) {
-			if ($(item).get(0) === $(element).get(0)) {
-				contains = true;
-				return false;
-			} else {
-				return true;
-			}
-		});
-		return contains;
-
-	}
-
 	var cleanEmptyKeys = function(object) {
 
 		return _.pick(object, _.compact(_.keys(object)));
@@ -815,15 +809,32 @@ window.way = {};
 
 		var keys = [];
 		if (selector) {
-			// Set bindings for the specified selector (bindings with keys starting with, to include nested bindings)
+
+			// Set bindings for the specified selector
+
+			// (bindings that are repeat items)
+			var split = selector.split("."),
+					lastKey = split[split.length - 1],
+					isArrayItem = !isNaN(lastKey);
+
+			if (isArrayItem) {
+					split.pop();
+					var key = split.join(".");
+					keys = object[key] ? _.union(keys, object[key]) : keys;
+			}
+
+			// (bindings with keys starting with, to include nested bindings)
 			for (var key in object) {
 				if (startsWith(key, selector)) keys = _.union(keys, object[key]);
 			}
+
 		} else {
+
 			// Set bindings for all selectors
 			for (var key in object) {
 				keys = _.union(keys, object[key]);
 			}
+
 		}
 		return keys;
 
@@ -847,47 +858,234 @@ window.way = {};
 
 	}
 
-	///////////////////////////////////
-	// INITIATE AND WATCH DOM EVENTS //
-	///////////////////////////////////
+	var escapeHTML = function(str) {
+		return str ? str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : str;
+	}
+
+	//////////////////////////////////////////
+	// wQuery (mini replacement for jQuery) //
+	//////////////////////////////////////////
+
+	var wQuery = function () {};
+	wQuery.constructor = wQuery;
+
+	wQuery.prototype.dom = function(selector, createOptions) {
+
+		var self = this,
+				elements = [];
+
+		if (createOptions) {
+			var element = document.createElement(selector);
+			for (var k in createOptions) {
+				element[k] = createOptions[k];
+			}
+		} else {
+			if (_.isString(selector)) {
+				elements = [].slice.call(document.querySelectorAll(selector));
+			} else {
+				if (_.isObject(selector) && selector.attributes) elements = [selector];
+			}
+			self._elements = elements;
+			self.length = elements.length;
+			return self;
+		}
+
+	}
+
+	wQuery.prototype.on = function(events, fn) {
+
+		var self = this,
+				elements = self._elements;
+		events = events.split(' ');
+		for (var i = 0, lenEl = elements.length; i < lenEl; i++) {
+			var element = elements[i];
+			for (var j = 0, lenEv = events.length; j < lenEv; j++) {
+				if (element.addEventListener) element.addEventListener(events[j], fn, false);
+			}
+		}
+
+	}
+
+	wQuery.prototype.find = function(selector) {
+
+			var self = this,
+					element = self.get(0),
+					elements = [];
+
+			if (_.isString(selector)) {
+				elements = [].slice.call(element.querySelectorAll(selector));
+			}
+			self._elements = elements;
+			return self;
+
+	}
+
+	wQuery.prototype.get = function(index, chain) {
+
+			var self = this,
+					elements = self._elements || [],
+					element = elements[index] || {};
+
+			if (chain) {
+				self._element = element;
+				return self;
+			} else {
+				return _.isNumber(index) ? element : elements;
+			}
+
+	}
+
+	wQuery.prototype.reverse = function() {
+		this._elements = this._elements.reverse();
+		return this;
+	}
+
+	wQuery.prototype.val = function(value) {
+		return this.prop("value", value);
+	}
+
+	wQuery.prototype.type = function(value) {
+		return this.prop("type", value);
+	}
+
+	wQuery.prototype.html = function(value) {
+		return this.prop("innerHTML", value);
+	}
+
+	wQuery.prototype.text = function(value) {
+		return this.prop("innerHTML", escapeHTML(value));
+		/*
+		var pre = document.createElement('pre');
+		var text = document.createTextNode(value);
+		pre.appendChild(text);
+		value = pre.innerHTML;
+		return this.prop("innerHTML", value);
+		*/
+	}
+
+	wQuery.prototype.prop = function(prop, value) {
+
+		var self = this,
+				elements = self._elements;
+
+		for (var i in elements) {
+			if (_.isUndefined(value)) {
+				return elements[i][prop];
+			} else {
+				elements[i][prop] = value;
+			}
+		}
+
+	}
+
+	wQuery.prototype.attr = function(attr, value) {
+
+		var self = this,
+				elements = self._elements;
+		for (var i in elements) {
+			if (value == undefined) {
+				return elements[i].getAttribute(attr);
+			} else {
+				elements[i].setAttribute(attr, value);
+			}
+		}
+		return self;
+
+	}
+
+	wQuery.prototype.removeAttr = function(attr) {
+		var self = this;
+		for (var i in self._elements) self._elements[i].removeAttribute(attr);
+		return self;
+	}
+
+	wQuery.prototype.addClass = function(c) {
+		var self = this;
+		for (var i in self._elements) self._elements[i].classList.add(c);
+		return self;
+	}
+
+	wQuery.prototype.removeClass = function(c) {
+		var self = this;
+		for (var i in self._elements) self._elements[i].classList.remove(c);
+		return self;
+	}
+
+	wQuery.prototype.parents = function(selector) {
+		var self = this,
+				element = self.get(0),
+				parent = element.parentNode,
+				parents = [];
+		while (parent !== null) {
+			var o = parent,
+					matches = selector && o.matches ? o.matches(selector) : true,
+					isDocument = (o.doctype != undefined) ? true : false;
+			if (matches && !isDocument) parents.push(o);
+			parent = o.parentNode;
+		}
+		self._elements = parents;
+		return self;
+	}
+
+	wQuery.prototype.parent = function(selector) {
+		var self = this,
+				element = self.get(0),
+				parent = element.parentNode,
+				matches = selector ? parent.matches(selector) : true;
+		return matches ? parent : {};
+	}
+
+	wQuery.prototype.clone = function(chain) {
+		var self = this,
+				element = self.get(0),
+				clone = element.cloneNode(true);
+		self._elements = [clone];
+		return chain ? self : clone;
+	}
+
+	wQuery.prototype.empty = function(chain) {
+		var self = this,
+				element = self.get(0);
+		if (!element || !element.hasChildNodes) return chain ? self : element;
+
+		while (element.hasChildNodes()) {
+			element.removeChild(element.lastChild);
+		}
+		return chain ? self : element;
+	}
+
+	wQuery.prototype.replaceWith = function(newDOM) {
+		var self = this,
+				oldDOM = self.get(0),
+				parent = oldDOM.parentNode;
+		parent.replaceChild(newDOM, oldDOM);
+	}
+
+	wQuery.prototype.ready = function(callback) {
+		var doc = document;
+		document.onreadystatechange = function() {
+			if (document.readyState == "complete") callback();
+		}
+
+	}
+
+	//////////////////////
+	// WATCH DOM EVENTS //
+	//////////////////////
 
 	way = new WAY();
-
-	var eventInit = function() {
-
-		way.restore();
-		way.setDefaults();
-		way.registerDependencies();
-		way.updateDependencies();
-
-	}
-
-	var timeoutDOM = null;
-	var eventDOMChange = function() {
-
-		// We need to register dynamically added bindings so we do it by watching DOM changes
-		// We use a timeout since "DOMSubtreeModified" gets triggered on every change in the DOM (even input value changes)
-		// so we can limit the number of scans when a user is typing something
-
-		if (timeoutDOM) clearTimeout(timeoutDOM);
-		timeoutDOM = setTimeout(function() {
-			way.registerDependencies();
-		}, way.options.timeoutDOM);
-
-	}
 
 	var timeoutInput = null;
 	var eventInputChange = function(e) {
 		// if (!isPrintableKey(e)) return;
 		if (timeoutInput) clearTimeout(timeoutInput);
 		timeoutInput = setTimeout(function() {
-			var element = $(e.target);
+			var element = w.dom(e.target).get(0);
 			way.dom(element).toStorage();
 		}, way.options.timeout);
 	}
 
 	var eventClear = function(e) {
-		console.log("Clicked!");
 		e.preventDefault();
 		var options = way.dom(this).getOptions();
 		way.remove(options.data, options);
@@ -896,25 +1094,63 @@ window.way = {};
 	var eventPush = function(e) {
 		e.preventDefault();
 		var options = way.dom(this).getOptions();
-		if (!options || !options["action-push"]) return;
+		if (!options || !options["action-push"]) return false;
 		var split = options["action-push"].split(":"),
-			selector = split[0] || null,
-			value = split[1] || null;
+				selector = split[0] || null,
+				value = split[1] || null;
 		way.push(selector, value, options);
 	}
 
 	var eventRemove = function(e) {
 		e.preventDefault();
 		var options = way.dom(this).getOptions();
-		if (!options || !options["action-remove"]) return;
+		if (!options || !options["action-remove"]) return false;
 		way.remove(options["action-remove"], options);
 	}
 
-	$(document).on("click", "[" + tagPrefix + "-clear]", eventClear);
-	$(document).on("input change", ":input[" + tagPrefix + "-data]", eventInputChange);
-	$(document).on("click", "[" + tagPrefix + "-action-push]", eventPush);
-	$(document).on("click", "[" + tagPrefix + "-action-remove]", eventRemove);
-	$(document).on("DOMSubtreeModified", "body", eventDOMChange);
-	$(document).ready(eventInit);
+	var timeoutDOM = null;
+	var eventDOMChange = function() {
 
-}).call(this);
+		// We need to register dynamically added bindings so we do it by watching DOM changes
+		// We use a timeout since "DOMSubtreeModified" gets triggered on every change in the DOM (even input value changes)
+		// so we can limit the number of scans when a user is typing something
+		if (timeoutDOM) clearTimeout(timeoutDOM);
+		timeoutDOM = setTimeout(function() {
+			console.log("DOM changed!");
+			way.registerDependencies();
+			setEventListeners();
+		}, way.options.timeoutDOM);
+
+	}
+
+	//////////////
+	// INITIATE //
+	//////////////
+
+	w = new wQuery();
+
+	var setEventListeners = function() {
+
+			w.dom("body").on("DOMSubtreeModified", eventDOMChange);
+			w.dom("[" + tagPrefix + "-data]").on("input change", eventInputChange);
+			w.dom("[" + tagPrefix + "-clear]").on("click", eventClear);
+			w.dom("[" + tagPrefix + "-action-remove]").on("click", eventRemove);
+			w.dom("[" + tagPrefix + "-action-push]").on("click", eventPush);
+
+	}
+
+	var eventInit = function() {
+
+		setEventListeners();
+		way.restore();
+		way.setDefaults();
+		way.registerDependencies();
+		way.updateDependencies();
+
+	}
+
+	w.ready(eventInit);
+
+	root.way = way;
+
+}(this);
