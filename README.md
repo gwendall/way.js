@@ -35,19 +35,10 @@ Enough talk, [see it in action](https://gwendall.github.io/way).
 Step 1: Include the bundled library to your page.
 
 ```html
-<script src="/way.bundle.min.js"></script>
+<script src="/way.min.js"></script>
 ```
 
 Step 2: There is no step 2. You are good to go.
-
-
-Note: The bundled version contains the required dependencies (listed below). Feel free to include them separately.
-
-```html
-<script src="/vendor/underscore.js"></script>
-<script src="/vendor/underscore.json.js"></script>
-<script src="/way.min.js"></script>
-```
 
 ## Options ##
 
