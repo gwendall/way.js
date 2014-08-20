@@ -34,13 +34,13 @@ Enough talk, [see it in action](https://gwendall.github.io/way).
 
 ## Installation ##
 
-**Step 1**: Include the library to your page.
+**[Step 1]** Include the library to your page.
 
 ```html
 <script src="way.min.js"></script>
 ```
 
-**Step 2**: There is no step 2. You are good to go.
+**[Step 2]** There is no step 2. You are good to go.
 
 ## Options ##
 
