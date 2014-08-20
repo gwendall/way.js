@@ -237,13 +237,13 @@
 	EventEmitter.prototype.watchAll = function(handler) {
 
 		this._watchersAll = this._watchersAll || [];
-		if (!_.contains(this._watchersAll, handler)) this._watchersAll.push(handler);
+		if (!_.contains(this._watchersAll, handler)) { this._watchersAll.push(handler); }
 
 	}
 
 	EventEmitter.prototype.watch = function(selector, handler) {
 
-		if (!this._watchers) this._watchers = {};
+		if (!this._watchers) { this._watchers = {}; }
 		this._watchers[selector] = this._watchers[selector] || [];
 		this._watchers[selector].push(handler);
 
@@ -257,7 +257,7 @@
 		var result = [];
 		var watchers = _.keys(this._watchers);
 		watchers.forEach(function(watcher) {
-			if (startsWith(selector, watcher)) result.push(watcher);
+			if (startsWith(selector, watcher)) { result.push(watcher); }
 		});
 		return result;
 
@@ -265,7 +265,7 @@
 
 	EventEmitter.prototype.emitChange = function(selector /* , arguments */) {
 
-		if (!this._watchers) this._watchers = {};
+		if (!this._watchers) { this._watchers = {}; }
 
 		var self = this;
 
@@ -280,9 +280,9 @@
 		});
 
 		// Send data down to the global watchers
-		if (!self._watchersAll || !_.isArray(self._watchersAll)) return;
+		if (!self._watchersAll || !_.isArray(self._watchersAll)) { return; }
 		self._watchersAll.forEach(function(watcher) {
-			if (_.isFunction(watcher)) watcher.apply(self, [selector, self.get(selector)]);
+			if (_.isFunction(watcher)) { watcher.apply(self, [selector, self.get(selector)]); }
 		});
 
 	}
@@ -331,7 +331,7 @@
 			scope = self.dom(element).scope(),
 			selector = scope ? scope + '.' + options.data : options.data;
 
-		if (options.readonly) return false;
+		if (options.readonly) { return false; }
 		self.set(selector, data, options);
 
 	}
@@ -343,8 +343,8 @@
 			data = self.dom(element).getValue(),
 			options = options || self.dom(element).getOptions();
 
-		if (_.isArray(options.pick)) data = selectNested(data, options.pick, true);
-		if (_.isArray(options.omit)) data = selectNested(data, options.omit, false);
+		if (_.isArray(options.pick)) { data = selectNested(data, options.pick, true); }
+		if (_.isArray(options.omit)) { data = selectNested(data, options.omit, false); }
 
 		return data;
 
@@ -360,7 +360,7 @@
 			element = element || self._element,
 			options = options || self.dom(element).getOptions();
 
-		if (options.writeonly) return false;
+		if (options.writeonly) { return false; }
 
 		var scope = self.dom(element).scope(),
 				selector = scope ? scope + '.' + options.data : options.data,
@@ -376,18 +376,16 @@
 				element = element || self._element,
 				options = options || self.dom(element).getOptions();
 
-		if (options.writeonly) return false;
+		if (options.writeonly) { return false; }
 
 		if (_.isObject(data)) {
-			if (_.isArray(options.pick)) data = selectNested(data, options.pick, true);
-			if (_.isArray(options.omit)) data = selectNested(data, options.omit, false);
+			if (_.isArray(options.pick)) { data = selectNested(data, options.pick, true); }
+			if (_.isArray(options.omit)) { data = selectNested(data, options.omit, false); }
 			var currentData = _.isObject(self.dom(element).toJSON()) ? self.dom(element).toJSON() : {};
 			data = _.extend(currentData, data);
 		}
 
-		if (options.json) {
-			data = _json.isStringified(data) ? data : _json.prettyprint(data);
-		}
+		if (options.json) { data = _json.isStringified(data) ? data : _json.prettyprint(data); }
 
 		self.dom(element).setValue(data, options);
 
@@ -442,21 +440,29 @@
 				w.dom(element).val(a);
 			},
 			'INPUT': function(a) {
-				if (!_.isString(a)) a = JSON.stringify(a);
+				if (!_.isString(a)) { a = JSON.stringify(a); }
 				var type = w.dom(element).get(0).type;
-				if (_.contains(["text", "password"], type)) w.dom(element).val(a || '');
+				if (_.contains(["text", "password"], type)) {
+					w.dom(element).val(a || '');
+				}
 				if (_.contains(["checkbox", "radio"], type)) {
-					if (a == w.dom(element).val()) w.dom(element).prop("checked", true);
-					else w.dom(element).prop("checked", false);
+					if (a === w.dom(element).val()) {
+						w.dom(element).prop("checked", true);
+					} else {
+						w.dom(element).prop("checked", false);
+					}
 				}
 			},
 			'TEXTAREA': function(a) {
-				if (!_.isString(a)) a = JSON.stringify(a);
+				if (!_.isString(a)) { a = JSON.stringify(a); }
 				w.dom(element).val(a || '');
 			},
 			'PRE': function(a) {
-				if (options.html) w.dom(element).html(a);
-				else w.dom(element).text(a);
+				if (options.html) {
+					w.dom(element).html(a);
+				} else {
+					w.dom(element).text(a);
+				}
 			},
 			'IMG': function(a) {
 
@@ -487,7 +493,6 @@
 						}
 						a = options.default || "";
 					}
-					// if (a) w.dom(element).attr('src', a); // Preserve the previous image or not?
 					w.dom(element).attr('src', a);
 				});
 
@@ -496,8 +501,11 @@
 		}
 		var defaultSetter = function(a) {
 
-			if (options.html) w.dom(element).html(a);
-			else w.dom(element).text(a);
+			if (options.html) {
+				w.dom(element).html(a);
+			} else {
+				w.dom(element).text(a);
+			}
 
 		}
 
@@ -515,7 +523,7 @@
 			options = options ? _.extend(self.dom(element).getOptions(), options) : self.dom(element).getOptions();
 
 		// Should we just set the default value in the DOM, or also in the datastore?
-		if (!options.default) return false;
+		if (!options.default) { return false; }
 		if (force) {
 			self.set(options.data, options.default, options);
 		} else {
@@ -535,7 +543,7 @@
 					options = self.dom(element).getOptions(),
 					selector = options.data || null,
 					data = selector ? self.get(selector) : null;
-			if (!data) self.dom(element).setDefault();
+			if (!data) { self.dom(element).setDefault(); }
 		}
 
 	}
@@ -580,8 +588,8 @@
 		// Set bindings for the data selector
 		var bindings = pickAndMergeParentArrays(self._bindings, selector);
 		bindings.forEach(function(element) {
-			var focused = (w.dom(element).get(0) == w.dom(':focus').get(0)) ? true : false;
-			if (!focused) self.dom(element).fromStorage();
+			var focused = (w.dom(element).get(0) === w.dom(':focus').get(0)) ? true : false;
+			if (!focused) { self.dom(element).fromStorage(); }
 		});
 
 		// Set bindings for the global selector
@@ -788,8 +796,8 @@
 					return value.split(',');
 				},
 				boolean: function(value) {
-					if (value == "true") return true;
-					if (value == "false") return false;
+					if (value === "true") { return true; }
+					if (value === "false") { return false; }
 					return true;
 				}
 			};
@@ -834,12 +842,12 @@
 		var elements = w.dom(element).parents(parentsSelector).get();
 		for (var i in elements) {
 			var el = elements[i];
-			if (w.dom(el).attr(scopeBreakAttr)) break;
+			if (w.dom(el).attr(scopeBreakAttr)) { break; }
 			var attr = w.dom(el).attr(scopeAttr);
 			scopes.unshift(attr);
 		}
-		if (w.dom(element).attr(scopeAttr)) scopes.push(w.dom(element).attr(scopeAttr));
-		if (w.dom(element).attr(scopeBreakAttr)) scopes = [];
+		if (w.dom(element).attr(scopeAttr)) { scopes.push(w.dom(element).attr(scopeAttr)); }
+		if (w.dom(element).attr(scopeBreakAttr)) { scopes = []; }
 
 		scope = scopes.join('.');
 
@@ -854,15 +862,15 @@
 	WAY.prototype.get = function(selector) {
 
 		var self = this;
-		if (selector != undefined && !_.isString(selector)) return false;
-		if (!self.data) return {};
+		if (selector !== undefined && !_.isString(selector)) { return false; }
+		if (!self.data) { return {}; }
 		return selector ? _json.get(self.data, selector) : self.data;
 
 	}
 
 	WAY.prototype.set = function(selector, value, options) {
 
-		if (!selector) return false;
+		if (!selector) { return false; }
 		if (selector.split(".")[0] === "this") {
 			console.log('Sorry, "this" is a reserved word in way.js');
 			return false;
@@ -873,20 +881,20 @@
 
 		if (selector) {
 
-			if (!_.isString(selector)) return false;
+			if (!_.isString(selector)) { return false; }
 			self.data = self.data || {};
 			self.data = selector ? _json.set(self.data, selector, value) : {};
 
 			self.updateDependencies(selector);
 			self.emitChange(selector, value);
-			if (options.persistent) self.backup(selector);
+			if (options.persistent) { self.backup(selector); }
 		}
 
 	}
 
 	WAY.prototype.push = function(selector, value, options) {
 
-		if (!selector) return false;
+		if (!selector) { return false; }
 
 		var self = this;
 		options = options || {};
@@ -897,7 +905,7 @@
 
 		self.updateDependencies(selector);
 		self.emitChange(selector, null);
-		if (options.persistent) self.backup(selector);
+		if (options.persistent) { self.backup(selector); }
 
 	}
 
@@ -914,7 +922,7 @@
 
 		self.updateDependencies(selector);
 		self.emitChange(selector, null);
-		if (options.persistent) self.backup(selector);
+		if (options.persistent) { self.backup(selector); }
 
 	}
 
@@ -931,7 +939,7 @@
 	WAY.prototype.backup = function() {
 
 		var self = this;
-		if (!self.options.persistent) return;
+		if (!self.options.persistent) { return; }
 		try {
 			var data = self.data || {};
 			localStorage.setItem(tagPrefix, JSON.stringify(data));
@@ -944,7 +952,7 @@
 	WAY.prototype.restore = function() {
 
 		var self = this;
-		if (!self.options.persistent) return;
+		if (!self.options.persistent) { return; }
 		try {
 			var data = localStorage.getItem(tagPrefix);
 			try {
@@ -965,8 +973,8 @@
 
 	var startsWith = function(str, starts) {
 
-		if (starts === '') return true;
-		if (str == null || starts == null) return false;
+		if (starts === '') { return true; }
+		if (str === null || starts === null) { return false; }
 		str = String(str); starts = String(starts);
 		return str.length >= starts.length && str.slice(0, starts.length) === starts;
 
@@ -974,8 +982,8 @@
 
 	var endsWith = function(str, ends) {
 
-		if (ends === '') return true;
-		if (str == null || ends == null) return false;
+		if (ends === '') { return true; }
+		if (str === null || ends === null) { return false; }
 		str = String(str); ends = String(ends);
 		return str.length >= ends.length && str.slice(str.length - ends.length, str.length) === ends;
 
@@ -992,9 +1000,9 @@
 		var keys = _.keys(object);
 		keys.forEach(function(key) {
 			if (type) {
-				if (!startsWith(key, string)) delete object[key];
+				if (!startsWith(key, string)) { delete object[key]; }
 			} else {
-				if (startsWith(key, string)) delete object[key];
+				if (startsWith(key, string)) { delete object[key]; }
 			}
 		});
 		return object;
@@ -1040,7 +1048,7 @@
 
 			// (bindings with keys starting with, to include nested bindings)
 			for (var key in object) {
-				if (startsWith(key, selector)) keys = _.union(keys, object[key]);
+				if (startsWith(key, selector)) { keys = _.union(keys, object[key]); }
 			}
 
 		} else {
@@ -1058,12 +1066,12 @@
 	var isPrintableKey = function(e) {
 
 		var keycode = e.keyCode;
-		if (!keycode) return true;
+		if (!keycode) { return true; }
 
 		var valid =
-			(keycode == 8)					 || // delete
+			(keycode === 8)					 || // delete
 			(keycode > 47 && keycode < 58)   || // number keys
-			keycode == 32 || keycode == 13   || // spacebar & return key(s) (if you want to allow carriage returns)
+			keycode === 32 || keycode === 13   || // spacebar & return key(s) (if you want to allow carriage returns)
 			(keycode > 64 && keycode < 91)   || // letter keys
 			(keycode > 95 && keycode < 112)  || // numpad keys
 			(keycode > 185 && keycode < 193) || // ;=,-./` (in order)
@@ -1098,7 +1106,7 @@
 			if (_.isString(selector)) {
 				elements = [].slice.call(document.querySelectorAll(selector));
 			} else {
-				if (_.isObject(selector) && selector.attributes) elements = [selector];
+				if (_.isObject(selector) && selector.attributes) { elements = [selector]; }
 			}
 			self._elements = elements;
 			self.length = elements.length;
@@ -1115,7 +1123,7 @@
 		for (var i = 0, lenEl = elements.length; i < lenEl; i++) {
 			var element = elements[i];
 			for (var j = 0, lenEv = events.length; j < lenEv; j++) {
-				if (element.addEventListener) element.addEventListener(events[j], fn, false);
+				if (element.addEventListener) { element.addEventListener(events[j], fn, false); }
 			}
 		}
 
@@ -1198,7 +1206,7 @@
 		var self = this,
 				elements = self._elements;
 		for (var i in elements) {
-			if (value == undefined) {
+			if (value === undefined) {
 				return elements[i].getAttribute(attr);
 			} else {
 				elements[i].setAttribute(attr, value);
@@ -1234,8 +1242,8 @@
 		while (parent !== null) {
 			var o = parent,
 					matches = selector && o.matches ? o.matches(selector) : true,
-					isDocument = (o.doctype != undefined) ? true : false;
-			if (matches && !isDocument) parents.push(o);
+					isDocument = (o.doctype !== undefined) ? true : false;
+			if (matches && !isDocument) { parents.push(o); }
 			parent = o.parentNode;
 		}
 		self._elements = parents;
@@ -1261,7 +1269,7 @@
 	wQuery.prototype.empty = function(chain) {
 		var self = this,
 				element = self.get(0);
-		if (!element || !element.hasChildNodes) return chain ? self : element;
+		if (!element || !element.hasChildNodes) { return chain ? self : element; }
 
 		while (element.hasChildNodes()) {
 			element.removeChild(element.lastChild);
@@ -1279,7 +1287,7 @@
 	wQuery.prototype.ready = function(callback) {
 		var doc = document;
 		document.onreadystatechange = function() {
-			if (document.readyState == "complete") callback();
+			if (document.readyState === "complete") { callback(); }
 		}
 
 	}
@@ -1292,8 +1300,7 @@
 
 	var timeoutInput = null;
 	var eventInputChange = function(e) {
-		// if (!isPrintableKey(e)) return;
-		if (timeoutInput) clearTimeout(timeoutInput);
+		if (timeoutInput) { clearTimeout(timeoutInput); }
 		timeoutInput = setTimeout(function() {
 			var element = w.dom(e.target).get(0);
 			way.dom(element).toStorage();
@@ -1309,7 +1316,7 @@
 	var eventPush = function(e) {
 		e.preventDefault();
 		var options = way.dom(this).getOptions();
-		if (!options || !options["action-push"]) return false;
+		if (!options || !options["action-push"]) { return false; }
 		var split = options["action-push"].split(":"),
 				selector = split[0] || null,
 				value = split[1] || null;
@@ -1319,7 +1326,7 @@
 	var eventRemove = function(e) {
 		e.preventDefault();
 		var options = way.dom(this).getOptions();
-		if (!options || !options["action-remove"]) return false;
+		if (!options || !options["action-remove"]) { return false; }
 		way.remove(options["action-remove"], options);
 	}
 
@@ -1329,7 +1336,7 @@
 		// We need to register dynamically added bindings so we do it by watching DOM changes
 		// We use a timeout since "DOMSubtreeModified" gets triggered on every change in the DOM (even input value changes)
 		// so we can limit the number of scans when a user is typing something
-		if (timeoutDOM) clearTimeout(timeoutDOM);
+		if (timeoutDOM) { clearTimeout(timeoutDOM); }
 		timeoutDOM = setTimeout(function() {
 			way.registerDependencies();
 			setEventListeners();
