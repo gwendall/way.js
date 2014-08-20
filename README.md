@@ -1,8 +1,8 @@
 way.js
 ======
 
-Simple, lightweight, persistent, framework-agnostic two-way databinding Javascript library (with no to little JS code to write).  
-No dependencies.  
+Simple, lightweight, persistent, framework-agnostic two-way databinding Javascript library.  
+With no to little JS code to write. And no dependencies.  
 
 [Demo](https://gwendall.github.io/way)  
 [Codepen](http://codepen.io/anon/pen/rihBs)  
