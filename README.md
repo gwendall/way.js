@@ -8,6 +8,7 @@ With no to little JS code to write. And no dependencies.
 [Codepen](http://codepen.io/anon/pen/rihBs)  
 [jsFiddle](http://jsfiddle.net/gwendall/s5zzc84m/)  
 
+Buy us coffee: [Gittip](https://www.gittip.com/gwendall)
 Follow us on Twitter: [@way_js](https://twitter.com/way_js)  
 
 ## Quick start ##
