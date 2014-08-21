@@ -169,7 +169,7 @@ Will render that:
 </div>
 ```
 
-## Filter ##
+## Filters ##
 
 Filter the data bound to your DOM elements.
 
