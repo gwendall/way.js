@@ -642,7 +642,8 @@
 		if (w.dom(element).attr(scopeAttr)) { scopes.push(w.dom(element).attr(scopeAttr)); }
 		if (w.dom(element).attr(scopeBreakAttr)) { scopes = []; }
 
-		scope = scopes.join(".");
+		// Remove falsy values
+		scope = _w.compact(scopes).join(".");
 
 		return scope;
 
@@ -1507,7 +1508,7 @@
 				parents = [];
 		while (parent !== null) {
 			var o = parent,
-					matches = selector && o.matches ? o.matches(selector) : true,
+					matches = selector && o.matchesSelector ? o.matchesSelector(selector) : true,
 					isDocument = (o.doctype !== undefined) ? true : false;
 			if (matches && !isDocument) { parents.push(o); }
 			parent = o.parentNode;
@@ -1520,7 +1521,7 @@
 		var self = this,
 				element = self.get(0),
 				parent = element.parentNode,
-				matches = selector ? parent.matches(selector) : true;
+				matches = selector && parent.matchesSelector ? parent.matchesSelector(selector) : true;
 		return matches ? parent : {};
 	}
 
