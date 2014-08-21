@@ -183,7 +183,7 @@ way.set("someData", "hello")
 ```
 
 ```html
-<div way-data="someData" way-filter="uppercase"></div><!-- Will render "HELLO" -->
+<div way-data="someData" way-filter="uppercase"></div><!-- Renders "HELLO" -->
 ```
 
 **registerFilter(name, filter) method**  
@@ -197,7 +197,7 @@ way.registerFilter("lolify", function(data) {
 ```
 
 ```html
-<div way-data="someData" way-filter="lolify|uppercase"></div><!-- Will render "HELLO LOL" -->
+<div way-data="someData" way-filter="lolify|uppercase"></div><!-- Renders "HELLO LOL" -->
 ```
 
 ## Helper elements ##
