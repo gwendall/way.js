@@ -190,7 +190,7 @@ way.set("someData", "hello")
 Adds a new filter.
 
 ```javascript
-way.set("someData", "hello")
+way.set("someData", "hello");
 way.registerFilter("lolify", function(data) {
   return data + " lol";
 });
