@@ -192,12 +192,12 @@ Adds a new filter.
 ```javascript
 way.set("someData", "hello")
 way.registerFilter("lolify", function(data) {
-  return "lol";
+  return data + " lol";
 });
 ```
 
 ```html
-<div way-data="someData" way-filter="lolify"></div><!-- Will render "lol" -->
+<div way-data="someData" way-filter="lolify"></div><!-- Will render "hello lol" -->
 ```
 
 ## Helper elements ##
