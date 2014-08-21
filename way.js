@@ -221,11 +221,34 @@
 
 	}
 
+	WAY.prototype._filters = {
+		uppercase: function(data) {
+			return data.toUpperCase();
+		},
+		lowercase: function(data) {
+			return data.toLowerCase();
+		},
+		reverse: function(data) {
+			return data.split("").reverse().join("");
+		}
+	};
+
+	WAY.prototype.registerFilter = function(name, filter) {
+		var self = this;
+		if (_w.isFunction(filter)) { self._filters[name] = filter; }
+	}
+
 	WAY.prototype.setValue = function(data, options, element) {
 
 		var self = this,
 			element = element || self._element,
 			options = options || self.dom(element).getOptions();
+
+		options.filter = options.filter || [];
+		options.filter.forEach(function(filterName) {
+			var filter = self._filters[filterName] || function(data) { return data };
+			data = filter(data);
+		});
 
 		var setters = {
 
@@ -570,7 +593,7 @@
 	WAY.prototype.getAttrs = function(prefix, element) {
 
 		var self = this,
-			element = element || self._element;
+				element = element || self._element;
 
 		var parseAttrValue = function(key, value) {
 
@@ -603,16 +626,16 @@
 		}
 
 		var attributes = {};
-		var attrs = w.dom(element).get(0).attributes;
-		for (var i in attrs) {
-			var attr = attrs[i];
+		var attrs = [].slice.call(w.dom(element).get(0).attributes);
+		attrs.forEach(function(attr) {
 			var include = (prefix && startsWith(attr.name, prefix + "-")) ? true : false;
 			if (include) {
 				var name = (prefix) ? attr.name.slice(prefix.length + 1, attr.name.length) : attr.name;
 				var value = parseAttrValue(name, attr.value);
+				if (name === "filter") { value = value.split("|"); }
 				attributes[name] = value;
 			}
-		}
+		});
 
 		return attributes;
 
