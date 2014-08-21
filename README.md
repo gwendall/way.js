@@ -175,8 +175,8 @@ Filter the data bound to your DOM elements.
 
 **[way-filter] attribute**  
 Pass filters by name. Add multiple filter by separating them with the "|" symbol.  
-In case of conflicts between filters, the last mentionned filter wins.
-Pre built filters are "uppercase", "lowercase", "reverse".  
+In case of conflicts between filters, the last mentionned filter wins.  
+Pre-built filters are "uppercase", "lowercase", "reverse".  
 
 ```javascript
 way.set("someData", "hello")
@@ -192,7 +192,7 @@ Adds a new filter.
 ```javascript
 way.set("someData", "hello")
 way.registerFilter("lolify", function(data) {
-  return "lol"
+  return "lol";
 });
 ```
 
