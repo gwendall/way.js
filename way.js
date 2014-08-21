@@ -642,7 +642,6 @@
 		if (w.dom(element).attr(scopeAttr)) { scopes.push(w.dom(element).attr(scopeAttr)); }
 		if (w.dom(element).attr(scopeBreakAttr)) { scopes = []; }
 
-		// Remove falsy values
 		scope = _w.compact(scopes).join(".");
 
 		return scope;
