@@ -251,6 +251,12 @@
 				w.dom(element).val(a || "");
 			},
 			"PRE": function(a) {
+				if (options.filter === "uppercase") {
+					a = a.toUpperCase();
+				} else if (options.filter === "lowercase") {
+					a = a.toLowerCase();
+				}
+
 				if (options.html) {
 					w.dom(element).html(a);
 				} else {
