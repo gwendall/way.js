@@ -169,6 +169,37 @@ Will render that:
 </div>
 ```
 
+## Filter ##
+
+Filter the data bound to your DOM elements.
+
+**[way-filter] attribute**  
+Pass filters by name. Add multiple filter by separating them with the "|" symbol.  
+In case of conflicts between filters, the last mentionned filter wins.
+Pre built filters are "uppercase", "lowercase", "reverse".  
+
+```javascript
+way.set("someData", "hello")
+```
+
+```html
+<div way-data="someData" way-filter="uppercase"></div><!-- Will render "HELLO" -->
+```
+
+**registerFilter(name, filter) method**  
+Adds a new filter.
+
+```javascript
+way.set("someData", "lolify")
+way.registerFilter("lol", function(data) {
+  return "lol"
+});
+```
+
+```html
+<div way-data="someData" way-filter="lolify"></div><!-- Will render "lol" -->
+```
+
 ## Helper elements ##
 
 Allows to perform simple tasks on your way.js' data with a click.
