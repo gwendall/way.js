@@ -464,7 +464,7 @@
 	}
 
 	WAY.prototype._filters = {
-		noDuplicates: function(item) {
+		noDuplicates: function(items) {
 			items = items || [];
 			return _w.uniq(items);
 		}
@@ -505,7 +505,7 @@
 
 				if (!test) { continue; }
 				*/
-				
+
 				w.dom(repeat.element).attr(tagPrefix + "-scope", key);
 				var html = w.dom(repeat.element).get(0).outerHTML;
 				html = html.replace(/\$\$key/gi, key);
