@@ -169,36 +169,83 @@ Will render that:
 </div>
 ```
 
-## Filters ##
+## Transforms ##
 
-Filter the data bound to your DOM elements.
+Transforms the displayed data bound to your DOM elements.
 
-**[way-filter] attribute**  
-Pass filters by name. Add multiple filter by separating them with the "|" symbol.  
-In case of conflicts between filters, the last mentionned filter wins.  
-Pre-built filters are "uppercase", "lowercase", "reverse".  
+**[way-transform] attribute**  
+Pass transform functions by name. Add multiple transforms by separating them with the "|" symbol.  
+In case of conflicts between transforms, the last mentionned transform wins.  
+Some pre-build transforms **[PR welcome for more!]**
+
+Name | Description | Example
+----|------|----
+uppercase | Sets a string to uppercase | "hello" becomes "HELLO"
+lowercase | Sets a string to lowercase | "HELLO" becomes "hello"
+reverse | Reverses a string | "hello" becomes "olleh"
+
 
 ```javascript
 way.set("someData", "hello")
 ```
 
 ```html
-<div way-data="someData" way-filter="uppercase"></div><!-- Renders "HELLO" -->
+<div way-data="someData" way-transform="uppercase"></div><!-- Renders "HELLO" -->
 ```
 
-**registerFilter(name, filter) method**  
-Adds a new filter.
+**registerTransform(name, transform) method**  
+Adds a new transform.
 
 ```javascript
 way.set("someData", "hello");
-way.registerFilter("lolify", function(data) {
+way.registerTransform("lolify", function(data) {
   return data + " lol";
 });
 ```
 
 ```html
-<div way-data="someData" way-filter="lolify|uppercase"></div><!-- Renders "HELLO LOL" -->
+<div way-data="someData" way-transform="lolify|uppercase"></div><!-- Renders "HELLO LOL" -->
 ```
+
+## Filters ## [experimental: bugs to fix]
+
+Filters the displayed data within your "way-repeat" blocks.
+
+**[way-filter] attribute**  
+Pass filter functions by name. Add multiple filters by separating them with the "|" symbol.  
+In case of conflicts between filters, the last mentionned filter wins.  
+Some pre-build filters **[PR welcome for more!] **
+
+Name | Description
+----|------
+noDuplicates | Only displays HTML for unique DOM elements
+
+
+```javascript
+way.set("someArray", [
+  { color: "red" },
+  { color: "red" },
+  { color: "blue" },
+  { color: "green" }
+  { color: "green" }
+])
+```
+
+```html
+<div way-repeat="someArray" way-filter="noDuplicates">  
+  <div way-data="color"></div>
+</div>  
+
+<!-- Will render something like... -->
+<div way-scope="someArray">
+  <div way-scope="0" way-data="color">red</div>
+  <div way-scope="2" way-data="color">blue</div>
+  <div way-scope="3" way-data="color">green</div>
+</div>
+```
+
+**registerFilter(name, filter) method**  
+Adds a new filter.
 
 ## Helper elements ##
 
