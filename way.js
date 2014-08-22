@@ -464,7 +464,7 @@
 	}
 
 	WAY.prototype._filters = {
-		noDuplicates: function(items) {
+		noDuplicates: function(item) {
 			items = items || [];
 			return _w.uniq(items);
 		}
@@ -489,17 +489,28 @@
 					items = [];
 
 			repeat.filter = repeat.filter || [];
-			repeat.filter.forEach(function(filterName) {
-				var filter = self._filters[filterName] || function(data) { return data };
-				data = filter(data);
-			});
-
 			w.dom(wrapper).empty();
+
 			for (var key in data) {
+
+				/*
+				var item = data[key],
+						test = true;
+				for (var i in repeat.filter) {
+					var filterName = repeat.filter[i];
+					var filter = self._filters[filterName] || function(data) { return data };
+					test = filter(item);
+					if (!test) { break; }
+				}
+
+				if (!test) { continue; }
+				*/
+				
 				w.dom(repeat.element).attr(tagPrefix + "-scope", key);
 				var html = w.dom(repeat.element).get(0).outerHTML;
 				html = html.replace(/\$\$key/gi, key);
 				items.push(html);
+
 			}
 
 			w.dom(wrapper).html(items);
