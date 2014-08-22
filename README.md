@@ -209,6 +209,7 @@ way.registerTransform("lolify", function(data) {
 <!-- Renders "HELLO LOL" -->
 ```
 
+<!--
 ## Filters ## [experimental: bugs to fix]
 
 Filters the displayed data within your "way-repeat" blocks.
@@ -237,9 +238,11 @@ way.set("someArray", [
 <div way-repeat="someArray" way-filter="noDuplicates">  
   <div way-data="color"></div>
 </div>  
+```
 
-<!-- Will render something like... -->  
+// Will render something like
 
+```html
 <div way-scope="someArray">
   <div way-scope="0" way-data="color">red</div>
   <div way-scope="2" way-data="color">blue</div>
@@ -249,6 +252,8 @@ way.set("someArray", [
 
 **registerFilter(name, filter) method**  
 Adds a new filter.
+
+-->
 
 ## Helper elements ##
 

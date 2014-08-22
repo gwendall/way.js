@@ -463,10 +463,14 @@
 
 	}
 
+	/*
 	WAY.prototype._filters = {
-		noDuplicates: function(items) {
-			items = items || [];
-			return _w.uniq(items);
+		noFalsy: function(item ) {
+			if (!item) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 	};
 
@@ -474,7 +478,8 @@
 		var self = this;
 		if (_w.isFunction(filter)) { self._filters[name] = filter; }
 	}
-
+	*/
+	
 	WAY.prototype.updateRepeats = function(selector) {
 
 		var self = this;
@@ -502,7 +507,6 @@
 					test = filter(item);
 					if (!test) { break; }
 				}
-
 				if (!test) { continue; }
 				*/
 
