@@ -221,21 +221,21 @@
 
 	}
 
-	WAY.prototype._filters = {
+	WAY.prototype._transforms = {
 		uppercase: function(data) {
-			return data.toUpperCase();
+			return _w.isString(data) ? data.toUpperCase() : data;
 		},
 		lowercase: function(data) {
-			return data.toLowerCase();
+			return _w.isString(data) ? data.toLowerCase() : data;
 		},
 		reverse: function(data) {
-			return data.split("").reverse().join("");
+			return data && data.split && _w.isFunction(data.split) ? data.split("").reverse().join("") : data;
 		}
 	};
 
-	WAY.prototype.registerFilter = function(name, filter) {
+	WAY.prototype.registerTransform = function(name, transform) {
 		var self = this;
-		if (_w.isFunction(filter)) { self._filters[name] = filter; }
+		if (_w.isFunction(transform)) { self._transforms[name] = transform; }
 	}
 
 	WAY.prototype.setValue = function(data, options, element) {
@@ -244,10 +244,10 @@
 			element = element || self._element,
 			options = options || self.dom(element).getOptions();
 
-		options.filter = options.filter || [];
-		options.filter.forEach(function(filterName) {
-			var filter = self._filters[filterName] || function(data) { return data };
-			data = filter(data);
+		options.transform = options.transform || [];
+		options.transform.forEach(function(transformName) {
+			var transform = self._transforms[transformName] || function(data) { return data };
+			data = transform(data);
 		});
 
 		var setters = {
@@ -442,13 +442,16 @@
 
 				self._repeats[options.repeat].push({
 					id: self._repeatsCount,
-					element: w.dom(element).clone(true).removeAttr(tagPrefix + "-repeat").get(0),
-					selector: options.repeat
+					element: w.dom(element).clone(true).removeAttr(tagPrefix + "-repeat").removeAttr(tagPrefix + "-filter").get(0),
+					selector: options.repeat,
+					filter: options.filter
 				});
 
 				var wrapper = document.createElement("div");
 				w.dom(wrapper).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount);
 				w.dom(wrapper).attr(tagPrefix + "-scope", options.repeat);
+				if (options.filter) { w.dom(wrapper).attr(tagPrefix + "-filter", options.filter); }
+
 				w.dom(element).replaceWith(wrapper);
 				self.updateRepeats(options.repeat);
 
@@ -458,6 +461,18 @@
 
 		}
 
+	}
+
+	WAY.prototype._filters = {
+		noDuplicates: function(items) {
+			items = items || [];
+			return _w.uniq(items);
+		}
+	};
+
+	WAY.prototype.registerFilter = function(name, filter) {
+		var self = this;
+		if (_w.isFunction(filter)) { self._filters[name] = filter; }
 	}
 
 	WAY.prototype.updateRepeats = function(selector) {
@@ -472,6 +487,12 @@
 			var wrapper = "[" + tagPrefix + "-repeat-wrapper=\"" + repeat.id + "\"]",
 					data = self.get(repeat.selector),
 					items = [];
+
+			repeat.filter = repeat.filter || [];
+			repeat.filter.forEach(function(filterName) {
+				var filter = self._filters[filterName] || function(data) { return data };
+				data = filter(data);
+			});
 
 			w.dom(wrapper).empty();
 			for (var key in data) {
@@ -632,7 +653,7 @@
 			if (include) {
 				var name = (prefix) ? attr.name.slice(prefix.length + 1, attr.name.length) : attr.name;
 				var value = parseAttrValue(name, attr.value);
-				if (name === "filter") { value = value.split("|"); }
+				if (_w.contains(["transform", "filter"], name)) { value = value.split("|"); }
 				attributes[name] = value;
 			}
 		});
@@ -1248,7 +1269,7 @@
 
 		var error = { source: source, data: data, value: value };
 		error.message = messages[reason] ? messages[reason] : "No particular reason";
-		console.log('Error', error);
+		console.log("Error", error);
 		return;
 
 	}
@@ -1523,16 +1544,19 @@
 		return self;
 	}
 
+	// matchFn = o.matches || o.matchesSelector || o.mozMatchesSelector || o.webkitMatchesSelector || o.oMatchesSelector || o.msMatchesSelector || function() { return false; };
+
 	wQuery.prototype.parents = function(selector) {
 		var self = this,
 				element = self.get(0),
 				parent = element.parentNode,
 				parents = [];
+
 		while (parent !== null) {
 			var o = parent,
-					matches = selector && o.matchesSelector ? o.matchesSelector(selector) : true,
-					isDocument = (o.doctype !== undefined) ? true : false;
-			if (matches && !isDocument) { parents.push(o); }
+					matches = selector && _w.isFunction(o.matches) ? o.matches(selector) : true,
+					isNotDomRoot = (o.doctype === undefined) ? true : false;
+			if (matches && isNotDomRoot) { parents.push(o); }
 			parent = o.parentNode;
 		}
 		self._elements = parents;
@@ -1542,9 +1566,9 @@
 	wQuery.prototype.parent = function(selector) {
 		var self = this,
 				element = self.get(0),
-				parent = element.parentNode,
-				matches = selector && parent.matchesSelector ? parent.matchesSelector(selector) : true;
-		return matches ? parent : {};
+				o = element.parentNode,
+				matches = selector && _w.isFunction(o.matches) ? o.matches(selector) : true;
+		return matches ? o : {};
 	}
 
 	wQuery.prototype.clone = function(chain) {
@@ -1638,6 +1662,7 @@
 	//////////////
 
 	w = new wQuery();
+	way.w = w;
 
 	var setEventListeners = function() {
 
