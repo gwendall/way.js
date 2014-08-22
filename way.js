@@ -479,7 +479,7 @@
 		if (_w.isFunction(filter)) { self._filters[name] = filter; }
 	}
 	*/
-	
+
 	WAY.prototype.updateRepeats = function(selector) {
 
 		var self = this;
@@ -1613,9 +1613,15 @@
 	}
 
 	wQuery.prototype.ready = function(callback) {
-		var doc = document;
-		document.onreadystatechange = function() {
-			if (document.readyState === "complete") { callback(); }
+
+		if (document && _w.isFunction(document.addEventListener)) {
+			document.addEventListener("DOMContentLoaded", callback, false);
+		} else if (window && _w.isFunction(window.addEventListener)) {
+			window.addEventListener("load", callback, false);
+		} else {
+			document.onreadystatechange = function() {
+				if (document.readyState === "complete") { callback(); }
+			}
 		}
 
 	}
