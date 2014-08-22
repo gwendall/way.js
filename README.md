@@ -238,7 +238,8 @@ way.set("someArray", [
   <div way-data="color"></div>
 </div>  
 
-<!-- Will render something like... -->
+<!-- Will render something like... -->  
+
 <div way-scope="someArray">
   <div way-scope="0" way-data="color">red</div>
   <div way-scope="2" way-data="color">blue</div>
