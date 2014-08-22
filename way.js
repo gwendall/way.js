@@ -1544,8 +1544,6 @@
 		return self;
 	}
 
-	// matchFn = o.matches || o.matchesSelector || o.mozMatchesSelector || o.webkitMatchesSelector || o.oMatchesSelector || o.msMatchesSelector || function() { return false; };
-
 	wQuery.prototype.parents = function(selector) {
 		var self = this,
 				element = self.get(0),
@@ -1554,8 +1552,9 @@
 
 		while (parent !== null) {
 			var o = parent,
-					matches = selector && _w.isFunction(o.matches) ? o.matches(selector) : true,
+					matches = _w.isFunction(o.matches) ? o.matches(selector) : false,
 					isNotDomRoot = (o.doctype === undefined) ? true : false;
+			if (!selector) { matches = true; }
 			if (matches && isNotDomRoot) { parents.push(o); }
 			parent = o.parentNode;
 		}
@@ -1567,7 +1566,8 @@
 		var self = this,
 				element = self.get(0),
 				o = element.parentNode,
-				matches = selector && _w.isFunction(o.matches) ? o.matches(selector) : true;
+				matches = _w.isFunction(o.matches) ? o.matches(selector) : false;
+		if (!selector) { matches = true; }
 		return matches ? o : {};
 	}
 
