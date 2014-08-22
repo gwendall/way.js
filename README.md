@@ -190,7 +190,8 @@ way.set("someData", "hello")
 ```
 
 ```html
-<div way-data="someData" way-transform="uppercase"></div><!-- Renders "HELLO" -->
+<div way-data="someData" way-transform="uppercase"></div>
+<!-- Renders "HELLO" -->
 ```
 
 **registerTransform(name, transform) method**  
@@ -204,7 +205,8 @@ way.registerTransform("lolify", function(data) {
 ```
 
 ```html
-<div way-data="someData" way-transform="lolify|uppercase"></div><!-- Renders "HELLO LOL" -->
+<div way-data="someData" way-transform="lolify|uppercase"></div>
+<!-- Renders "HELLO LOL" -->
 ```
 
 ## Filters ## [experimental: bugs to fix]
