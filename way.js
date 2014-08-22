@@ -1662,7 +1662,6 @@
 	//////////////
 
 	w = new wQuery();
-	way.w = w;
 
 	var setEventListeners = function() {
 
