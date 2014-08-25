@@ -212,7 +212,7 @@
 			}
 		}
 		var defaultGetter = function(a) {
-			w.dom(element).html();
+			return w.dom(element).html();
 		}
 
 		var elementType = w.dom(element).get(0).tagName;
@@ -822,6 +822,18 @@
 	//////////
 	// MISC //
 	//////////
+
+	var matchesSelector = function(el, selector) {
+		var matchers = ["matches", "matchesSelector", "webkitMatchesSelector", "mozMatchesSelector", "msMatchesSelector", "oMatchesSelector"],
+				fn = null;
+		for (var i in matchers) {
+			fn = matchers[i];
+			if (_w.isFunction(el[fn])) {
+				return el[fn](selector);
+			}
+		}
+		return false;
+	}
 
 	var startsWith = function(str, starts) {
 
@@ -1567,7 +1579,7 @@
 
 		while (parent !== null) {
 			var o = parent,
-					matches = _w.isFunction(o.matches) ? o.matches(selector) : false,
+					matches = matchesSelector(o, selector),
 					isNotDomRoot = (o.doctype === undefined) ? true : false;
 			if (!selector) { matches = true; }
 			if (matches && isNotDomRoot) { parents.push(o); }
@@ -1581,7 +1593,7 @@
 		var self = this,
 				element = self.get(0),
 				o = element.parentNode,
-				matches = _w.isFunction(o.matches) ? o.matches(selector) : false;
+				matches = matchesSelector(o, selector);
 		if (!selector) { matches = true; }
 		return matches ? o : {};
 	}
