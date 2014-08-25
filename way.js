@@ -517,7 +517,7 @@
 
 			}
 
-			w.dom(wrapper).html(items);
+			w.dom(wrapper).html(items.join(" "));
 			self.registerBindings();
 			self.updateBindings();
 
