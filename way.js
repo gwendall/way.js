@@ -65,8 +65,8 @@
 		// Send data down to the local watchers
 		var deps = self.findWatcherDeps(selector);
 		deps.forEach(function(item) {
-			if (this._watchers[item]) {
-				this._watchers[item].forEach(function(handler) {
+			if (self._watchers[item]) {
+				self._watchers[item].forEach(function(handler) {
 					handler.apply(self, [self.get(item)]);
 				});
 			}
