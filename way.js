@@ -946,7 +946,7 @@
 	}
 
 	var escapeHTML = function(str) {
-		return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : str;
+		return str && _w.isString(str) ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : str;
 	}
 
 	///////////////////////////////////////////////////
