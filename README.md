@@ -1,12 +1,14 @@
 way.js
 ======
 
-Simple, lightweight, persistent, framework-agnostic two-way databinding Javascript library (with no to little JS code to write).
+Simple, lightweight, persistent, framework-agnostic two-way databinding Javascript library.  
+With no to little JS code to write. And no dependencies.  
 
 [Demo](https://gwendall.github.io/way)  
 [Codepen](http://codepen.io/anon/pen/rihBs)  
 [jsFiddle](http://jsfiddle.net/gwendall/s5zzc84m/)  
 
+Buy us coffee: [Gittip](https://www.gittip.com/gwendall)  
 Follow us on Twitter: [@way_js](https://twitter.com/way_js)  
 
 ## Quick start ##
@@ -32,23 +34,13 @@ Enough talk, [see it in action](https://gwendall.github.io/way).
 
 ## Installation ##
 
-Step 1: Include the bundled library to your page.
+**[Step 1]** Include the library to your page.
 
 ```html
-<script src="/way.bundle.min.js"></script>
+<script src="way.min.js"></script>
 ```
 
-Step 2: There is no step 2. You are good to go.
-
-
-Note: The bundled version contains the required dependencies (listed below). Feel free to include them separately.
-
-```html
-<script src="/vendor/jquery.js"></script>
-<script src="/vendor/underscore.js"></script>
-<script src="/vendor/underscore.json.js"></script>
-<script src="/way.min.js"></script>
-```
+**[Step 2]** There is no step 2. You are good to go.
 
 ## Options ##
 
@@ -177,8 +169,91 @@ Will render that:
 </div>
 ```
 
-Demo:  
-[Codepen](http://codepen.io/anon/pen/CjbAh)  
+## Transforms ##
+
+Transforms the displayed data bound to your DOM elements.
+
+**[way-transform] attribute**  
+Pass transform functions by name. Add multiple transforms by separating them with the "|" symbol.  
+In case of conflicts between transforms, the last mentionned transform wins.  
+Some pre-build transforms **[PR welcome for more!]**
+
+Name | Description | Example
+----|------|----
+uppercase | Sets a string to uppercase | "hello" becomes "HELLO"
+lowercase | Sets a string to lowercase | "HELLO" becomes "hello"
+reverse | Reverses a string | "hello" becomes "olleh"
+
+
+```javascript
+way.set("someData", "hello")
+```
+
+```html
+<div way-data="someData" way-transform="uppercase"></div>
+<!-- Renders "HELLO" -->
+```
+
+**registerTransform(name, transform) method**  
+Adds a new transform.
+
+```javascript
+way.set("someData", "hello");
+way.registerTransform("lolify", function(data) {
+  return data + " lol";
+});
+```
+
+```html
+<div way-data="someData" way-transform="lolify|uppercase"></div>
+<!-- Renders "HELLO LOL" -->
+```
+
+<!--
+## Filters ## [experimental: bugs to fix]
+
+Filters the displayed data within your "way-repeat" blocks.
+
+**[way-filter] attribute**  
+Pass filter functions by name. Add multiple filters by separating them with the "|" symbol.  
+In case of conflicts between filters, the last mentionned filter wins.  
+Some pre-build filters **[PR welcome for more!] **
+
+Name | Description
+----|------
+noDuplicates | Only displays HTML for unique DOM elements
+
+
+```javascript
+way.set("someArray", [
+  { color: "red" },
+  { color: "red" },
+  { color: "blue" },
+  { color: "green" }
+  { color: "green" }
+])
+```
+
+```html
+<div way-repeat="someArray" way-filter="noDuplicates">  
+  <div way-data="color"></div>
+</div>  
+```
+
+// Will render something like
+
+```html
+<div way-scope="someArray">
+  <div way-scope="0" way-data="color">red</div>
+  <div way-scope="2" way-data="color">blue</div>
+  <div way-scope="3" way-data="color">green</div>
+</div>
+```
+
+**registerFilter(name, filter) method**  
+Adds a new filter.
+
+-->
 
 ## Helper elements ##
 
@@ -231,7 +306,7 @@ way.set("image.url", "somethingThatsNotAnImageURL");
 Everything should be done for you from the HTML tags. But if necessary, you can also use helper functions to interact with your stored data and DOM elements.
 
 Notes:
-- [element] refers to the jQuery selector of a DOM element
+- [element] refers to the CSS selector of a DOM element.
 - [options] is optional. By default, options are read from the HTML tags of the elements. But you can overwrite them, by passing this parameter.
 
 ### DOM methods
