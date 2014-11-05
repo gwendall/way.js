@@ -439,20 +439,16 @@
 			var wrapperAttr = tagPrefix + "-repeat-wrapper=\"" + self._repeatsCount + "\"",
 					parent = w.dom(element).parent("[" + wrapperAttr + "]");
 			if (!parent.length) {
-
 				self._repeats[options.repeat].push({
 					id: self._repeatsCount,
 					element: w.dom(element).clone(true).removeAttr(tagPrefix + "-repeat").removeAttr(tagPrefix + "-filter").get(0),
 					selector: options.repeat,
 					filter: options.filter
 				});
+				w.dom(w.dom(element).parent()).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount);
+				w.dom(w.dom(element).parent()).attr(tagPrefix + "-scope", options.repeat);
+				if (options.filter) { w.dom(w.dom(element).parent()).attr(tagPrefix + "-filter", options.filter); }
 
-				var wrapper = document.createElement("div");
-				w.dom(wrapper).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount);
-				w.dom(wrapper).attr(tagPrefix + "-scope", options.repeat);
-				if (options.filter) { w.dom(wrapper).attr(tagPrefix + "-filter", options.filter); }
-
-				w.dom(element).replaceWith(wrapper);
 				self.updateRepeats(options.repeat);
 
 				self._repeatsCount++;
@@ -497,7 +493,7 @@
 			w.dom(wrapper).empty();
 
 			for (var key in data) {
-
+				if (_w.isArray(data)) key = parseInt(key);
 				/*
 				var item = data[key],
 						test = true;
@@ -512,12 +508,14 @@
 
 				w.dom(repeat.element).attr(tagPrefix + "-scope", key);
 				var html = w.dom(repeat.element).get(0).outerHTML;
-				html = html.replace(/\$\$key/gi, key);
+				var m = html.match(/\$\$(key|{[^\}]+})/gi);
+				html = html.replace(m, eval(RegExp.$1));
 				items.push(html);
 
 			}
 
 			w.dom(wrapper).html(items.join(""));
+			setEventListeners(wrapper);
 			self.registerBindings();
 			self.updateBindings();
 
@@ -1479,7 +1477,7 @@
 					element = self.get(0),
 					elements = [];
 
-			if (_w.isString(selector)) {
+			if (self._elements.length > 0 && _w.isString(selector)) {
 				elements = [].slice.call(element.querySelectorAll(selector));
 			}
 			self._elements = elements;
@@ -1697,14 +1695,23 @@
 	w = new wQuery();
 	way.w = w;
 
-	var setEventListeners = function() {
+	var setGlobalEventListeners = false;
 
+	var setEventListeners = function(selector) {
+		var f, o;
+		if (_w.isString(selector)) {
+			o = w.dom(selector);
+			f = o.find;
+		} else if (!setGlobalEventListeners) {
+			o = w;
+			f = o.dom;
+			setGlobalEventListeners = true;
 			w.dom("body").on("DOMSubtreeModified", eventDOMChange);
-			w.dom("[" + tagPrefix + "-data]").on("input change", eventInputChange);
-			w.dom("[" + tagPrefix + "-clear]").on("click", eventClear);
-			w.dom("[" + tagPrefix + "-action-remove]").on("click", eventRemove);
-			w.dom("[" + tagPrefix + "-action-push]").on("click", eventPush);
-
+		}
+		f.apply(o, ["[" + tagPrefix + "-data]"]).on("input change", eventInputChange);
+		f.apply(o, ["[" + tagPrefix + "-clear]"]).on("click", eventClear);
+		f.apply(o, ["[" + tagPrefix + "-action-remove]"]).on("click", eventRemove);
+		f.apply(o, ["[" + tagPrefix + "-action-push]"]).on("click", eventPush);
 	}
 
 	var eventInit = function() {
