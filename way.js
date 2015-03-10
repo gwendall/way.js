@@ -447,7 +447,8 @@
 					filter: options.filter
 				});
 
-				var wrapper = document.createElement("div");
+				var wrappertag = options.wrappertag || "div";
+				var wrapper = document.createElement(wrappertag);
 				w.dom(wrapper).attr(tagPrefix + "-repeat-wrapper", self._repeatsCount);
 				w.dom(wrapper).attr(tagPrefix + "-scope", options.repeat);
 				if (options.filter) { w.dom(wrapper).attr(tagPrefix + "-filter", options.filter); }
