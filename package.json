@@ -30,7 +30,7 @@
     "grunt-contrib-uglify": "~0.5.1",
     "grunt-contrib-watch": "~0.6.1",
     "mocha": "~1.21.4",
-    "fakedom-amd": "~0.4.1",
+    "fakedom-amd": "~0.5.0",
     "sinon": "~1.10.3"
   }
 }
