@@ -280,6 +280,22 @@
 					w.dom(element).text(a);
 				}
 			},
+			// support binding a.href by `way-href="data.a.href"`
+			"A": function(a) {
+				if (options.href) {
+					var scope,key,val;
+					scope = way.dom(element).scope();
+					key = scope ? scope + '.' + options.href : options.href;
+					val = way.get(key);
+					w.dom(element).attr("href", val);
+				}
+                
+				if (options.html) {
+					w.dom(element).html(a);
+                } else {
+					w.dom(element).text(a);
+				}
+			},
 			"IMG": function(a) {
 
 				if (!a) {
