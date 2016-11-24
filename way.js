@@ -274,6 +274,14 @@
 				w.dom(element).val(a || "");
 			},
 			"PRE": function(a) {
+				if (options.filter === "uppercase") {
+					a = a.toUpperCase();
+				} else if (options.filter === "lowercase") {
+					a = a.toLowerCase();
+				} else if (options.filter === "reverse") {
+					a = a.split("").reverse().join("");
+				}
+
 				if (options.html) {
 					w.dom(element).html(a);
 				} else {
