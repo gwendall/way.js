@@ -18,9 +18,6 @@
 	// EVENT EMITTER DEFINITION //
     //////////////////////////////
 
-    //################//
-    //111111111111111//
-
 	var EventEmitter = function () {
 
 		this._watchers = {};
