@@ -15,7 +15,7 @@
 	var way, w, tagPrefix = "way";
 
 	//////////////////////////////
-	// EVENT EMITTER DEFINITION //
+	// ÐÞ¸Ä//
 	//////////////////////////////
 
 	var EventEmitter = function () {
