@@ -1650,7 +1650,7 @@
 		timeoutInput = setTimeout(function() {
 			var element = w.dom(e.target).get(0);
 			way.dom(element).toStorage();
-		}, way.options.timeout);
+		}, way.options.timeoutInput);
 	}
 
 	var eventClear = function(e) {
