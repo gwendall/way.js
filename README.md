@@ -11,6 +11,8 @@ With no to little JS code to write. And no dependencies.
 Buy us coffee: [Gittip](https://www.gittip.com/gwendall)  
 Follow us on Twitter: [@way_js](https://twitter.com/way_js)  
 
+The following documentation is also available in [Chinese](https://github.com/gwendall/way.js/blob/master/docs/zh-CN.md).
+
 ## Quick start ##
 
 Declare an HTML element with some tags.
