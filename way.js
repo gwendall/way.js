@@ -205,6 +205,8 @@
 				if (_w.contains(["checkbox", "radio"], type)) {
 					return w.dom(element).prop("checked") ? w.dom(element).val() : null;
 				}
+				//the other types such as text,password,hidden,email etc.
+				return w.dom(element).val();
 
 			},
 			"TEXTAREA": function() {
@@ -268,6 +270,8 @@
 						w.dom(element).prop("checked", false);
 					}
 				}
+				//the other types such as text,password,hidden,email etc. 
+				w.dom(element).val(a || "");
 			},
 			"TEXTAREA": function(a) {
 				if (!_w.isString(a)) { a = JSON.stringify(a); }
@@ -1646,11 +1650,8 @@
 
 	var timeoutInput = null;
 	var eventInputChange = function(e) {
-		if (timeoutInput) { clearTimeout(timeoutInput); }
-		timeoutInput = setTimeout(function() {
-			var element = w.dom(e.target).get(0);
-			way.dom(element).toStorage();
-		}, way.options.timeout);
+		var element = w.dom(e.target).get(0);
+		way.dom(element).toStorage();
 	}
 
 	var eventClear = function(e) {
