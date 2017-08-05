@@ -13,7 +13,7 @@ With no to little JS code to write. And no dependencies.
 Buy us coffee: [Gittip](https://www.gittip.com/gwendall)  
 Follow us on Twitter: [@way_js](https://twitter.com/way_js)  
 
-The following documentation is also available in [Chinese](https://github.com/gwendall/way.js/blob/master/docs/zh-CN.md).
+The following documentation is also available in [Chinese](https://github.com/gwendall/way.js/blob/master/docs/zh-CN.md) (credits: [@wuyunjiang](https://github.com/wuyunjiang).
 
 ## Quick start ##
 
