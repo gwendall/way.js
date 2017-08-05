@@ -1,6 +1,8 @@
 way.js
 ======
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gwendall/way.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Simple, lightweight, persistent, framework-agnostic two-way databinding Javascript library.  
 With no to little JS code to write. And no dependencies.  
 
