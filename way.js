@@ -738,7 +738,7 @@
 			self.data = selector ? _json.set(self.data, selector, value) : {};
 
 			self.updateDependencies(selector);
-			self.emitChange(selector, value);
+			if (!options.silent) self.emitChange(selector, value);
 			if (options.persistent) { self.backup(selector); }
 		}
 
@@ -756,7 +756,7 @@
 		}
 
 		self.updateDependencies(selector);
-		self.emitChange(selector, null);
+		if (!options.silent) self.emitChange(selector, null);
 		if (options.persistent) { self.backup(selector); }
 
 	}
@@ -773,7 +773,7 @@
 		}
 
 		self.updateDependencies(selector);
-		self.emitChange(selector, null);
+		if (!options.silent) self.emitChange(selector, null);
 		if (options.persistent) { self.backup(selector); }
 
 	}
