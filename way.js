@@ -243,6 +243,9 @@
 		var self = this,
 			element = element || self._element,
 			options = options || self.dom(element).getOptions();
+			
+		if(w.dom(element).attr("readonly") !== null)
+			return
 
 		options.transform = options.transform || [];
 		options.transform.forEach(function(transformName) {
