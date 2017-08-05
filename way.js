@@ -1333,8 +1333,8 @@
 		if (json == undefined) return _json.exit("set", "missing", "json", json);
 		if (selector == undefined) return _json.exit("set", "missing", "selector", selector);
 		if (!_w.isString(selector)) return _json.exit("set", "noString", "selector", selector);
-		return value ? deepJSON(json, selector, value) : _json.remove(json, selector);
-		// return deepJSON(json, selector, value); // Now removes the property if the value is empty. Maybe should keep it instead?
+		// Proper check for null'ish values instead of falsyness
+		return (value === undefined || value === null || (typeof value === 'number' && isNaN(value))) ? _json.remove(json, selector) : deepJSON(json, selector, value);
 
 	};
 
