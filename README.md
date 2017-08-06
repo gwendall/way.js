@@ -40,8 +40,14 @@ Enough talk, [see it in action](https://gwendall.github.io/way).
 
 **[Step 1]** Include the library to your page.
 
+via NPM
 ```html
-<script src="way.min.js"></script>
+npm install way-js
+```
+
+or
+```html
+<script src="dist/way.js"></script>
 ```
 
 **[Step 2]** There is no step 2. You are good to go.
