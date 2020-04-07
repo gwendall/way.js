@@ -189,7 +189,7 @@ Transforms the displayed data bound to your DOM elements.
 
 **[way-transform] attribute**  
 Pass transform functions by name. Add multiple transforms by separating them with the "|" symbol.  
-In case of conflicts between transforms, the last mentionned transform wins.  
+In case of conflicts between transforms, the last mentioned transform wins.  
 Some pre-build transforms **[PR welcome for more!]**
 
 Name | Description | Example
@@ -230,7 +230,7 @@ Filters the displayed data within your "way-repeat" blocks.
 
 **[way-filter] attribute**  
 Pass filter functions by name. Add multiple filters by separating them with the "|" symbol.  
-In case of conflicts between filters, the last mentionned filter wins.  
+In case of conflicts between filters, the last mentioned filter wins.  
 Some pre-build filters **[PR welcome for more!] **
 
 Name | Description
